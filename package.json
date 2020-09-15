@@ -1,6 +1,6 @@
 {
 	"name": "date-ex",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "Extensions for Date.",
 	"main": "index.js",
 	"scripts": {

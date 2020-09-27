@@ -1,20 +1,31 @@
-import { DateTimeSetParam } from './interfaces';
+import { DateProxy } from './date-proxy';
 
-export class DateEx {
+import { InitDataFormat } from './interfaces';
 
-	// private date : Date;
+
+export class DateEx extends DateProxy {
+
 	// private dateFormat : string;
 
 
-	constructor(initData? : string | number | Date | DateEx) {
+	constructor(initData? : InitDataFormat) {
+		super(initData);
 	}
 
-	set(param : DateTimeSetParam) : DateEx {
+
+	// set(param : DateTimeSetParam) : DateEx {
+	set() : DateEx {
 		return this;
 	}
 
-	format(format : string) : string {
+	// format(format : string) : string {
+	format() : string {
 		return '';
+	}
+
+
+	toDate() : Date {
+		return this._date;
 	}
 
 	toString() : string {

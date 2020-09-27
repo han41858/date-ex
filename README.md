@@ -1,2 +1,3 @@
 # date-ex
-Extensions for Date.
+
+Extensions for Date class.

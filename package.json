@@ -1,9 +1,11 @@
 {
-	"name": "date-ex",
+	"name": "@han41858/date-ex",
 	"version": "0.0.1",
-	"description": "Extensions for Date.",
+	"description": "Extensions for Date class.",
 	"main": "index.js",
 	"scripts": {
+		"pretest": "tsc -p tsconfig.spec.json",
+		"test": "mocha ./build/**/*.spec.js"
 	},
 	"repository": {
 		"type": "git",
@@ -17,5 +19,12 @@
 	"bugs": {
 		"url": "https://github.com/han41858/date-ex/issues"
 	},
-	"homepage": "https://github.com/han41858/date-ex#readme"
+	"homepage": "https://github.com/han41858/date-ex#readme",
+	"devDependencies": {
+		"@types/chai": "^4.2.12",
+		"@types/mocha": "^8.0.3",
+		"chai": "^4.2.0",
+		"mocha": "^8.1.3",
+		"typescript": "^4.0.3"
+	}
 }

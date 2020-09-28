@@ -28,6 +28,10 @@ export class DateEx extends DateProxy {
 		return this._date;
 	}
 
+	valueOf() : number {
+		return +this._date;
+	}
+
 	toString() : string {
 		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);
 		return '';

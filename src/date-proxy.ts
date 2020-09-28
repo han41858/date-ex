@@ -1,5 +1,6 @@
 import { InitDataFormat } from './interfaces';
 import { DateEx } from './date-ex';
+import { iso8601DateTester, iso8601DateTimeTester, iso8601TimeTester, rfc3339Tester } from './util';
 
 
 export class DateProxy {
@@ -13,7 +14,26 @@ export class DateProxy {
 		}
 		else {
 			if (typeof initDate === 'string') {
-				this._date = new Date(initDate);
+				console.log(initDate, rfc3339Tester(initDate)
+					|| iso8601DateTester(initDate)
+					|| iso8601DateTimeTester(initDate)
+					|| iso8601TimeTester(initDate),
+					rfc3339Tester(initDate),
+					iso8601DateTester(initDate),
+					iso8601DateTimeTester(initDate),
+					iso8601TimeTester(initDate),
+					new Date(initDate));
+
+				if (rfc3339Tester(initDate)
+					|| iso8601DateTester(initDate)
+					|| iso8601DateTimeTester(initDate)
+					|| iso8601TimeTester(initDate)) {
+					this._date = new Date(initDate);
+				}
+
+				if (!this._date || isNaN(this._date.getFullYear())) {
+					throw new Error(`invalid init value : ${ initDate }`);
+				}
 			}
 			else if (typeof initDate === 'number') {
 				this._date = new Date(initDate);

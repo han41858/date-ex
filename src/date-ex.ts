@@ -1,6 +1,7 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeSetParam, InitDataFormat } from './interfaces';
+import { DatetimeSetParamKeys } from './constants';
 
 
 export class DateEx extends DateProxy {
@@ -10,6 +11,20 @@ export class DateEx extends DateProxy {
 
 	constructor (initData? : InitDataFormat) {
 		super(initData);
+
+		if (initData !== null
+			&& !(initData instanceof Date)
+			&& !(initData instanceof DateEx)
+			&& typeof initData === 'object') {
+			// with DateTimeSetParam
+			const initDataKeys : string[] = Object.keys(initData);
+
+			if (initDataKeys.every(key => {
+				return DatetimeSetParamKeys.includes(key as keyof DateTimeSetParam);
+			})) {
+				this.set(initData);
+			}
+		}
 	}
 
 

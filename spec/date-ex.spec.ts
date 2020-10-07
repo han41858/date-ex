@@ -1,12 +1,14 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
+import { DateTimeSetParam } from '../src/interfaces';
+
+
+const MilliSecondsCloseTo : number = 10;
 
 
 describe('constructor()', () => {
 	it('empty initializer', () => {
-		const MilliSecondsCloseTo : number = 10;
-
 		const now : Date = new Date();
 		const newDate : DateEx = new DateEx();
 
@@ -96,7 +98,7 @@ describe('constructor()', () => {
 	// 				].join('');
 	//
 	//
-	// 				expect(() => new DateEx(dateStr)).to.throw();
+	// 				expect(() => new DateEx(dateStr)).throws();
 	// 			});
 	// 		});
 	//
@@ -238,5 +240,75 @@ describe('constructor()', () => {
 describe('toDate()', () => {
 	it('is Date', () => {
 		expect(new DateEx().toDate()).to.be.instanceOf(Date);
+	});
+});
+
+describe('set()', () => {
+	const keys : (keyof DateTimeSetParam)[] = [
+		'year','month', 'date',
+		'hours', 'minutes', 'seconds', 'ms'
+	];
+
+	let refDate: DateEx;
+
+	before(() => {
+	    refDate = new DateEx(0); // zero base
+	});
+
+	keys.forEach(key => {
+		it(key, () => {
+			const now : Date = new Date();
+
+			const newDate : DateEx = new DateEx(refDate);
+
+			let changingValue : number;
+
+			switch (key) {
+				case 'year':
+					changingValue = now.getFullYear();
+					break;
+
+				case 'month':
+					changingValue = now.getMonth() + 1;
+					break;
+
+				case 'date':
+					changingValue = now.getDate();
+					break;
+
+				case 'hours':
+					changingValue = now.getHours();
+					break;
+
+				case 'minutes':
+					changingValue = now.getMinutes();
+					break;
+
+				case 'seconds':
+					changingValue = now.getSeconds();
+					break;
+
+				case 'ms':
+					changingValue = now.getMilliseconds();
+					break;
+
+
+			}
+
+			// set
+			newDate.set({
+				[key] : changingValue
+			});
+
+			// check
+			keys.forEach(checkKey => {
+				if (checkKey === key) {
+					expect(newDate[checkKey]).to.be.eql(changingValue);
+				}
+				else {
+					expect(newDate[checkKey]).to.be.eql(refDate[checkKey]);
+				}
+			});
+		});
 	});
 });

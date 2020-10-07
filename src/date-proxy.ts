@@ -7,7 +7,7 @@ export class DateProxy {
 	protected _date ! : Date;
 
 
-	constructor(initDate? : InitDataFormat) {
+	constructor (initDate? : InitDataFormat) {
 		if (initDate === null || initDate === undefined) {
 			this._date = new Date();
 		}
@@ -41,31 +41,31 @@ export class DateProxy {
 	}
 
 
-	get year() : number {
+	get year () : number {
 		return this._date.getFullYear();
 	}
 
-	get month() : number {
+	get month () : number {
 		return this._date.getMonth() + 1;
 	}
 
-	get date() : number {
+	get date () : number {
 		return this._date.getDate();
 	}
 
-	get hours() : number {
+	get hours () : number {
 		return this._date.getHours();
 	}
 
-	get minutes() : number {
+	get minutes () : number {
 		return this._date.getMinutes();
 	}
 
-	get seconds() : number {
+	get seconds () : number {
 		return this._date.getSeconds();
 	}
 
-	get ms() : number {
+	get ms () : number {
 		return this._date.getMilliseconds();
 	}
 

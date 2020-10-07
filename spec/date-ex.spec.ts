@@ -245,14 +245,14 @@ describe('toDate()', () => {
 
 describe('set()', () => {
 	const keys : (keyof DateTimeSetParam)[] = [
-		'year','month', 'date',
+		'year', 'month', 'date',
 		'hours', 'minutes', 'seconds', 'ms'
 	];
 
-	let refDate: DateEx;
+	let refDate : DateEx;
 
 	before(() => {
-	    refDate = new DateEx(0); // zero base
+		refDate = new DateEx(0); // zero base
 	});
 
 	keys.forEach(key => {

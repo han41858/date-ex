@@ -8,13 +8,13 @@ export class DateEx extends DateProxy {
 	// private dateFormat : string;
 
 
-	constructor(initData? : InitDataFormat) {
+	constructor (initData? : InitDataFormat) {
 		super(initData);
 	}
 
 
 	// allow null, no limit number range
-	set(param : DateTimeSetParam) : DateEx {
+	set (param : DateTimeSetParam) : DateEx {
 		param.year !== undefined && this._date.setFullYear(param.year);
 		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
 		param.date !== undefined && this._date.setDate(param.date);
@@ -28,20 +28,20 @@ export class DateEx extends DateProxy {
 	}
 
 	// format(format : string) : string {
-	format() : string {
+	format () : string {
 		return '';
 	}
 
 
-	toDate() : Date {
+	toDate () : Date {
 		return this._date;
 	}
 
-	valueOf() : number {
+	valueOf () : number {
 		return +this._date;
 	}
 
-	toString() : string {
+	toString () : string {
 		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);
 		return '';
 	}

@@ -40,9 +40,16 @@ export class DateProxy {
 		}
 	}
 
+	get timezoneOffset () : number {
+		return this._date.getTimezoneOffset();
+	}
 
 	get year () : number {
 		return this._date.getFullYear();
+	}
+
+	get quarter () : number {
+		return Math.floor((this.month - 1) % 3) + 1;
 	}
 
 	get month () : number {

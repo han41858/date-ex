@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
-import { DatetimeSetParamKeys } from '../src/constants';
+import { DatetimeSetParamKeys, FormatDesignator } from '../src/constants';
+import { newArray, padDigit } from '../src/util';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -364,4 +365,85 @@ describe('DateEx', () => {
 		});
 	});
 
+	describe.only('format()', () => {
+		describe('year', () => {
+			describe(FormatDesignator.Year, () => {
+				const years : number[] = newArray(20, i => {
+					return 2000 + i; // 2000 ~ 2019
+				});
+
+				years.forEach(year => {
+					it('' + year, () => {
+						const date : DateEx = new DateEx({
+							year
+						});
+
+						const result : string = date.format(FormatDesignator.Year);
+
+						expect(result).to.be.lengthOf(4);
+						expect(result).to.be.eql('' + year);
+					});
+				});
+			});
+
+			describe(FormatDesignator.YearShort, () => {
+				const years : number[] = newArray(20, i => {
+					return 2000 + i; // 2000 ~ 2019
+				});
+
+				years.forEach(year => {
+					it('' + year, () => {
+						const date : DateEx = new DateEx({
+							year
+						});
+
+						const result : string = date.format(FormatDesignator.YearShort);
+
+						expect(result).to.be.lengthOf(2);
+						expect(result).to.be.eql(('' + year).substr(2, 2));
+					});
+				});
+			});
+		});
+
+		describe('month', () => {
+			describe(FormatDesignator.Month, () => {
+				const months : number[] = newArray(12, i => {
+					return i + 1; // 1 ~ 12
+				});
+
+				months.forEach(month => {
+					it('' + month, () => {
+						const date : DateEx = new DateEx({
+							month
+						});
+
+						const result : string = date.format(FormatDesignator.Month);
+
+						expect(result).to.be.lengthOf(month < 10 ? 1 : 2);
+						expect(result).to.be.eql('' + month);
+					});
+				});
+			});
+
+			describe(FormatDesignator.MonthPadded, () => {
+				const months : number[] = newArray(12, i => {
+					return i + 1; // 1 ~ 12
+				});
+
+				months.forEach(month => {
+					it('' + month, () => {
+						const date : DateEx = new DateEx({
+							month
+						});
+
+						const result : string = date.format(FormatDesignator.MonthPadded);
+
+						expect(result).to.be.lengthOf(2);
+						expect(result).to.be.eql(padDigit(month, 2));
+					});
+				});
+			});
+		});
+	});
 });

@@ -1,7 +1,8 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeSetParam, InitDataFormat } from './interfaces';
-import { DatetimeSetParamKeys } from './constants';
+import { DatetimeSetParamKeys, FormatDesignator } from './constants';
+import { padDigit } from './util';
 
 
 export class DateEx extends DateProxy {
@@ -56,9 +57,12 @@ export class DateEx extends DateProxy {
 		return this.set(setParam);
 	}
 
-	// TODO: format(format : string) : string {
-	format () : string {
-		return '';
+	format (format : string) : string {
+		return format
+			.replace(new RegExp(FormatDesignator.Year), '' + this.year)
+			.replace(new RegExp(FormatDesignator.YearShort), ('' + this.year).substr(2, 2))
+			.replace(new RegExp(FormatDesignator.MonthPadded), padDigit(this.month, 2))
+			.replace(new RegExp(FormatDesignator.Month), ('' + this.month));
 	}
 
 	// TODO: from

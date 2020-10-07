@@ -1,8 +1,8 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeSetParam, InitDataFormat } from './interfaces';
-import { DatetimeSetParamKeys, FormatDesignator } from './constants';
-import { padDigit } from './util';
+import { DatetimeSetParamKeys, FormatDesignator, ZeroDaySetter } from './constants';
+import { clone, padDigit } from './util';
 
 
 export class DateEx extends DateProxy {
@@ -23,7 +23,10 @@ export class DateEx extends DateProxy {
 			if (initDataKeys.every(key => {
 				return DatetimeSetParamKeys.includes(key as keyof DateTimeSetParam);
 			})) {
-				this.set(initData);
+				// others 0
+				const setParam : DateTimeSetParam = Object.assign(clone(ZeroDaySetter), initData);
+
+				this.set(setParam);
 			}
 		}
 	}

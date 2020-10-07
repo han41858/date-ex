@@ -5,6 +5,17 @@ export const DatetimeSetParamKeys : (keyof DateTimeSetParam)[] = [
 	'hours', 'minutes', 'seconds', 'ms'
 ];
 
+export const ZeroDaySetter : DateTimeSetParam = {
+	year : 1900,
+	month : 1,
+	date : 1,
+
+	hours : 0,
+	minutes : 0,
+	seconds : 0,
+	ms : 0
+};
+
 export enum Meridiem {
 	Am = 'am',
 	Pm = 'pm'

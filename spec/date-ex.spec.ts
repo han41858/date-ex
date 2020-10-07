@@ -237,7 +237,37 @@ describe('DateEx', () => {
 		});
 
 		describe('with set param', () => {
-			it('ok', () => {
+			DatetimeSetParamKeys.forEach(key => {
+				it(key, () => {
+					const date : DateEx = new DateEx({
+						[key] : key === 'year'
+							? 1903
+							: 3
+					});
+
+					DatetimeSetParamKeys.forEach(checkKey => {
+						if (checkKey === key) {
+							expect(date[checkKey]).to.be.eql(
+								checkKey === 'year'
+									? 1903
+									: 3
+							);
+						}
+						else {
+							expect(date[checkKey]).to.be.eql(
+								checkKey === 'year'
+									? 1900
+									: ((checkKey === 'month' || checkKey === 'date')
+										? 1
+										: 0
+									)
+							);
+						}
+					});
+				});
+			});
+
+			it('all', () => {
 				const now : Date = new Date();
 
 				const newDate : DateEx = new DateEx({
@@ -365,7 +395,7 @@ describe('DateEx', () => {
 		});
 	});
 
-	describe.only('format()', () => {
+	describe('format()', () => {
 		describe('year', () => {
 			describe(FormatDesignator.Year, () => {
 				const years : number[] = newArray(20, i => {
@@ -444,6 +474,9 @@ describe('DateEx', () => {
 					});
 				});
 			});
+
+			// TODO: FormatDesignator.MonthStringShort
+			// TODO: FormatDesignator.MonthStringLong
 		});
 	});
 });

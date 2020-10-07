@@ -1,6 +1,5 @@
 import { InitDataFormat } from './interfaces';
 import { DateEx } from './date-ex';
-import { iso8601DateTester, iso8601DateTimeTester, iso8601TimeTester, rfc3339Tester } from './util';
 
 
 export class DateProxy {
@@ -13,29 +12,20 @@ export class DateProxy {
 			this._date = new Date();
 		}
 		else {
-			if (typeof initDate === 'string') {
-				console.log(initDate, rfc3339Tester(initDate)
-					|| iso8601DateTester(initDate)
-					|| iso8601DateTimeTester(initDate)
-					|| iso8601TimeTester(initDate),
-					rfc3339Tester(initDate),
-					iso8601DateTester(initDate),
-					iso8601DateTimeTester(initDate),
-					iso8601TimeTester(initDate),
-					new Date(initDate));
+			// if (typeof initDate === 'string') {
+			// 	if (rfc3339Tester(initDate)
+			// 		|| iso8601DateTester(initDate)
+			// 		|| iso8601DateTimeTester(initDate)
+			// 		|| iso8601TimeTester(initDate)) {
+			// 		this._date = new Date(initDate);
+			// 	}
+			//
+			// 	if (!this._date || isNaN(this._date.getFullYear())) {
+			// 		throw new Error(`invalid init value : ${ initDate }`);
+			// 	}
+			// }
 
-				if (rfc3339Tester(initDate)
-					|| iso8601DateTester(initDate)
-					|| iso8601DateTimeTester(initDate)
-					|| iso8601TimeTester(initDate)) {
-					this._date = new Date(initDate);
-				}
-
-				if (!this._date || isNaN(this._date.getFullYear())) {
-					throw new Error(`invalid init value : ${ initDate }`);
-				}
-			}
-			else if (typeof initDate === 'number') {
+			if (typeof initDate === 'number') {
 				this._date = new Date(initDate);
 			}
 			else if (initDate instanceof Date) {

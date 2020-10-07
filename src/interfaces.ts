@@ -1,6 +1,6 @@
 import { DateEx } from './date-ex';
 
-export type InitDataFormat = string | number | Date | DateEx;
+export type InitDataFormat = number | Date | DateEx;
 
 export interface DateTimeSetParam {
 	year? : number;

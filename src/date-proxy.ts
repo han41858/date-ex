@@ -1,5 +1,6 @@
 import { InitDataFormat } from './interfaces';
 import { DateEx } from './date-ex';
+import { Meridiem } from './constants';
 
 
 export class DateProxy {
@@ -58,6 +59,12 @@ export class DateProxy {
 
 	get date () : number {
 		return this._date.getDate();
+	}
+
+	get meridiem () : Meridiem {
+		return this.hours < 13
+			? Meridiem.Am
+			: Meridiem.Pm;
 	}
 
 	get hours () : number {

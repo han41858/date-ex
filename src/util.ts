@@ -1,3 +1,11 @@
+export const newArray = <T> (length : number, callback? : (i? : number, arr? : T[]) => T) : (undefined | T)[] => {
+	const arr : any[] = new Array(length).fill(undefined);
+
+	return !!callback && callback instanceof Function ?
+		arr.map((nothing, _i : number) : T => callback(_i, arr)) :
+		arr as undefined[];
+};
+
 export const padDigit = (str : string | number, length : number) : string => {
 	return ('' + str).padStart(length, '0');
 };

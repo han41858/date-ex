@@ -5,6 +5,11 @@ export const DatetimeSetParamKeys : (keyof DateTimeSetParam)[] = [
 	'hours', 'minutes', 'seconds', 'ms'
 ];
 
+export enum Meridiem {
+	Am = 'am',
+	Pm = 'pm'
+}
+
 export enum ISO8601Format {
 	Date = 'YYYY-MM-DD',
 	DateTimeUTC = 'YYYY-MM-DDTHH:mm:ssZ',

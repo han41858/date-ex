@@ -27,6 +27,20 @@ export class DateEx extends DateProxy {
 		return this;
 	}
 
+	add (param : DateTimeSetParam) : DateEx {
+		const setParam : DateTimeSetParam = {};
+
+		Object.entries(param).forEach(([_key, value]) => {
+			const key : keyof DateTimeSetParam = _key as keyof DateTimeSetParam;
+
+			if (value !== undefined) {
+				setParam[key] = this[key] + value;
+			}
+		});
+
+		return this.set(setParam);
+	}
+
 	// format(format : string) : string {
 	format () : string {
 		return '';

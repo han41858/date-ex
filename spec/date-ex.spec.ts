@@ -312,3 +312,37 @@ describe('set()', () => {
 		});
 	});
 });
+
+describe('add()', () => {
+	const keys : (keyof DateTimeSetParam)[] = [
+		'year', 'month', 'date',
+		'hours', 'minutes', 'seconds', 'ms'
+	];
+
+	let refDate : DateEx;
+
+	before(() => {
+		refDate = new DateEx(0); // zero base
+	});
+
+	keys.forEach(key => {
+		it(key, () => {
+			const newDate : DateEx = new DateEx(refDate);
+
+			// add
+			newDate.add({
+				[key] : 1
+			});
+
+			// check
+			keys.forEach(checkKey => {
+				if (checkKey === key) {
+					expect(newDate[checkKey]).to.be.eql(refDate[checkKey] + 1);
+				}
+				else {
+					expect(newDate[checkKey]).to.be.eql(refDate[checkKey]);
+				}
+			});
+		});
+	});
+});

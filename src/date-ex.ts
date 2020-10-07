@@ -41,9 +41,14 @@ export class DateEx extends DateProxy {
 		return this.set(setParam);
 	}
 
-	// format(format : string) : string {
+	// TODO: format(format : string) : string {
 	format () : string {
 		return '';
+	}
+
+	// TODO: from
+	from (dateTimeStr : string, format : string) : DateEx {
+		return this;
 	}
 
 
@@ -55,6 +60,7 @@ export class DateEx extends DateProxy {
 		return +this._date;
 	}
 
+	// TODO
 	toString () : string {
 		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);
 		return '';

@@ -308,8 +308,8 @@ describe('DateEx', () => {
 			refDate = new DateEx(0); // zero base
 		});
 
-		DatetimeSetParamKeys.forEach(key => {
-			it(key, () => {
+		it('ok', () => {
+			DatetimeSetParamKeys.forEach(key => {
 				const now : Date = new Date();
 
 				const newDate : DateEx = new DateEx(refDate);
@@ -373,8 +373,8 @@ describe('DateEx', () => {
 			refDate = new DateEx(0); // zero base
 		});
 
-		DatetimeSetParamKeys.forEach(key => {
-			it(key, () => {
+		it('ok', () => {
+			DatetimeSetParamKeys.forEach(key => {
 				const newDate : DateEx = new DateEx(refDate);
 
 				// add
@@ -397,97 +397,87 @@ describe('DateEx', () => {
 
 	describe('format()', () => {
 		describe('year', () => {
-			describe(FormatDesignator.Year, () => {
+			it(FormatDesignator.Year, () => {
 				const years : number[] = newArray(20, i => {
 					return 2000 + i; // 2000 ~ 2019
 				});
 
 				years.forEach(year => {
-					it('' + year, () => {
-						const date : DateEx = new DateEx({
-							year
-						});
-
-						const result : string = date.format(FormatDesignator.Year);
-
-						expect(result).to.be.lengthOf(4);
-						expect(result).to.be.eql('' + year);
+					const date : DateEx = new DateEx({
+						year
 					});
+
+					const result : string = date.format(FormatDesignator.Year);
+
+					expect(result).to.be.lengthOf(4);
+					expect(result).to.be.eql('' + year);
 				});
 			});
 
-			describe(FormatDesignator.YearShort, () => {
+			it(FormatDesignator.YearShort, () => {
 				const years : number[] = newArray(20, i => {
 					return 2000 + i; // 2000 ~ 2019
 				});
 
 				years.forEach(year => {
-					it('' + year, () => {
-						const date : DateEx = new DateEx({
-							year
-						});
-
-						const result : string = date.format(FormatDesignator.YearShort);
-
-						expect(result).to.be.lengthOf(2);
-						expect(result).to.be.eql(('' + year).substr(2, 2));
+					const date : DateEx = new DateEx({
+						year
 					});
+
+					const result : string = date.format(FormatDesignator.YearShort);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(('' + year).substr(2, 2));
 				});
 			});
 		});
 
 		describe('month', () => {
-			describe(FormatDesignator.Month, () => {
+			it(FormatDesignator.Month, () => {
 				const months : number[] = newArray(12, i => {
 					return i + 1; // 1 ~ 12
 				});
 
 				months.forEach(month => {
-					it('' + month, () => {
-						const date : DateEx = new DateEx({
-							month
-						});
-
-						const result : string = date.format(FormatDesignator.Month);
-
-						expect(result).to.be.lengthOf(month < 10 ? 1 : 2);
-						expect(result).to.be.eql('' + month);
+					const date : DateEx = new DateEx({
+						month
 					});
+
+					const result : string = date.format(FormatDesignator.Month);
+
+					expect(result).to.be.lengthOf(month < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + month);
 				});
 			});
 
-			describe(FormatDesignator.MonthPadded, () => {
+			it(FormatDesignator.MonthPadded, () => {
 				const months : number[] = newArray(12, i => {
 					return i + 1; // 1 ~ 12
 				});
 
 				months.forEach(month => {
-					it('' + month, () => {
-						const date : DateEx = new DateEx({
-							month
-						});
-
-						const result : string = date.format(FormatDesignator.MonthPadded);
-
-						expect(result).to.be.lengthOf(2);
-						expect(result).to.be.eql(padDigit(month, 2));
+					const date : DateEx = new DateEx({
+						month
 					});
+
+					const result : string = date.format(FormatDesignator.MonthPadded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(month, 2));
 				});
 			});
 
 			// TODO: FormatDesignator.MonthStringShort
 			// TODO: FormatDesignator.MonthStringLong
 		});
-	});
 
-	describe('date', () => {
-		describe(FormatDesignator.DayOfYear, () => {
-			const dates : number[] = newArray(100, i => {
-				return i + 1; // 1 ~ 100
-			});
+		describe('date', () => {
+			it(FormatDesignator.DayOfYear, () => {
+				const dates : number[] = newArray(100, i => {
+					return i + 1; // 1 ~ 100
+				});
 
-			dates.forEach(date => {
-				it('' + date, () => {
+				dates.forEach(date => {
 					const dateEx : DateEx = new DateEx({
 						date
 					});
@@ -498,15 +488,13 @@ describe('DateEx', () => {
 					expect(result).to.be.eql('' + date);
 				});
 			});
-		});
 
-		describe(FormatDesignator.DayOfYearPadded, () => {
-			const dates : number[] = newArray(100, i => {
-				return i + 1; // 1 ~ 100
-			});
+			it(FormatDesignator.DayOfYearPadded, () => {
+				const dates : number[] = newArray(100, i => {
+					return i + 1; // 1 ~ 100
+				});
 
-			dates.forEach(date => {
-				it('' + date, () => {
+				dates.forEach(date => {
 					const dateEx : DateEx = new DateEx({
 						date
 					});
@@ -517,15 +505,13 @@ describe('DateEx', () => {
 					expect(result).to.be.eql(padDigit(date, 3));
 				});
 			});
-		});
 
-		describe(FormatDesignator.DayOfMonth, () => {
-			const dates : number[] = newArray(31, i => {
-				return i + 1; // 1 ~ 31
-			});
+			it(FormatDesignator.DayOfMonth, () => {
+				const dates : number[] = newArray(31, i => {
+					return i + 1; // 1 ~ 31
+				});
 
-			dates.forEach(date => {
-				it('' + date, () => {
+				dates.forEach(date => {
 					const dateEx : DateEx = new DateEx({
 						date
 					});
@@ -536,15 +522,13 @@ describe('DateEx', () => {
 					expect(result).to.be.eql('' + date);
 				});
 			});
-		});
 
-		describe(FormatDesignator.DayOfMonthPadded, () => {
-			const dates : number[] = newArray(31, i => {
-				return i + 1; // 1 ~ 31
-			});
+			it(FormatDesignator.DayOfMonthPadded, () => {
+				const dates : number[] = newArray(31, i => {
+					return i + 1; // 1 ~ 31
+				});
 
-			dates.forEach(date => {
-				it('' + date, () => {
+				dates.forEach(date => {
 					const dateEx : DateEx = new DateEx({
 						date
 					});

@@ -12,8 +12,8 @@ describe('DateProxy', () => {
 			return i + 1; // 1 ~ 12
 		});
 
-		months.forEach(month => {
-			it('' + month, () => {
+		it('ok', () => {
+			months.forEach(month => {
 				const date : DateEx = new DateEx({
 					month
 				});
@@ -28,8 +28,8 @@ describe('DateProxy', () => {
 			return i; // 0 ~ 11
 		});
 
-		months.forEach(month => {
-			it('' + month, () => {
+		it('ok', () => {
+			months.forEach(month => {
 				const date : Date = new Date();
 				date.setMonth(month);
 
@@ -74,8 +74,8 @@ describe('DateProxy', () => {
 			week : 1
 		}];
 
-		targets.forEach(target => {
-			it(`${ target.param.year }-${ target.param.month }-${ target.param.date }`, () => {
+		it('ok', () => {
+			targets.forEach(target => {
 				const date : DateEx = new DateEx(target.param);
 
 				expect(date.weekOfYear).to.be.eql(target.week);
@@ -116,8 +116,8 @@ describe('DateProxy', () => {
 			week : 1
 		}];
 
-		targets.forEach(target => {
-			it(`${ target.param.year }-${ target.param.month }-${ target.param.date }`, () => {
+		it('ok', () => {
+			targets.forEach(target => {
 				const date : DateEx = new DateEx(target.param);
 
 				expect(date.weekOfMonth).to.be.eql(target.week);
@@ -146,8 +146,8 @@ describe('DateProxy', () => {
 			day : 1
 		}];
 
-		targets.forEach(target => {
-			it(`${ target.param.year }-${ target.param.month }-${ target.param.date }`, () => {
+		it('ok', () => {
+			targets.forEach(target => {
 				const date : DateEx = new DateEx(target.param);
 
 				expect(date.dayOfYear).to.be.eql(target.day);
@@ -160,8 +160,8 @@ describe('DateProxy', () => {
 			return i; // 0 ~ 23
 		});
 
-		hoursArr.forEach(hours => {
-			it('' + hours, () => {
+		it('ok', () => {
+			hoursArr.forEach(hours => {
 				const date : DateEx = new DateEx({
 					hours
 				});

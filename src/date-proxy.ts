@@ -57,8 +57,38 @@ export class DateProxy {
 		return this._date.getMonth() + 1;
 	}
 
+	get weekOfYear () : number {
+		const firstDayOfYear : DateEx = new DateEx({
+			year : this.year,
+			month : 1,
+			date : 1
+		});
+
+		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / (24 * 60 * 60 * 1000));
+
+		// add 1 for day starting from 0
+		return Math.ceil((firstDayOfYear.day + 1 + numberOfDays) / 7);
+	}
+
+	get weekOfMonth () : number {
+		const firstDayOfMonth : DateEx = new DateEx({
+			year : this.year,
+			month : this.month,
+			date : 1
+		});
+
+		const numberOfDays : number = Math.floor((+this._date - +firstDayOfMonth) / (24 * 60 * 60 * 1000));
+
+		// add 1 for day starting from 0
+		return Math.ceil((firstDayOfMonth.day + 1 + numberOfDays) / 7);
+	}
+
 	get date () : number {
 		return this._date.getDate();
+	}
+
+	get day () : number {
+		return this._date.getDay();
 	}
 
 	get meridiem () : Meridiem {

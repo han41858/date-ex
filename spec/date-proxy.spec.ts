@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { DateEx } from '../src/date-ex';
 import { Meridiem } from '../src/constants';
 import { newArray } from '../src/util';
+import { DateTimeSetParam } from '../src/interfaces';
 
 
 describe('DateProxy', () => {
@@ -36,6 +37,90 @@ describe('DateProxy', () => {
 
 				expect(dateEx.toDate().getMonth()).to.be.eql(month); // 0 ~ 11
 				expect(dateEx.month).to.be.eql(month + 1); // 1 ~ 12
+			});
+		});
+	});
+
+	describe('weekOfYear', () => {
+		const targets : {
+			param : DateTimeSetParam,
+			week : number
+		}[] = [{
+			param : { year : 2020, month : 1, date : 1 },
+			week : 1
+		}, {
+			param : { year : 2020, month : 1, date : 4 },
+			week : 1
+		}, {
+			param : { year : 2020, month : 1, date : 5 },
+			week : 2
+		}, {
+			param : { year : 2020, month : 1, date : 11 },
+			week : 2
+		}, {
+			param : { year : 2020, month : 1, date : 18 },
+			week : 3
+		}, {
+			param : { year : 2020, month : 1, date : 31 },
+			week : 5
+		}, {
+			param : { year : 2020, month : 2, date : 1 },
+			week : 5
+		}, {
+			param : { year : 2020, month : 12, date : 31 },
+			week : 53
+		}, {
+			param : { year : 2021, month : 1, date : 1 },
+			week : 1
+		}];
+
+		targets.forEach(target => {
+			it(`${ target.param.year }-${ target.param.month }-${ target.param.date }`, () => {
+				const date : DateEx = new DateEx(target.param);
+
+				expect(date.weekOfYear).to.be.eql(target.week);
+			});
+		});
+	});
+
+	describe('weekOfMonth', () => {
+		const targets : {
+			param : DateTimeSetParam,
+			week : number
+		}[] = [{
+			param : { year : 2020, month : 1, date : 1 },
+			week : 1
+		}, {
+			param : { year : 2020, month : 1, date : 4 },
+			week : 1
+		}, {
+			param : { year : 2020, month : 1, date : 5 },
+			week : 2
+		}, {
+			param : { year : 2020, month : 1, date : 11 },
+			week : 2
+		}, {
+			param : { year : 2020, month : 1, date : 18 },
+			week : 3
+		}, {
+			param : { year : 2020, month : 1, date : 31 },
+			week : 5
+		}, {
+			param : { year : 2020, month : 2, date : 1 },
+			week : 1
+		}, {
+			param : { year : 2020, month : 12, date : 31 },
+			week : 5
+		}, {
+			param : { year : 2021, month : 1, date : 1 },
+			week : 1
+		}];
+
+		targets.forEach(target => {
+			it(`${ target.param.year }-${ target.param.month }-${ target.param.date }`, () => {
+				const date : DateEx = new DateEx(target.param);
+
+				expect(date.weekOfMonth).to.be.eql(target.week);
 			});
 		});
 	});

@@ -125,6 +125,36 @@ describe('DateProxy', () => {
 		});
 	});
 
+	describe('dayOfYear', () => {
+		const targets : {
+			param : DateTimeSetParam,
+			day : number
+		}[] = [{
+			param : { year : 2020, month : 1, date : 1 },
+			day : 1
+		}, {
+			param : { year : 2020, month : 1, date : 4 },
+			day : 4
+		}, {
+			param : { year : 2020, month : 2, date : 1 },
+			day : 32
+		}, {
+			param : { year : 2020, month : 12, date : 31 },
+			day : 366
+		}, {
+			param : { year : 2021, month : 1, date : 1 },
+			day : 1
+		}];
+
+		targets.forEach(target => {
+			it(`${ target.param.year }-${ target.param.month }-${ target.param.date }`, () => {
+				const date : DateEx = new DateEx(target.param);
+
+				expect(date.dayOfYear).to.be.eql(target.day);
+			});
+		});
+	});
+
 	describe('meridiem', () => {
 		const hoursArr : number[] = newArray(24, i => {
 			return i; // 0 ~ 23

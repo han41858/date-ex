@@ -87,6 +87,18 @@ export class DateProxy {
 		return this._date.getDate();
 	}
 
+	get dayOfYear () : number {
+		const firstDayOfYear : DateEx = new DateEx({
+			year : this.year,
+			month : 1,
+			date : 1
+		});
+
+		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / (24 * 60 * 60 * 1000));
+
+		return numberOfDays + 1;
+	}
+
 	get day () : number {
 		return this._date.getDay();
 	}

@@ -64,8 +64,14 @@ export class DateEx extends DateProxy {
 		return format
 			.replace(new RegExp(FormatDesignator.Year), '' + this.year)
 			.replace(new RegExp(FormatDesignator.YearShort), ('' + this.year).substr(2, 2))
+
 			.replace(new RegExp(FormatDesignator.MonthPadded), padDigit(this.month, 2))
-			.replace(new RegExp(FormatDesignator.Month), ('' + this.month));
+			.replace(new RegExp(FormatDesignator.Month), ('' + this.month))
+
+			.replace(new RegExp(FormatDesignator.DayOfYearPadded), padDigit('' + this.dayOfYear, 3))
+			.replace(new RegExp(FormatDesignator.DayOfYear), ('' + this.dayOfYear))
+			.replace(new RegExp(FormatDesignator.DayOfMonthPadded), padDigit('' + this.date, 2))
+			.replace(new RegExp(FormatDesignator.DayOfMonth), ('' + this.date));
 	}
 
 	// TODO: from

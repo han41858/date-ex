@@ -33,8 +33,8 @@ export enum FormatDesignator {
 	Week = 'W',
 	WeekPadded = 'WW',
 
-	DayOfYear = 'DDD',
-	DayOfYearPadded = 'DDDD',
+	DayOfYear = 'DDD', // 1, 2, ... 365
+	DayOfYearPadded = 'DDDD', // 001, 002, ... 365
 
 	DayOfMonth = 'D',
 	DayOfMonthPadded = 'DD',

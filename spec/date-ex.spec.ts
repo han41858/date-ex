@@ -479,4 +479,82 @@ describe('DateEx', () => {
 			// TODO: FormatDesignator.MonthStringLong
 		});
 	});
+
+	describe('date', () => {
+		describe(FormatDesignator.DayOfYear, () => {
+			const dates : number[] = newArray(100, i => {
+				return i + 1; // 1 ~ 100
+			});
+
+			dates.forEach(date => {
+				it('' + date, () => {
+					const dateEx : DateEx = new DateEx({
+						date
+					});
+
+					const result : string = dateEx.format(FormatDesignator.DayOfYear);
+
+					expect(result).to.be.lengthOf(date < 10 ? 1 : (date < 100 ? 2 : 3));
+					expect(result).to.be.eql('' + date);
+				});
+			});
+		});
+
+		describe(FormatDesignator.DayOfYearPadded, () => {
+			const dates : number[] = newArray(100, i => {
+				return i + 1; // 1 ~ 100
+			});
+
+			dates.forEach(date => {
+				it('' + date, () => {
+					const dateEx : DateEx = new DateEx({
+						date
+					});
+
+					const result : string = dateEx.format(FormatDesignator.DayOfYearPadded);
+
+					expect(result).to.be.lengthOf(3);
+					expect(result).to.be.eql(padDigit(date, 3));
+				});
+			});
+		});
+
+		describe(FormatDesignator.DayOfMonth, () => {
+			const dates : number[] = newArray(31, i => {
+				return i + 1; // 1 ~ 31
+			});
+
+			dates.forEach(date => {
+				it('' + date, () => {
+					const dateEx : DateEx = new DateEx({
+						date
+					});
+
+					const result : string = dateEx.format(FormatDesignator.DayOfMonth);
+
+					expect(result).to.be.lengthOf(date < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + date);
+				});
+			});
+		});
+
+		describe(FormatDesignator.DayOfMonthPadded, () => {
+			const dates : number[] = newArray(31, i => {
+				return i + 1; // 1 ~ 31
+			});
+
+			dates.forEach(date => {
+				it('' + date, () => {
+					const dateEx : DateEx = new DateEx({
+						date
+					});
+
+					const result : string = dateEx.format(FormatDesignator.DayOfMonthPadded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(date, 2));
+				});
+			});
+		});
+	});
 });

@@ -113,6 +113,16 @@ export class DateProxy {
 		return this._date.getHours();
 	}
 
+	// 0 ~ 23
+	get hours24 () : number {
+		return this.hours;
+	}
+
+	// 0 ~ 12
+	get hours12 () : number {
+		return this.hours > 12 ? this.hours % 12 : this.hours;
+	}
+
 	get minutes () : number {
 		return this._date.getMinutes();
 	}

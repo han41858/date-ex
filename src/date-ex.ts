@@ -68,10 +68,24 @@ export class DateEx extends DateProxy {
 			.replace(new RegExp(FormatDesignator.MonthPadded), padDigit(this.month, 2))
 			.replace(new RegExp(FormatDesignator.Month), ('' + this.month))
 
+			.replace(new RegExp(FormatDesignator.WeekPadded), padDigit(this.weekOfYear, 2))
+			.replace(new RegExp(FormatDesignator.Week), ('' + this.weekOfYear))
+
 			.replace(new RegExp(FormatDesignator.DayOfYearPadded), padDigit('' + this.dayOfYear, 3))
 			.replace(new RegExp(FormatDesignator.DayOfYear), ('' + this.dayOfYear))
 			.replace(new RegExp(FormatDesignator.DayOfMonthPadded), padDigit('' + this.date, 2))
-			.replace(new RegExp(FormatDesignator.DayOfMonth), ('' + this.date));
+			.replace(new RegExp(FormatDesignator.DayOfMonth), ('' + this.date))
+
+			.replace(new RegExp(FormatDesignator.DayOfWeek), ('' + this.day))
+
+			.replace(new RegExp(FormatDesignator.AmPmLower), this.meridiem.toLowerCase())
+			.replace(new RegExp(FormatDesignator.AmPmCapital), this.meridiem.toUpperCase())
+
+			.replace(new RegExp(FormatDesignator.Hours24Padded), padDigit(this.hours, 2))
+			.replace(new RegExp(FormatDesignator.Hours24), '' + this.hours)
+			.replace(new RegExp(FormatDesignator.Hours12Padded), padDigit(this.hours12, 2))
+			.replace(new RegExp(FormatDesignator.Hours12), '' + (this.hours12));
+
 	}
 
 	// TODO: from

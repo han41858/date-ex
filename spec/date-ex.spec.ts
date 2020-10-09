@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
-import { DatetimeSetParamKeys, FormatDesignator } from '../src/constants';
+import { DatetimeSetParamKeys, FormatDesignator, Meridiem } from '../src/constants';
 import { newArray, padDigit } from '../src/util';
 
 
@@ -471,6 +471,34 @@ describe('DateEx', () => {
 			// TODO: FormatDesignator.MonthStringLong
 		});
 
+		describe('week', () => {
+			it(FormatDesignator.Week, () => {
+				const dates : DateEx[] = newArray(43, i => {
+					return new DateEx({ year : 2020, month : 1, date : i + 1 });
+				});
+
+				dates.forEach(date => {
+					const result : string = date.format(FormatDesignator.Week);
+
+					expect(result).to.be.lengthOf(date.weekOfYear < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + date.weekOfYear);
+				});
+			});
+
+			it(FormatDesignator.WeekPadded, () => {
+				const dates : DateEx[] = newArray(43, i => {
+					return new DateEx({ year : 2020, month : 1, date : i + 1 });
+				});
+
+				dates.forEach(date => {
+					const result : string = date.format(FormatDesignator.WeekPadded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(date.weekOfYear, 2));
+				});
+			});
+		});
+
 		describe('date', () => {
 			it(FormatDesignator.DayOfYear, () => {
 				const dates : number[] = newArray(100, i => {
@@ -537,6 +565,102 @@ describe('DateEx', () => {
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(date, 2));
+				});
+			});
+		});
+
+		describe('day', () => {
+			it(FormatDesignator.DayOfWeek, () => {
+				const dates : DateEx[] = newArray(7, i => {
+					return new DateEx({ year : 2020, month : 1, date : i });
+				});
+
+				dates.forEach(date => {
+					const result : string = date.format(FormatDesignator.DayOfWeek);
+
+					expect(result).to.be.lengthOf(1);
+					expect(result).to.be.eql('' + date.day);
+				});
+			});
+		});
+
+		describe('meridiem', () => {
+			it(FormatDesignator.AmPmLower, () => {
+				const amDate : DateEx = new DateEx({ hours : 5 });
+				expect(amDate.format(FormatDesignator.AmPmLower)).to.be.eql(Meridiem.Am);
+
+				const pmDate : DateEx = new DateEx({ hours : 12 + 5 });
+				expect(pmDate.format(FormatDesignator.AmPmLower)).to.be.eql(Meridiem.Pm);
+			});
+
+			it(FormatDesignator.AmPmCapital, () => {
+				const amDate : DateEx = new DateEx({ hours : 5 });
+				expect(amDate.format(FormatDesignator.AmPmCapital)).to.be.eql(Meridiem.Am.toUpperCase());
+
+				const pmDate : DateEx = new DateEx({ hours : 12 + 5 });
+				expect(pmDate.format(FormatDesignator.AmPmCapital)).to.be.eql(Meridiem.Pm.toUpperCase());
+			});
+		});
+
+		describe('hours', () => {
+			it(FormatDesignator.Hours24, () => {
+				const hoursArr : number[] = newArray(24, i => {
+					return i; // 0 ~ 23
+				});
+
+				hoursArr.forEach(hours => {
+					const date : DateEx = new DateEx({ hours });
+
+					const result : string = date.format(FormatDesignator.Hours24);
+
+					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + hours);
+				});
+			});
+
+
+			it(FormatDesignator.Hours24Padded, () => {
+				const hoursArr : number[] = newArray(24, i => {
+					return i; // 0 ~ 23
+				});
+
+				hoursArr.forEach(hours => {
+					const date : DateEx = new DateEx({ hours });
+
+					const result : string = date.format(FormatDesignator.Hours24Padded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(hours, 2));
+				});
+			});
+
+			it(FormatDesignator.Hours12, () => {
+				const hoursArr : number[] = newArray(24, i => {
+					return i; // 0 ~ 23
+				});
+
+				hoursArr.forEach(hours => {
+					const date : DateEx = new DateEx({ hours });
+
+					const result : string = date.format(FormatDesignator.Hours12);
+
+					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + (hours > 12 ? hours % 12 : hours));
+				});
+			});
+
+			it(FormatDesignator.Hours12Padded, () => {
+				const hoursArr : number[] = newArray(24, i => {
+					return i; // 0 ~ 23
+				});
+
+				hoursArr.forEach(hours => {
+					const date : DateEx = new DateEx({ hours });
+
+					const result : string = date.format(FormatDesignator.Hours12Padded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(hours > 12 ? hours % 12 : hours, 2));
 				});
 			});
 		});

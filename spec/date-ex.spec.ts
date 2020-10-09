@@ -664,5 +664,119 @@ describe('DateEx', () => {
 				});
 			});
 		});
+
+		describe('minutes', () => {
+			it(FormatDesignator.Minutes, () => {
+				const minutesArr : number[] = newArray(60, i => {
+					return i; // 0 ~ 59
+				});
+
+				minutesArr.forEach(minutes => {
+					const date : DateEx = new DateEx({ minutes });
+
+					const result : string = date.format(FormatDesignator.Minutes);
+
+					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + minutes);
+				});
+			});
+
+
+			it(FormatDesignator.MinutesPadded, () => {
+				const minutesArr : number[] = newArray(60, i => {
+					return i; // 0 ~ 59
+				});
+
+				minutesArr.forEach(minutes => {
+					const date : DateEx = new DateEx({ minutes });
+
+					const result : string = date.format(FormatDesignator.MinutesPadded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(minutes, 2));
+				});
+			});
+		});
+
+		describe('seconds', () => {
+			it(FormatDesignator.Seconds, () => {
+				const secondsArr : number[] = newArray(60, i => {
+					return i; // 0 ~ 59
+				});
+
+				secondsArr.forEach(seconds => {
+					const date : DateEx = new DateEx({ seconds });
+
+					const result : string = date.format(FormatDesignator.Seconds);
+
+					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
+					expect(result).to.be.eql('' + seconds);
+				});
+			});
+
+
+			it(FormatDesignator.SecondsPadded, () => {
+				const secondsArr : number[] = newArray(60, i => {
+					return i; // 0 ~ 59
+				});
+
+				secondsArr.forEach(seconds => {
+					const date : DateEx = new DateEx({ seconds });
+
+					const result : string = date.format(FormatDesignator.SecondsPadded);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(seconds, 2));
+				});
+			});
+		});
+
+		describe('ms', () => {
+			it(FormatDesignator.MilliSeconds, () => {
+				const msArr : number[] = newArray(999, i => {
+					return i; // 0 ~ 999
+				});
+
+				msArr.forEach(ms => {
+					const date : DateEx = new DateEx({ ms });
+
+					const result : string = date.format(FormatDesignator.MilliSeconds);
+
+					expect(result).to.be.lengthOf(+result < 10 ? 1 : (+result < 100 ? 2 : 3));
+					expect(result).to.be.eql('' + ms);
+				});
+			});
+
+
+			it(FormatDesignator.MilliSecondsPadded2, () => {
+				const msArr : number[] = newArray(999, i => {
+					return i; // 0 ~ 999
+				});
+
+				msArr.forEach(ms => {
+					const date : DateEx = new DateEx({ ms });
+
+					const result : string = date.format(FormatDesignator.MilliSecondsPadded2);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(padDigit(ms < 100 ? ms : Math.floor(ms / 10), 2));
+				});
+			});
+
+			it(FormatDesignator.MilliSecondsPadded3, () => {
+				const msArr : number[] = newArray(999, i => {
+					return i; // 0 ~ 999
+				});
+
+				msArr.forEach(ms => {
+					const date : DateEx = new DateEx({ ms });
+
+					const result : string = date.format(FormatDesignator.MilliSecondsPadded3);
+
+					expect(result).to.be.lengthOf(3);
+					expect(result).to.be.eql(padDigit(ms, 3));
+				});
+			});
+		});
 	});
 });

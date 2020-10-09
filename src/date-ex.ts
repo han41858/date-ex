@@ -78,14 +78,24 @@ export class DateEx extends DateProxy {
 
 			.replace(new RegExp(FormatDesignator.DayOfWeek), ('' + this.day))
 
-			.replace(new RegExp(FormatDesignator.AmPmLower), this.meridiem.toLowerCase())
-			.replace(new RegExp(FormatDesignator.AmPmCapital), this.meridiem.toUpperCase())
-
 			.replace(new RegExp(FormatDesignator.Hours24Padded), padDigit(this.hours, 2))
 			.replace(new RegExp(FormatDesignator.Hours24), '' + this.hours)
 			.replace(new RegExp(FormatDesignator.Hours12Padded), padDigit(this.hours12, 2))
-			.replace(new RegExp(FormatDesignator.Hours12), '' + (this.hours12));
+			.replace(new RegExp(FormatDesignator.Hours12), '' + (this.hours12))
 
+			.replace(new RegExp(FormatDesignator.MinutesPadded), padDigit(this.minutes, 2))
+			.replace(new RegExp(FormatDesignator.Minutes), '' + this.minutes)
+
+			.replace(new RegExp(FormatDesignator.SecondsPadded), padDigit(this.seconds, 2))
+			.replace(new RegExp(FormatDesignator.Seconds), '' + this.seconds)
+
+			.replace(new RegExp(FormatDesignator.MilliSecondsPadded3), padDigit(this.ms, 3))
+			.replace(new RegExp(FormatDesignator.MilliSecondsPadded2), padDigit(this.ms < 100 ? this.ms : Math.floor(this.ms / 10), 2))
+			.replace(new RegExp(FormatDesignator.MilliSeconds), '' + this.ms)
+
+			// after minutes designator 'm'
+			.replace(new RegExp(FormatDesignator.AmPmLower), this.meridiem.toLowerCase())
+			.replace(new RegExp(FormatDesignator.AmPmCapital), this.meridiem.toUpperCase());
 	}
 
 	// TODO: from

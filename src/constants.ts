@@ -56,7 +56,10 @@ export enum FormatDesignator {
 
 	MilliSeconds = 'S',
 	MilliSecondsPadded2 = 'SS',
-	MilliSecondsPadded3 = 'SSS'
+	MilliSecondsPadded3 = 'SSS',
+
+	Timezone = 'Z', // -07:00 ~ +07:00
+	TimezoneWithoutColon = 'ZZ' // -0700 ~ +0700
 }
 
 export enum ISO8601Format {

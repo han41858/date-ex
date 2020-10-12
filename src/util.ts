@@ -1,3 +1,5 @@
+import { LocaleSet } from './interfaces';
+
 export const newArray = <T> (length : number, callback? : (i? : number, arr? : T[]) => T) : (undefined | T)[] => {
 	const arr : any[] = new Array(length).fill(undefined);
 
@@ -77,6 +79,16 @@ export const clone = <T> (obj : T, sanitize : boolean = false) => {
 	}
 
 	return result;
+};
+
+export const loadLocaleFile = async (locale : string) : Promise<LocaleSet> => {
+	return import(`./locale/${ locale }.js`) as Promise<LocaleSet>;
+};
+
+export const wait = (ms ? : number) : Promise<void> => {
+	return new Promise<void>(resolve => setTimeout(() => {
+		resolve();
+	}, ms || 0));
 };
 
 // // RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt) : YYYY-MM-DDThh:mm:ss[.SSSZ]

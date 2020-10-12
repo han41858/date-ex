@@ -2,7 +2,7 @@ import { DateProxy } from './date-proxy';
 
 import { DateTimeSetParam, InitDataFormat, LocaleSet } from './interfaces';
 import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator, ZeroDaySetter } from './constants';
-import { clone, padDigit } from './util';
+import { clone, loadLocaleFile, padDigit } from './util';
 
 // load default locale
 import locale from './locale/en';
@@ -11,11 +11,13 @@ import locale from './locale/en';
 // internal global storage
 const globalConfig : {
 	locale? : string,
+	localeTimer? : number
 } = {
-	locale : undefined
+	locale : undefined,
+	localeTimer : undefined
 };
 
-const localeSet : {
+const localeSetCached : {
 	[key : string] : LocaleSet;
 } = {
 	[DefaultLocale] : locale
@@ -25,14 +27,13 @@ const localeSet : {
 export class DateEx extends DateProxy {
 
 	private ownLocale ! : string;
+	private setLocaleTimer : undefined | number;
 
 	// private dateFormat : string;
 
 
 	constructor (initData? : InitDataFormat, formatForString? : string) {
 		super(initData);
-
-		let localeFromAnotherDateEx : undefined | string = undefined;
 
 		if (initData !== null
 			&& !(initData instanceof Date)
@@ -51,15 +52,37 @@ export class DateEx extends DateProxy {
 			}
 		}
 
+
+		let localeFromAnotherDateEx : undefined | string;
+
 		if (initData instanceof DateEx) {
 			localeFromAnotherDateEx = initData.locale();
 		}
 
-		// set default locale
-		const defaultLocale : string = localeFromAnotherDateEx || globalConfig.locale || DefaultLocale;
+		if (!!globalConfig.localeTimer) {
+			// wait global set
+			setTimeout(() => {
+				this.setDefaultLocale(localeFromAnotherDateEx);
+			});
+		}
+		else {
+			this.setDefaultLocale(localeFromAnotherDateEx);
+		}
+	}
 
+	private setDefaultLocale (localeFromAnotherDateEx ? : string) : void {
+		const defaultLocale : string = localeFromAnotherDateEx
+			|| this.ownLocale
+			|| globalConfig.locale
+			|| DefaultLocale;
+
+		// set default locale
+		this.ownLocale = defaultLocale;
+
+		// load locale
 		this.locale(defaultLocale);
 	}
+
 
 	toDate () : Date {
 		return this._date;
@@ -75,18 +98,105 @@ export class DateEx extends DateProxy {
 		return '';
 	}
 
-	// global locale
-	static locale (locale : string) : void {
-		globalConfig.locale = locale;
-	}
+	// global locale setter
+	static locale (locale? : string) : undefined | string {
+		let returnValue : undefined | string;
 
-	locale (locale? : string) : string {
-		if (!!locale) {
-			// TODO: check validation
-			this.ownLocale = locale;
+		// get
+		if (locale === undefined) {
+			returnValue = globalConfig.locale;
+		}
+		else {
+			const previousLocale : undefined | string = globalConfig.locale;
+
+			if (previousLocale !== locale) {
+				if (!!globalConfig.localeTimer) {
+					clearTimeout(globalConfig.localeTimer);
+
+					globalConfig.localeTimer = undefined;
+				}
+
+				// loaded already
+				if (!!localeSetCached[locale]) {
+					globalConfig.locale = locale;
+
+					returnValue = globalConfig.locale;
+				}
+				// load
+				else {
+					// set temporarily
+					returnValue = globalConfig.locale = locale;
+
+					// load asynchronously
+					globalConfig.localeTimer = setTimeout(async () => {
+						try {
+							localeSetCached[locale] = await loadLocaleFile(locale);
+							globalConfig.locale = locale;
+						} catch (e) {
+							console.error(`invalid locale : '${ locale }', reverted previous locale : '${ previousLocale }'`);
+
+							globalConfig.locale = previousLocale;
+						}
+
+						globalConfig.localeTimer = undefined;
+					});
+				}
+			}
+			else {
+				returnValue = previousLocale;
+			}
 		}
 
-		return this.ownLocale;
+		return returnValue;
+	}
+
+	locale (locale ? : string) : string {
+		let returnValue : string; // not undefined
+
+		// get
+		if (locale === undefined) {
+			returnValue = this.ownLocale;
+		}
+		else {
+			const previousLocale : string = this.ownLocale;
+
+			if (previousLocale !== locale) {
+				if (!!this.setLocaleTimer) {
+					clearTimeout(this.setLocaleTimer);
+
+					this.setLocaleTimer = undefined;
+				}
+
+				// loaded already
+				if (!!localeSetCached[locale]) {
+					returnValue = this.ownLocale = locale;
+				}
+				// load
+				else {
+					// set temporarily
+					returnValue = this.ownLocale = locale;
+
+					// load asynchronously
+					this.setLocaleTimer = setTimeout(async () => {
+						try {
+							localeSetCached[locale] = await loadLocaleFile(locale);
+						} catch (e) {
+							console.error(`invalid locale : '${ locale }', reverted previous locale : '${ previousLocale }'`);
+
+							this.ownLocale = previousLocale;
+						}
+
+						this.setLocaleTimer = undefined;
+					});
+				}
+			}
+			else {
+				// skip
+				returnValue = locale;
+			}
+		}
+
+		return returnValue;
 	}
 
 	// allow null, no limit number range

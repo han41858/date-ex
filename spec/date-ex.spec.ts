@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
 import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator } from '../src/constants';
-import { newArray, padDigit } from '../src/util';
+import { newArray, padDigit, wait } from '../src/util';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -301,12 +301,46 @@ describe('DateEx', () => {
 		});
 	});
 
-	describe('locale', () => {
+	describe.only('locale', () => {
 		const anotherLocale : string = 'ko-kr';
 
-		beforeEach(() => {
+		beforeEach(async () => {
 			// reset locale
 			DateEx.locale(DefaultLocale);
+
+			await wait();
+		});
+
+		describe('error', () => {
+			// undefined is getter
+			describe('invalid locale', () => {
+				const invalidLocale : string = 'invalid-locale';
+
+				it('with static setter', async () => {
+					DateEx.locale(invalidLocale);
+
+					// wait for load
+					await wait();
+
+					const date : DateEx = new DateEx();
+
+					// not changed
+					expect(date.locale()).to.be.eql(DefaultLocale);
+				});
+
+				it('with local setter', async () => {
+					const date : DateEx = new DateEx();
+
+					date.locale(invalidLocale);
+
+					// wait for load
+					await wait();
+
+					// not changed
+					expect(date.locale()).to.be.eql(DefaultLocale);
+				});
+			});
+
 		});
 
 		it('default locale', async () => {
@@ -317,6 +351,9 @@ describe('DateEx', () => {
 
 		it('start with another', async () => {
 			DateEx.locale(anotherLocale);
+
+			// wait for load
+			await wait();
 
 			const date1 : DateEx = new DateEx();
 			const date2 : DateEx = new DateEx();
@@ -331,6 +368,9 @@ describe('DateEx', () => {
 			// set locally
 			date1.locale(anotherLocale);
 
+			// wait for load
+			await wait();
+
 			expect(date1.locale()).to.be.eql(anotherLocale);
 
 			const date2 : DateEx = new DateEx();
@@ -340,6 +380,9 @@ describe('DateEx', () => {
 			// set globally
 			DateEx.locale(anotherLocale);
 
+			// wait for load
+			await wait();
+
 			const date3 : DateEx = new DateEx();
 
 			expect(date1.locale()).to.be.eql(anotherLocale);
@@ -347,9 +390,37 @@ describe('DateEx', () => {
 			expect(date3.locale()).to.be.eql(anotherLocale);
 		});
 
-		it('from DateEx', () => {
+		it('called multiple - global', async () => {
+			DateEx.locale(anotherLocale);
+			DateEx.locale(DefaultLocale);
+			DateEx.locale(anotherLocale);
+
+			// wait for load
+			await wait();
+
+			const date : DateEx = new DateEx();
+			expect(date.locale()).to.be.eql(anotherLocale);
+		});
+
+		it('called multiple - local', async () => {
+			const date : DateEx = new DateEx();
+
+			date.locale(anotherLocale);
+			date.locale(DefaultLocale);
+			date.locale(anotherLocale);
+
+			// wait for load
+			await wait();
+
+			expect(date.locale()).to.be.eql(anotherLocale);
+		});
+
+		it('from DateEx', async () => {
 			const date1 : DateEx = new DateEx();
 			date1.locale(anotherLocale);
+
+			// wait for load
+			await wait();
 
 			const date2 : DateEx = new DateEx(date1);
 

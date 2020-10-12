@@ -12,3 +12,16 @@ export interface DateTimeSetParam {
 	seconds? : number;
 	ms? : number
 }
+
+export interface LocaleSet {
+	MonthShort : [string, string, string, string, string, string, string, string, string, string, string, string];
+	MonthLong : [string, string, string, string, string, string, string, string, string, string, string, string];
+
+	// sunday ~ saturday : 0 ~ 6
+	DayOfWeekShort : [string, string, string, string, string, string, string];
+	DayOfWeekMiddle : [string, string, string, string, string, string, string];
+	DayOfWeekLong : [string, string, string, string, string, string, string];
+
+	// in lower case
+	Meridiem : [string, string];
+}

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
-import { Meridiem } from '../src/constants';
 import { newArray } from '../src/util';
 import { DateTimeSetParam } from '../src/interfaces';
 
@@ -155,7 +154,7 @@ describe('DateProxy', () => {
 		});
 	});
 
-	describe('meridiem', () => {
+	describe('isAm', () => {
 		const hoursArr : number[] = newArray(24, i => {
 			return i; // 0 ~ 23
 		});
@@ -166,12 +165,7 @@ describe('DateProxy', () => {
 					hours
 				});
 
-				if (hours < 13) {
-					expect(date.meridiem).to.be.eql(Meridiem.Am);
-				}
-				else {
-					expect(date.meridiem).to.be.eql(Meridiem.Pm);
-				}
+				expect(date.isAm).to.be.eql(hours < 13);
 			});
 		});
 	});

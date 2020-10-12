@@ -1,17 +1,38 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeSetParam, InitDataFormat } from './interfaces';
-import { DatetimeSetParamKeys, FormatDesignator, ZeroDaySetter } from './constants';
+import { DateTimeSetParam, InitDataFormat, LocaleSet } from './interfaces';
+import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator, ZeroDaySetter } from './constants';
 import { clone, padDigit } from './util';
+
+// load default locale
+import locale from './locale/en';
+
+
+// internal global storage
+const globalConfig : {
+	locale? : string,
+} = {
+	locale : undefined
+};
+
+const localeSet : {
+	[key : string] : LocaleSet;
+} = {
+	[DefaultLocale] : locale
+};
 
 
 export class DateEx extends DateProxy {
 
+	private ownLocale ! : string;
+
 	// private dateFormat : string;
 
 
-	constructor (initData? : InitDataFormat) {
+	constructor (initData? : InitDataFormat, formatForString? : string) {
 		super(initData);
+
+		let localeFromAnotherDateEx : undefined | string = undefined;
 
 		if (initData !== null
 			&& !(initData instanceof Date)
@@ -29,8 +50,44 @@ export class DateEx extends DateProxy {
 				this.set(setParam);
 			}
 		}
+
+		if (initData instanceof DateEx) {
+			localeFromAnotherDateEx = initData.locale();
+		}
+
+		// set default locale
+		const defaultLocale : string = localeFromAnotherDateEx || globalConfig.locale || DefaultLocale;
+
+		this.locale(defaultLocale);
 	}
 
+	toDate () : Date {
+		return this._date;
+	}
+
+	valueOf () : number {
+		return +this._date;
+	}
+
+	// TODO
+	toString () : string {
+		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);
+		return '';
+	}
+
+	// global locale
+	static locale (locale : string) : void {
+		globalConfig.locale = locale;
+	}
+
+	locale (locale? : string) : string {
+		if (!!locale) {
+			// TODO: check validation
+			this.ownLocale = locale;
+		}
+
+		return this.ownLocale;
+	}
 
 	// allow null, no limit number range
 	set (param : DateTimeSetParam) : DateEx {
@@ -91,31 +148,17 @@ export class DateEx extends DateProxy {
 
 			.replace(new RegExp(FormatDesignator.MilliSecondsPadded3), padDigit(this.ms, 3))
 			.replace(new RegExp(FormatDesignator.MilliSecondsPadded2), padDigit(this.ms < 100 ? this.ms : Math.floor(this.ms / 10), 2))
-			.replace(new RegExp(FormatDesignator.MilliSeconds), '' + this.ms)
+			.replace(new RegExp(FormatDesignator.MilliSeconds), '' + this.ms);
 
-			// after minutes designator 'm'
-			.replace(new RegExp(FormatDesignator.AmPmLower), this.meridiem.toLowerCase())
-			.replace(new RegExp(FormatDesignator.AmPmCapital), this.meridiem.toUpperCase());
+		// after minutes designator 'm'
+		// .replace(new RegExp(FormatDesignator.AmPmLower), this.locale.Meridiem[this.isAm ? 0 : 1].toLowerCase())
+		// .replace(new RegExp(FormatDesignator.AmPmCapital), this.locale.Meridiem[this.isAm ? 0 : 1].toUpperCase());
 	}
 
-	// TODO: from
-	from (dateTimeStr : string, format : string) : DateEx {
-		return this;
-	}
+	// TODO: diff()
 
-
-	toDate () : Date {
-		return this._date;
-	}
-
-	valueOf () : number {
-		return +this._date;
-	}
-
-	// TODO
-	toString () : string {
-		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);
-		return '';
-	}
+	// TODO: isBefore()
+	// TODO: isAfter()
+	// TODO: isBetween()
 
 }

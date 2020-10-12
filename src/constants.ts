@@ -16,11 +16,6 @@ export const ZeroDaySetter : DateTimeSetParam = {
 	ms : 0
 };
 
-export enum Meridiem {
-	Am = 'am',
-	Pm = 'pm'
-}
-
 export enum FormatDesignator {
 	YearShort = 'YY', // 20
 	Year = 'YYYY', // 2020
@@ -71,3 +66,5 @@ export enum ISO8601Format {
 	WeekWithWeekday = 'YYYY-Www-d',
 	Time = 'hh:mm:ss.sss'
 }
+
+export const DefaultLocale : string = 'en';

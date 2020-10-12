@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
-import { DatetimeSetParamKeys, FormatDesignator, Meridiem } from '../src/constants';
+import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator } from '../src/constants';
 import { newArray, padDigit } from '../src/util';
 
 
@@ -301,6 +301,62 @@ describe('DateEx', () => {
 		});
 	});
 
+	describe('locale', () => {
+		const anotherLocale : string = 'ko-kr';
+
+		beforeEach(() => {
+			// reset locale
+			DateEx.locale(DefaultLocale);
+		});
+
+		it('default locale', async () => {
+			const date : DateEx = new DateEx();
+
+			expect(date.locale()).to.be.eql(DefaultLocale);
+		});
+
+		it('start with another', async () => {
+			DateEx.locale(anotherLocale);
+
+			const date1 : DateEx = new DateEx();
+			const date2 : DateEx = new DateEx();
+
+			expect(date1.locale()).to.be.eql(anotherLocale);
+			expect(date2.locale()).to.be.eql(anotherLocale);
+		});
+
+		it('change to another', async () => {
+			const date1 : DateEx = new DateEx();
+
+			// set locally
+			date1.locale(anotherLocale);
+
+			expect(date1.locale()).to.be.eql(anotherLocale);
+
+			const date2 : DateEx = new DateEx();
+
+			expect(date2.locale()).to.be.eql(DefaultLocale);
+
+			// set globally
+			DateEx.locale(anotherLocale);
+
+			const date3 : DateEx = new DateEx();
+
+			expect(date1.locale()).to.be.eql(anotherLocale);
+			expect(date2.locale()).to.be.eql(DefaultLocale);
+			expect(date3.locale()).to.be.eql(anotherLocale);
+		});
+
+		it('from DateEx', () => {
+			const date1 : DateEx = new DateEx();
+			date1.locale(anotherLocale);
+
+			const date2 : DateEx = new DateEx(date1);
+
+			expect(date2.locale()).to.be.eql(anotherLocale);
+		});
+	});
+
 	describe('set()', () => {
 		let refDate : DateEx;
 
@@ -582,25 +638,13 @@ describe('DateEx', () => {
 					expect(result).to.be.eql('' + date.day);
 				});
 			});
+
+			// TODO: FormatDesignator.DayOfWeekStringShort
+			// TODO: FormatDesignator.DayOfWeekStringMiddle
+			// TODO: FormatDesignator.DayOfWeekStringLong
 		});
 
-		describe('meridiem', () => {
-			it(FormatDesignator.AmPmLower, () => {
-				const amDate : DateEx = new DateEx({ hours : 5 });
-				expect(amDate.format(FormatDesignator.AmPmLower)).to.be.eql(Meridiem.Am);
-
-				const pmDate : DateEx = new DateEx({ hours : 12 + 5 });
-				expect(pmDate.format(FormatDesignator.AmPmLower)).to.be.eql(Meridiem.Pm);
-			});
-
-			it(FormatDesignator.AmPmCapital, () => {
-				const amDate : DateEx = new DateEx({ hours : 5 });
-				expect(amDate.format(FormatDesignator.AmPmCapital)).to.be.eql(Meridiem.Am.toUpperCase());
-
-				const pmDate : DateEx = new DateEx({ hours : 12 + 5 });
-				expect(pmDate.format(FormatDesignator.AmPmCapital)).to.be.eql(Meridiem.Pm.toUpperCase());
-			});
-		});
+		// no meridiem, it is about locale
 
 		describe('hours', () => {
 			it(FormatDesignator.Hours24, () => {

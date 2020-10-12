@@ -1,6 +1,6 @@
 import { LocaleSet } from '../interfaces';
 
-const locale : LocaleSet = {
+export const locale : LocaleSet = {
 	MonthShort : ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 	MonthLong : ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 
@@ -10,5 +10,3 @@ const locale : LocaleSet = {
 
 	Meridiem : ['오전', '오후']
 };
-
-export default locale;

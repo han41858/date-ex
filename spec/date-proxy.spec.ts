@@ -165,7 +165,7 @@ describe('DateProxy', () => {
 					hours
 				});
 
-				expect(date.isAm).to.be.eql(hours < 13);
+				expect(date.isAm).to.be.eql(hours < 12);
 			});
 		});
 	});

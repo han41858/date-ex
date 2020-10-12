@@ -39,8 +39,8 @@ export enum FormatDesignator {
 	DayOfWeekStringMiddle = 'ddd', // Mon
 	DayOfWeekStringLong = 'dddd', // Monday
 
-	AmPmLower = 'a', // am/pm
-	AmPmCapital = 'A', // AM/PM
+	MeridiemLower = 'a', // am/pm
+	MeridiemCapital = 'A', // AM/PM
 
 	Hours24 = 'H',
 	Hours24Padded = 'HH',

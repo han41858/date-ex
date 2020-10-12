@@ -103,7 +103,7 @@ export class DateProxy {
 	}
 
 	get isAm () : boolean {
-		return this.hours < 13;
+		return this.hours < 12;
 	}
 
 	get hours () : number {

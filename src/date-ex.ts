@@ -5,7 +5,7 @@ import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator, ZeroDaySetter } 
 import { clone, loadLocaleFile, padDigit } from './util';
 
 // load default locale
-import locale from './locale/en';
+import { locale } from './locale/en';
 
 
 // internal global storage
@@ -258,11 +258,17 @@ export class DateEx extends DateProxy {
 
 			.replace(new RegExp(FormatDesignator.MilliSecondsPadded3), padDigit(this.ms, 3))
 			.replace(new RegExp(FormatDesignator.MilliSecondsPadded2), padDigit(this.ms < 100 ? this.ms : Math.floor(this.ms / 10), 2))
-			.replace(new RegExp(FormatDesignator.MilliSeconds), '' + this.ms);
+			.replace(new RegExp(FormatDesignator.MilliSeconds), '' + this.ms)
 
-		// after minutes designator 'm'
-		// .replace(new RegExp(FormatDesignator.AmPmLower), this.locale.Meridiem[this.isAm ? 0 : 1].toLowerCase())
-		// .replace(new RegExp(FormatDesignator.AmPmCapital), this.locale.Meridiem[this.isAm ? 0 : 1].toUpperCase());
+			// after minutes designator 'm'
+			.replace(
+				new RegExp(FormatDesignator.MeridiemLower),
+				localeSetCached[this.locale()]?.Meridiem[this.isAm ? 0 : 1]?.toLowerCase()
+			)
+			.replace(
+				new RegExp(FormatDesignator.MeridiemCapital),
+				localeSetCached[this.locale()]?.Meridiem[this.isAm ? 0 : 1]?.toUpperCase()
+			);
 	}
 
 	// TODO: diff()

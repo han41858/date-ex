@@ -2,7 +2,8 @@ import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
 import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator } from '../src/constants';
-import { newArray, padDigit, wait } from '../src/util';
+import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
+import { LocaleSet } from '../src/interfaces';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -301,7 +302,7 @@ describe('DateEx', () => {
 		});
 	});
 
-	describe.only('locale', () => {
+	describe('locale', () => {
 		const anotherLocale : string = 'ko-kr';
 
 		beforeEach(async () => {
@@ -716,6 +717,48 @@ describe('DateEx', () => {
 		});
 
 		// no meridiem, it is about locale
+		describe('meridiem', () => {
+			let defaultLocaleSet : LocaleSet;
+
+			before(async () => {
+				defaultLocaleSet = await loadLocaleFile(DefaultLocale);
+				DateEx.locale(DefaultLocale);
+
+				await wait();
+			});
+
+			it(FormatDesignator.MeridiemLower, () => {
+				const hoursArr : number[] = newArray(24, i => i); // 0 ~ 23
+
+				hoursArr.forEach(hours => {
+					const date : DateEx = new DateEx({
+						hours
+					});
+
+					expect(date.format(FormatDesignator.MeridiemLower)).to.be.eql(
+						hours < 12
+							? defaultLocaleSet.Meridiem[0]
+							: defaultLocaleSet.Meridiem[1]
+					);
+				});
+			});
+
+			it(FormatDesignator.MeridiemCapital, () => {
+				const hoursArr : number[] = newArray(24, i => i); // 0 ~ 23
+
+				hoursArr.forEach(hours => {
+					const date : DateEx = new DateEx({
+						hours
+					});
+
+					expect(date.format(FormatDesignator.MeridiemCapital)).to.be.eql(
+						hours < 12
+							? defaultLocaleSet.Meridiem[0].toUpperCase()
+							: defaultLocaleSet.Meridiem[1].toUpperCase()
+					);
+				});
+			});
+		});
 
 		describe('hours', () => {
 			it(FormatDesignator.Hours24, () => {

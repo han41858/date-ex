@@ -82,7 +82,8 @@ export const clone = <T> (obj : T, sanitize : boolean = false) => {
 };
 
 export const loadLocaleFile = async (locale : string) : Promise<LocaleSet> => {
-	return import(`./locale/${ locale }.js`) as Promise<LocaleSet>;
+	const localeSetObj : { locale : LocaleSet } = await import(`./locale/${ locale }.js`);
+	return localeSetObj.locale;
 };
 
 export const wait = (ms ? : number) : Promise<void> => {

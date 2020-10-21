@@ -228,21 +228,23 @@ export class DateEx extends DateProxy {
 	}
 
 	format (format : string) : string {
+		let result : string = format;
+
+		// find tokens
+		const regExp : RegExp = /Y{2,4}|M{1,4}|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+
 		const matchArr : {
 			token : FormatToken,
 			startIndex : number
 		}[] = [];
 
-		const regExp : RegExp = /Y{2,4}|M{1,4}|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
-
 		let formatFrag : string = format;
 		let omitLength : number = 0;
 
-		// find tokens
-		while (regExp.exec(formatFrag)) {
-			const execResult : RegExpExecArray | null = regExp.exec(formatFrag);
+		let execResult : RegExpExecArray | null = regExp.exec(formatFrag);
 
-			if (!!execResult) {
+		if (!!execResult) {
+			do {
 				const strFound : string = execResult[0];
 
 				matchArr.push({
@@ -252,18 +254,20 @@ export class DateEx extends DateProxy {
 
 				formatFrag = formatFrag.substr(strFound.length);
 				omitLength += execResult.index + strFound.length;
+
+				execResult = regExp.exec(formatFrag);
+			}
+			while (!!execResult);
+
+			// convert tokens to real value
+			const maxIndex : number = matchArr.length - 1;
+
+			for (let i = maxIndex; i >= 0; i--) {
+				result = result.substr(0, matchArr[i].startIndex)
+					+ this.convertTokenToValue(matchArr[i].token)
+					+ result.substr(matchArr[i].startIndex + matchArr[i].token.length);
 			}
 		}
-
-		let result : string = format;
-
-		// convert tokens to real value
-		for (let i = matchArr.length - 1; i >= 0; i--) {
-			result = result.substr(0, matchArr[i].startIndex)
-				+ this.convertTokenToValue(matchArr[i].token)
-				+ result.substr(matchArr[i].startIndex + matchArr[i].token.length);
-		}
-
 
 		return result;
 	}

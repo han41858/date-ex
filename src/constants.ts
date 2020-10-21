@@ -16,7 +16,7 @@ export const ZeroDaySetter : DateTimeSetParam = {
 	ms : 0
 };
 
-export enum FormatDesignator {
+export enum FormatToken {
 	YearShort = 'YY', // 20
 	Year = 'YYYY', // 2020
 

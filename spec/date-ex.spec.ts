@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
-import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator } from '../src/constants';
+import { DatetimeSetParamKeys, DefaultLocale, FormatToken } from '../src/constants';
 import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
 import { LocaleSet } from '../src/interfaces';
 
@@ -525,7 +525,7 @@ describe('DateEx', () => {
 
 	describe('format()', () => {
 		describe('year', () => {
-			it(FormatDesignator.Year, () => {
+			it(FormatToken.Year, () => {
 				const years : number[] = newArray(20, i => {
 					return 2000 + i; // 2000 ~ 2019
 				});
@@ -535,14 +535,14 @@ describe('DateEx', () => {
 						year
 					});
 
-					const result : string = date.format(FormatDesignator.Year);
+					const result : string = date.format(FormatToken.Year);
 
 					expect(result).to.be.lengthOf(4);
 					expect(result).to.be.eql('' + year);
 				});
 			});
 
-			it(FormatDesignator.YearShort, () => {
+			it(FormatToken.YearShort, () => {
 				const years : number[] = newArray(20, i => {
 					return 2000 + i; // 2000 ~ 2019
 				});
@@ -552,7 +552,7 @@ describe('DateEx', () => {
 						year
 					});
 
-					const result : string = date.format(FormatDesignator.YearShort);
+					const result : string = date.format(FormatToken.YearShort);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(('' + year).substr(2, 2));
@@ -561,7 +561,7 @@ describe('DateEx', () => {
 		});
 
 		describe('month', () => {
-			it(FormatDesignator.Month, () => {
+			it(FormatToken.Month, () => {
 				const months : number[] = newArray(12, i => {
 					return i + 1; // 1 ~ 12
 				});
@@ -571,14 +571,14 @@ describe('DateEx', () => {
 						month
 					});
 
-					const result : string = date.format(FormatDesignator.Month);
+					const result : string = date.format(FormatToken.Month);
 
 					expect(result).to.be.lengthOf(month < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + month);
 				});
 			});
 
-			it(FormatDesignator.MonthPadded, () => {
+			it(FormatToken.MonthPadded, () => {
 				const months : number[] = newArray(12, i => {
 					return i + 1; // 1 ~ 12
 				});
@@ -588,38 +588,38 @@ describe('DateEx', () => {
 						month
 					});
 
-					const result : string = date.format(FormatDesignator.MonthPadded);
+					const result : string = date.format(FormatToken.MonthPadded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(month, 2));
 				});
 			});
 
-			// TODO: FormatDesignator.MonthStringShort
-			// TODO: FormatDesignator.MonthStringLong
+			// TODO: FormatToken.MonthStringShort
+			// TODO: FormatToken.MonthStringLong
 		});
 
 		describe('week', () => {
-			it(FormatDesignator.Week, () => {
+			it(FormatToken.Week, () => {
 				const dates : DateEx[] = newArray(43, i => {
 					return new DateEx({ year : 2020, month : 1, date : i + 1 });
 				});
 
 				dates.forEach(date => {
-					const result : string = date.format(FormatDesignator.Week);
+					const result : string = date.format(FormatToken.Week);
 
 					expect(result).to.be.lengthOf(date.weekOfYear < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + date.weekOfYear);
 				});
 			});
 
-			it(FormatDesignator.WeekPadded, () => {
+			it(FormatToken.WeekPadded, () => {
 				const dates : DateEx[] = newArray(43, i => {
 					return new DateEx({ year : 2020, month : 1, date : i + 1 });
 				});
 
 				dates.forEach(date => {
-					const result : string = date.format(FormatDesignator.WeekPadded);
+					const result : string = date.format(FormatToken.WeekPadded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(date.weekOfYear, 2));
@@ -628,7 +628,7 @@ describe('DateEx', () => {
 		});
 
 		describe('date', () => {
-			it(FormatDesignator.DayOfYear, () => {
+			it(FormatToken.DayOfYear, () => {
 				const dates : number[] = newArray(100, i => {
 					return i + 1; // 1 ~ 100
 				});
@@ -638,14 +638,14 @@ describe('DateEx', () => {
 						date
 					});
 
-					const result : string = dateEx.format(FormatDesignator.DayOfYear);
+					const result : string = dateEx.format(FormatToken.DayOfYear);
 
 					expect(result).to.be.lengthOf(date < 10 ? 1 : (date < 100 ? 2 : 3));
 					expect(result).to.be.eql('' + date);
 				});
 			});
 
-			it(FormatDesignator.DayOfYearPadded, () => {
+			it(FormatToken.DayOfYearPadded, () => {
 				const dates : number[] = newArray(100, i => {
 					return i + 1; // 1 ~ 100
 				});
@@ -655,14 +655,14 @@ describe('DateEx', () => {
 						date
 					});
 
-					const result : string = dateEx.format(FormatDesignator.DayOfYearPadded);
+					const result : string = dateEx.format(FormatToken.DayOfYearPadded);
 
 					expect(result).to.be.lengthOf(3);
 					expect(result).to.be.eql(padDigit(date, 3));
 				});
 			});
 
-			it(FormatDesignator.DayOfMonth, () => {
+			it(FormatToken.DayOfMonth, () => {
 				const dates : number[] = newArray(31, i => {
 					return i + 1; // 1 ~ 31
 				});
@@ -672,14 +672,14 @@ describe('DateEx', () => {
 						date
 					});
 
-					const result : string = dateEx.format(FormatDesignator.DayOfMonth);
+					const result : string = dateEx.format(FormatToken.DayOfMonth);
 
 					expect(result).to.be.lengthOf(date < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + date);
 				});
 			});
 
-			it(FormatDesignator.DayOfMonthPadded, () => {
+			it(FormatToken.DayOfMonthPadded, () => {
 				const dates : number[] = newArray(31, i => {
 					return i + 1; // 1 ~ 31
 				});
@@ -689,7 +689,7 @@ describe('DateEx', () => {
 						date
 					});
 
-					const result : string = dateEx.format(FormatDesignator.DayOfMonthPadded);
+					const result : string = dateEx.format(FormatToken.DayOfMonthPadded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(date, 2));
@@ -698,25 +698,67 @@ describe('DateEx', () => {
 		});
 
 		describe('day', () => {
-			it(FormatDesignator.DayOfWeek, () => {
+			let defaultLocaleSet : LocaleSet;
+
+			before(async () => {
+				defaultLocaleSet = await loadLocaleFile(DefaultLocale);
+				DateEx.locale(DefaultLocale);
+
+				await wait();
+			});
+
+			it(FormatToken.DayOfWeek, () => {
 				const dates : DateEx[] = newArray(7, i => {
 					return new DateEx({ year : 2020, month : 1, date : i });
 				});
 
 				dates.forEach(date => {
-					const result : string = date.format(FormatDesignator.DayOfWeek);
+					const result : string = date.format(FormatToken.DayOfWeek);
 
 					expect(result).to.be.lengthOf(1);
 					expect(result).to.be.eql('' + date.day);
 				});
 			});
 
-			// TODO: FormatDesignator.DayOfWeekStringShort
-			// TODO: FormatDesignator.DayOfWeekStringMiddle
-			// TODO: FormatDesignator.DayOfWeekStringLong
+			it(FormatToken.DayOfWeekStringShort, () => {
+				const dates : DateEx[] = newArray(7, i => {
+					return new DateEx({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
+				});
+
+				dates.forEach((date, i) => {
+					const result : string = date.format(FormatToken.DayOfWeekStringShort);
+
+					expect(result).to.be.lengthOf(2);
+					expect(result).to.be.eql(defaultLocaleSet.DayOfWeekShort[i]);
+				});
+			});
+
+			it(FormatToken.DayOfWeekStringMiddle, () => {
+				const dates : DateEx[] = newArray(7, i => {
+					return new DateEx({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
+				});
+
+				dates.forEach((date, i) => {
+					const result : string = date.format(FormatToken.DayOfWeekStringMiddle);
+
+					expect(result).to.be.lengthOf(3);
+					expect(result).to.be.eql(defaultLocaleSet.DayOfWeekMiddle[i]);
+				});
+			});
+
+			it(FormatToken.DayOfWeekStringLong, () => {
+				const dates : DateEx[] = newArray(7, i => {
+					return new DateEx({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
+				});
+
+				dates.forEach((date, i) => {
+					const result : string = date.format(FormatToken.DayOfWeekStringLong);
+
+					expect(result).to.be.eql(defaultLocaleSet.DayOfWeekLong[i]);
+				});
+			});
 		});
 
-		// no meridiem, it is about locale
 		describe('meridiem', () => {
 			let defaultLocaleSet : LocaleSet;
 
@@ -727,7 +769,7 @@ describe('DateEx', () => {
 				await wait();
 			});
 
-			it(FormatDesignator.MeridiemLower, () => {
+			it(FormatToken.MeridiemLower, () => {
 				const hoursArr : number[] = newArray(24, i => i); // 0 ~ 23
 
 				hoursArr.forEach(hours => {
@@ -735,7 +777,7 @@ describe('DateEx', () => {
 						hours
 					});
 
-					expect(date.format(FormatDesignator.MeridiemLower)).to.be.eql(
+					expect(date.format(FormatToken.MeridiemLower)).to.be.eql(
 						hours < 12
 							? defaultLocaleSet.Meridiem[0]
 							: defaultLocaleSet.Meridiem[1]
@@ -743,7 +785,7 @@ describe('DateEx', () => {
 				});
 			});
 
-			it(FormatDesignator.MeridiemCapital, () => {
+			it(FormatToken.MeridiemCapital, () => {
 				const hoursArr : number[] = newArray(24, i => i); // 0 ~ 23
 
 				hoursArr.forEach(hours => {
@@ -751,7 +793,7 @@ describe('DateEx', () => {
 						hours
 					});
 
-					expect(date.format(FormatDesignator.MeridiemCapital)).to.be.eql(
+					expect(date.format(FormatToken.MeridiemCapital)).to.be.eql(
 						hours < 12
 							? defaultLocaleSet.Meridiem[0].toUpperCase()
 							: defaultLocaleSet.Meridiem[1].toUpperCase()
@@ -761,7 +803,7 @@ describe('DateEx', () => {
 		});
 
 		describe('hours', () => {
-			it(FormatDesignator.Hours24, () => {
+			it(FormatToken.Hours24, () => {
 				const hoursArr : number[] = newArray(24, i => {
 					return i; // 0 ~ 23
 				});
@@ -769,7 +811,7 @@ describe('DateEx', () => {
 				hoursArr.forEach(hours => {
 					const date : DateEx = new DateEx({ hours });
 
-					const result : string = date.format(FormatDesignator.Hours24);
+					const result : string = date.format(FormatToken.Hours24);
 
 					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + hours);
@@ -777,7 +819,7 @@ describe('DateEx', () => {
 			});
 
 
-			it(FormatDesignator.Hours24Padded, () => {
+			it(FormatToken.Hours24Padded, () => {
 				const hoursArr : number[] = newArray(24, i => {
 					return i; // 0 ~ 23
 				});
@@ -785,14 +827,14 @@ describe('DateEx', () => {
 				hoursArr.forEach(hours => {
 					const date : DateEx = new DateEx({ hours });
 
-					const result : string = date.format(FormatDesignator.Hours24Padded);
+					const result : string = date.format(FormatToken.Hours24Padded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(hours, 2));
 				});
 			});
 
-			it(FormatDesignator.Hours12, () => {
+			it(FormatToken.Hours12, () => {
 				const hoursArr : number[] = newArray(24, i => {
 					return i; // 0 ~ 23
 				});
@@ -800,14 +842,14 @@ describe('DateEx', () => {
 				hoursArr.forEach(hours => {
 					const date : DateEx = new DateEx({ hours });
 
-					const result : string = date.format(FormatDesignator.Hours12);
+					const result : string = date.format(FormatToken.Hours12);
 
 					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + (hours > 12 ? hours % 12 : hours));
 				});
 			});
 
-			it(FormatDesignator.Hours12Padded, () => {
+			it(FormatToken.Hours12Padded, () => {
 				const hoursArr : number[] = newArray(24, i => {
 					return i; // 0 ~ 23
 				});
@@ -815,7 +857,7 @@ describe('DateEx', () => {
 				hoursArr.forEach(hours => {
 					const date : DateEx = new DateEx({ hours });
 
-					const result : string = date.format(FormatDesignator.Hours12Padded);
+					const result : string = date.format(FormatToken.Hours12Padded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(hours > 12 ? hours % 12 : hours, 2));
@@ -824,7 +866,7 @@ describe('DateEx', () => {
 		});
 
 		describe('minutes', () => {
-			it(FormatDesignator.Minutes, () => {
+			it(FormatToken.Minutes, () => {
 				const minutesArr : number[] = newArray(60, i => {
 					return i; // 0 ~ 59
 				});
@@ -832,7 +874,7 @@ describe('DateEx', () => {
 				minutesArr.forEach(minutes => {
 					const date : DateEx = new DateEx({ minutes });
 
-					const result : string = date.format(FormatDesignator.Minutes);
+					const result : string = date.format(FormatToken.Minutes);
 
 					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + minutes);
@@ -840,7 +882,7 @@ describe('DateEx', () => {
 			});
 
 
-			it(FormatDesignator.MinutesPadded, () => {
+			it(FormatToken.MinutesPadded, () => {
 				const minutesArr : number[] = newArray(60, i => {
 					return i; // 0 ~ 59
 				});
@@ -848,7 +890,7 @@ describe('DateEx', () => {
 				minutesArr.forEach(minutes => {
 					const date : DateEx = new DateEx({ minutes });
 
-					const result : string = date.format(FormatDesignator.MinutesPadded);
+					const result : string = date.format(FormatToken.MinutesPadded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(minutes, 2));
@@ -857,7 +899,7 @@ describe('DateEx', () => {
 		});
 
 		describe('seconds', () => {
-			it(FormatDesignator.Seconds, () => {
+			it(FormatToken.Seconds, () => {
 				const secondsArr : number[] = newArray(60, i => {
 					return i; // 0 ~ 59
 				});
@@ -865,7 +907,7 @@ describe('DateEx', () => {
 				secondsArr.forEach(seconds => {
 					const date : DateEx = new DateEx({ seconds });
 
-					const result : string = date.format(FormatDesignator.Seconds);
+					const result : string = date.format(FormatToken.Seconds);
 
 					expect(result).to.be.lengthOf(+result < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + seconds);
@@ -873,7 +915,7 @@ describe('DateEx', () => {
 			});
 
 
-			it(FormatDesignator.SecondsPadded, () => {
+			it(FormatToken.SecondsPadded, () => {
 				const secondsArr : number[] = newArray(60, i => {
 					return i; // 0 ~ 59
 				});
@@ -881,7 +923,7 @@ describe('DateEx', () => {
 				secondsArr.forEach(seconds => {
 					const date : DateEx = new DateEx({ seconds });
 
-					const result : string = date.format(FormatDesignator.SecondsPadded);
+					const result : string = date.format(FormatToken.SecondsPadded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(seconds, 2));
@@ -890,7 +932,7 @@ describe('DateEx', () => {
 		});
 
 		describe('ms', () => {
-			it(FormatDesignator.MilliSeconds, () => {
+			it(FormatToken.MilliSeconds, () => {
 				const msArr : number[] = newArray(999, i => {
 					return i; // 0 ~ 999
 				});
@@ -898,7 +940,7 @@ describe('DateEx', () => {
 				msArr.forEach(ms => {
 					const date : DateEx = new DateEx({ ms });
 
-					const result : string = date.format(FormatDesignator.MilliSeconds);
+					const result : string = date.format(FormatToken.MilliSeconds);
 
 					expect(result).to.be.lengthOf(+result < 10 ? 1 : (+result < 100 ? 2 : 3));
 					expect(result).to.be.eql('' + ms);
@@ -906,7 +948,7 @@ describe('DateEx', () => {
 			});
 
 
-			it(FormatDesignator.MilliSecondsPadded2, () => {
+			it(FormatToken.MilliSecondsPadded2, () => {
 				const msArr : number[] = newArray(999, i => {
 					return i; // 0 ~ 999
 				});
@@ -914,14 +956,14 @@ describe('DateEx', () => {
 				msArr.forEach(ms => {
 					const date : DateEx = new DateEx({ ms });
 
-					const result : string = date.format(FormatDesignator.MilliSecondsPadded2);
+					const result : string = date.format(FormatToken.MilliSecondsPadded2);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(ms < 100 ? ms : Math.floor(ms / 10), 2));
 				});
 			});
 
-			it(FormatDesignator.MilliSecondsPadded3, () => {
+			it(FormatToken.MilliSecondsPadded3, () => {
 				const msArr : number[] = newArray(999, i => {
 					return i; // 0 ~ 999
 				});
@@ -929,7 +971,7 @@ describe('DateEx', () => {
 				msArr.forEach(ms => {
 					const date : DateEx = new DateEx({ ms });
 
-					const result : string = date.format(FormatDesignator.MilliSecondsPadded3);
+					const result : string = date.format(FormatToken.MilliSecondsPadded3);
 
 					expect(result).to.be.lengthOf(3);
 					expect(result).to.be.eql(padDigit(ms, 3));

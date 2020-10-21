@@ -1,7 +1,7 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeSetParam, InitDataFormat, LocaleSet } from './interfaces';
-import { DatetimeSetParamKeys, DefaultLocale, FormatDesignator, ZeroDaySetter } from './constants';
+import { DatetimeSetParamKeys, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
 import { clone, loadLocaleFile, padDigit } from './util';
 
 // load default locale
@@ -228,47 +228,175 @@ export class DateEx extends DateProxy {
 	}
 
 	format (format : string) : string {
-		return format
-			.replace(new RegExp(FormatDesignator.Year), '' + this.year)
-			.replace(new RegExp(FormatDesignator.YearShort), ('' + this.year).substr(2, 2))
+		const matchArr : {
+			token : FormatToken,
+			startIndex : number
+		}[] = [];
 
-			.replace(new RegExp(FormatDesignator.MonthPadded), padDigit(this.month, 2))
-			.replace(new RegExp(FormatDesignator.Month), ('' + this.month))
+		const regExp : RegExp = /Y{2,4}|M{1,2}|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
-			.replace(new RegExp(FormatDesignator.WeekPadded), padDigit(this.weekOfYear, 2))
-			.replace(new RegExp(FormatDesignator.Week), ('' + this.weekOfYear))
+		let formatFrag : string = format;
+		let omitLength : number = 0;
 
-			.replace(new RegExp(FormatDesignator.DayOfYearPadded), padDigit('' + this.dayOfYear, 3))
-			.replace(new RegExp(FormatDesignator.DayOfYear), ('' + this.dayOfYear))
-			.replace(new RegExp(FormatDesignator.DayOfMonthPadded), padDigit('' + this.date, 2))
-			.replace(new RegExp(FormatDesignator.DayOfMonth), ('' + this.date))
+		// find tokens
+		while (regExp.exec(formatFrag)) {
+			const execResult : RegExpExecArray | null = regExp.exec(formatFrag);
 
-			.replace(new RegExp(FormatDesignator.DayOfWeek), ('' + this.day))
+			if (!!execResult) {
+				const strFound : string = execResult[0];
 
-			.replace(new RegExp(FormatDesignator.Hours24Padded), padDigit(this.hours, 2))
-			.replace(new RegExp(FormatDesignator.Hours24), '' + this.hours)
-			.replace(new RegExp(FormatDesignator.Hours12Padded), padDigit(this.hours12, 2))
-			.replace(new RegExp(FormatDesignator.Hours12), '' + (this.hours12))
+				matchArr.push({
+					token : strFound as FormatToken,
+					startIndex : omitLength + execResult.index
+				});
 
-			.replace(new RegExp(FormatDesignator.MinutesPadded), padDigit(this.minutes, 2))
-			.replace(new RegExp(FormatDesignator.Minutes), '' + this.minutes)
+				formatFrag = formatFrag.substr(strFound.length);
+				omitLength += execResult.index + strFound.length;
+			}
+		}
 
-			.replace(new RegExp(FormatDesignator.SecondsPadded), padDigit(this.seconds, 2))
-			.replace(new RegExp(FormatDesignator.Seconds), '' + this.seconds)
+		let result : string = format;
 
-			.replace(new RegExp(FormatDesignator.MilliSecondsPadded3), padDigit(this.ms, 3))
-			.replace(new RegExp(FormatDesignator.MilliSecondsPadded2), padDigit(this.ms < 100 ? this.ms : Math.floor(this.ms / 10), 2))
-			.replace(new RegExp(FormatDesignator.MilliSeconds), '' + this.ms)
+		// convert tokens to real value
+		for (let i = matchArr.length - 1; i >= 0; i--) {
+			result = result.substr(0, matchArr[i].startIndex)
+				+ this.convertTokenToValue(matchArr[i].token)
+				+ result.substr(matchArr[i].startIndex + matchArr[i].token.length);
+		}
 
-			// after minutes designator 'm'
-			.replace(
-				new RegExp(FormatDesignator.MeridiemLower),
-				localeSetCached[this.locale()]?.Meridiem[this.isAm ? 0 : 1]?.toLowerCase()
-			)
-			.replace(
-				new RegExp(FormatDesignator.MeridiemCapital),
-				localeSetCached[this.locale()]?.Meridiem[this.isAm ? 0 : 1]?.toUpperCase()
-			);
+
+		return result;
+	}
+
+	private convertTokenToValue (token : FormatToken) : string {
+		let returnValue : string = '';
+
+		switch (token) {
+			case FormatToken.Year:
+				returnValue = '' + this.year;
+				break;
+
+			case FormatToken.YearShort:
+				returnValue = padDigit(this.year % 100, 2);
+				break;
+
+
+			case FormatToken.Month:
+				returnValue = '' + this.month;
+				break;
+
+			case FormatToken.MonthPadded:
+				returnValue = padDigit(this.month, 2);
+				break;
+
+
+			case FormatToken.Week:
+				returnValue = '' + this.weekOfYear;
+				break;
+
+			case FormatToken.WeekPadded:
+				returnValue = padDigit(this.weekOfYear, 2);
+				break;
+
+
+			case FormatToken.DayOfYearPadded:
+				returnValue = padDigit('' + this.dayOfYear, 3);
+				break;
+
+			case FormatToken.DayOfYear:
+				returnValue = '' + this.dayOfYear;
+				break;
+
+
+			case FormatToken.DayOfMonthPadded:
+				returnValue = padDigit('' + this.date, 2);
+				break;
+
+			case FormatToken.DayOfMonth:
+				returnValue = '' + this.date;
+				break;
+
+
+			case FormatToken.DayOfWeekStringLong:
+				returnValue = localeSetCached[this.locale()]?.DayOfWeekLong[this.day];
+				break;
+
+			case FormatToken.DayOfWeekStringMiddle:
+				returnValue = localeSetCached[this.locale()]?.DayOfWeekMiddle[this.day];
+				break;
+
+			case FormatToken.DayOfWeekStringShort:
+				returnValue = localeSetCached[this.locale()]?.DayOfWeekShort[this.day];
+				break;
+
+			case FormatToken.DayOfWeek:
+				returnValue = '' + this.day;
+				break;
+
+
+			case FormatToken.MeridiemLower:
+				returnValue = localeSetCached[this.locale()]?.Meridiem[this.isAm ? 0 : 1]?.toLowerCase();
+				break;
+
+			case FormatToken.MeridiemCapital:
+				returnValue = localeSetCached[this.locale()]?.Meridiem[this.isAm ? 0 : 1]?.toUpperCase();
+				break;
+
+
+			case FormatToken.Hours24Padded:
+				returnValue = padDigit(this.hours, 2);
+				break;
+
+			case FormatToken.Hours24:
+				returnValue = '' + this.hours;
+				break;
+
+
+			case FormatToken.Hours12Padded:
+				returnValue = padDigit(this.hours12, 2);
+				break;
+
+			case FormatToken.Hours12:
+				returnValue = '' + (this.hours12);
+				break;
+
+
+			case FormatToken.MinutesPadded:
+				returnValue = padDigit(this.minutes, 2);
+				break;
+
+			case FormatToken.Minutes:
+				returnValue = '' + this.minutes;
+				break;
+
+
+			case FormatToken.SecondsPadded:
+				returnValue = padDigit(this.seconds, 2);
+				break;
+
+			case FormatToken.Seconds:
+				returnValue = '' + this.seconds;
+				break;
+
+
+			case FormatToken.MilliSecondsPadded3:
+				returnValue = padDigit(this.ms, 3);
+				break;
+
+			case FormatToken.MilliSecondsPadded2:
+				returnValue = padDigit(
+					this.ms < 100
+						? this.ms
+						: Math.floor(this.ms / 10), 2
+				);
+				break;
+
+			case FormatToken.MilliSeconds:
+				returnValue = '' + this.ms;
+				break;
+		}
+
+		return returnValue;
 	}
 
 	// TODO: diff()

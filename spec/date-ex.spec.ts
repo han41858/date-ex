@@ -561,6 +561,15 @@ describe('DateEx', () => {
 		});
 
 		describe('month', () => {
+			let defaultLocaleSet : LocaleSet;
+
+			before(async () => {
+				defaultLocaleSet = await loadLocaleFile(DefaultLocale);
+				DateEx.locale(DefaultLocale);
+
+				await wait();
+			});
+
 			it(FormatToken.Month, () => {
 				const months : number[] = newArray(12, i => {
 					return i + 1; // 1 ~ 12
@@ -595,8 +604,37 @@ describe('DateEx', () => {
 				});
 			});
 
-			// TODO: FormatToken.MonthStringShort
-			// TODO: FormatToken.MonthStringLong
+			it(FormatToken.MonthStringShort, () => {
+				const months : number[] = newArray(12, i => {
+					return i + 1; // 1 ~ 12
+				});
+
+				months.forEach((month, i) => {
+					const date : DateEx = new DateEx({
+						month
+					});
+
+					const result : string = date.format(FormatToken.MonthStringShort);
+
+					expect(result).to.be.eql(defaultLocaleSet.MonthShort[i]);
+				});
+			});
+
+			it(FormatToken.MonthStringLong, () => {
+				const months : number[] = newArray(12, i => {
+					return i + 1; // 1 ~ 12
+				});
+
+				months.forEach((month, i) => {
+					const date : DateEx = new DateEx({
+						month
+					});
+
+					const result : string = date.format(FormatToken.MonthStringLong);
+
+					expect(result).to.be.eql(defaultLocaleSet.MonthLong[i]);
+				});
+			});
 		});
 
 		describe('week', () => {

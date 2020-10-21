@@ -233,7 +233,7 @@ export class DateEx extends DateProxy {
 			startIndex : number
 		}[] = [];
 
-		const regExp : RegExp = /Y{2,4}|M{1,2}|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+		const regExp : RegExp = /Y{2,4}|M{1,4}|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
 		let formatFrag : string = format;
 		let omitLength : number = 0;
@@ -287,6 +287,14 @@ export class DateEx extends DateProxy {
 
 			case FormatToken.MonthPadded:
 				returnValue = padDigit(this.month, 2);
+				break;
+
+			case FormatToken.MonthStringShort:
+				returnValue = localeSetCached[this.locale()]?.MonthShort[this.month - 1];
+				break;
+
+			case FormatToken.MonthStringLong:
+				returnValue = localeSetCached[this.locale()]?.MonthLong[this.month - 1];
 				break;
 
 

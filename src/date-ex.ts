@@ -231,7 +231,7 @@ export class DateEx extends DateProxy {
 		let result : string = format;
 
 		// find tokens
-		const regExp : RegExp = /Y{2,4}|M{1,4}|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+		const regExp : RegExp = /YYYY|YY|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
 		const matchArr : {
 			token : FormatToken,
@@ -308,6 +308,10 @@ export class DateEx extends DateProxy {
 
 			case FormatToken.WeekPadded:
 				returnValue = padDigit(this.weekOfYear, 2);
+				break;
+
+			case FormatToken.WeekPaddedWithPrefix:
+				returnValue = 'W' + padDigit(this.weekOfYear, 2);
 				break;
 
 

@@ -663,6 +663,19 @@ describe('DateEx', () => {
 					expect(result).to.be.eql(padDigit(date.weekOfYear, 2));
 				});
 			});
+
+			it(FormatToken.WeekPaddedWithPrefix, () => {
+				const dates : DateEx[] = newArray(43, i => {
+					return new DateEx({ year : 2020, month : 1, date : i + 1 });
+				});
+
+				dates.forEach(date => {
+					const result : string = date.format(FormatToken.WeekPaddedWithPrefix);
+
+					expect(result).to.be.lengthOf(3);
+					expect(result).to.be.eql('W' + padDigit(date.weekOfYear, 2));
+				});
+			});
 		});
 
 		describe('date', () => {

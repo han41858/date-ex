@@ -27,6 +27,7 @@ export enum FormatToken {
 
 	Week = 'W',
 	WeekPadded = 'WW',
+	WeekPaddedWithPrefix = 'Www',
 
 	DayOfYear = 'DDD', // 1, 2, ... 365
 	DayOfYearPadded = 'DDDD', // 001, 002, ... 365

@@ -6,6 +6,28 @@ import { DateTimeJson } from '../src/interfaces';
 
 
 describe('DateProxy', () => {
+	describe('isValid()', () => {
+		it('ok', () => {
+			expect(new DateEx().isValid()).to.be.true;
+		});
+
+		it('invalid case - with invalid Date', () => {
+			const date : Date = new Date(1000000, 1);
+
+			expect(new DateEx(date).isValid()).to.be.false;
+		});
+
+		it('invalid case - with invalid years', () => {
+			expect(new DateEx({
+				year : -20000010
+			}).isValid()).to.be.false;
+		});
+
+		it('invalid case - with invalid string', () => {
+			expect(new DateEx('abc' as unknown).isValid()).to.be.false;
+		});
+	});
+
 	describe('toDate()', () => {
 		it('ok', () => {
 			expect(new DateEx().toDate()).to.be.instanceOf(Date);

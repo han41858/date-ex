@@ -1,4 +1,4 @@
-import { InitDataFormat } from './interfaces';
+import { DateTimeJson, InitDataFormat } from './interfaces';
 import { DateEx } from './date-ex';
 
 
@@ -48,12 +48,77 @@ export class DateProxy {
 		return this._date.getFullYear();
 	}
 
+	get yearUTC () : number {
+		let year : number = this.year;
+
+		if (this.isMonthChangingWithUTC() && this.month === 1) {
+			year -= 1;
+		}
+
+		return year;
+	}
+
+	// 1 ~ 4
 	get quarter () : number {
 		return Math.floor((this.month - 1) / 3) + 1;
 	}
 
+	get quarterUTC () : number {
+		let quarter : number = this.quarter;
+
+		if (this.isMonthChangingWithUTC() && (this.month % 3 === 1)) {
+			if (quarter - 1 > 0) {
+				quarter -= 1;
+			}
+			else {
+				quarter = 4;
+			}
+
+		}
+
+		return quarter;
+	}
+
 	get month () : number {
 		return this._date.getMonth() + 1;
+	}
+
+	private isFirstDayOfMonth () : boolean {
+		const nextDay : DateEx = new DateEx(this);
+
+		nextDay.add({
+			date : -1
+		});
+
+		return this.month !== nextDay.month;
+	}
+
+	private isLastDayOfMonth () : boolean {
+		const nextDay : DateEx = new DateEx(this);
+
+		nextDay.add({
+			date : 1
+		});
+
+		return this.month !== nextDay.month;
+	}
+
+	private isMonthChangingWithUTC () : boolean {
+		return this.isDateChangingWithUTC() && this.isFirstDayOfMonth();
+	}
+
+	get monthUTC () : number {
+		let month : number = this.month;
+
+		if (this.isMonthChangingWithUTC()) {
+			month -= 1;
+
+			if (month === 0) {
+				month = 12;
+			}
+		}
+
+		return month;
 	}
 
 	get weekOfYear () : number {
@@ -86,6 +151,34 @@ export class DateProxy {
 		return this._date.getDate();
 	}
 
+	private isDateChangingWithUTC () : boolean {
+		const hours : number = this.hours24UTC;
+		const timezoneOffsetInHours : number = this.timezoneOffset / 60;
+
+		// TODO: < 0?
+		return hours - timezoneOffsetInHours > 23;
+	}
+
+	get dateUTC () : number {
+		let date : number = this.date;
+
+		if (this.isDateChangingWithUTC()) {
+			if (date - 1 > 0) {
+				date -= 1;
+			}
+			else {
+				const previousDay : DateEx = new DateEx(this);
+				previousDay.add({
+					date : -1
+				});
+
+				date = previousDay.date;
+			}
+		}
+
+		return date;
+	}
+
 	get dayOfYear () : number {
 		const firstDayOfYear : DateEx = new DateEx({
 			year : this.year,
@@ -100,6 +193,18 @@ export class DateProxy {
 
 	get day () : number {
 		return this._date.getDay();
+	}
+
+	get dayUTC () : number {
+		const day : number = this.day;
+
+		return !this.isDateChangingWithUTC()
+			? day
+			: (
+				day + 1 > 6
+					? 0
+					: day + 1
+			);
 	}
 
 	get isAm () : boolean {
@@ -117,7 +222,21 @@ export class DateProxy {
 
 	// 0 ~ 12
 	get hours12 () : number {
-		return this.hours > 12 ? this.hours % 12 : this.hours;
+		const hours : number = this.hours;
+
+		return hours > 12 ? hours % 12 : hours;
+	}
+
+	get hours12UTC () : number {
+		return (this.hours24UTC + 1) % 12 - 1;
+	}
+
+	get hours24UTC () : number {
+		let hours : number = this.hours + this.timezoneOffset / 60;
+
+		return hours < 0
+			? hours + 24
+			: hours;
 	}
 
 	get minutes () : number {
@@ -130,6 +249,48 @@ export class DateProxy {
 
 	get ms () : number {
 		return this._date.getMilliseconds();
+	}
+
+	toDate () : Date {
+		return this._date;
+	}
+
+	valueOf () : number {
+		return +this._date;
+	}
+
+	toISOString () : string {
+		return this._date.toISOString();
+	}
+
+	toUTCString () : string {
+		return this._date.toUTCString();
+	}
+
+	toJson () : Required<DateTimeJson> {
+		return {
+			year : this.year,
+			month : this.month,
+			date : this.date,
+
+			hours : this.hours,
+			minutes : this.minutes,
+			seconds : this.seconds,
+			ms : this.ms
+		};
+	}
+
+	toJsonUTC () : Required<DateTimeJson> {
+		return {
+			year : this.yearUTC,
+			month : this.monthUTC,
+			date : this.dateUTC,
+
+			hours : this.hours24UTC,
+			minutes : this.minutes,
+			seconds : this.seconds,
+			ms : this.ms
+		};
 	}
 
 }

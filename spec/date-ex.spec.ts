@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { DateEx } from '../src/date-ex';
 import { DatetimeSetParamKeys, DefaultLocale, FormatToken } from '../src/constants';
 import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { LocaleSet } from '../src/interfaces';
+import { InitDataFormat, LocaleSet } from '../src/interfaces';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -830,8 +830,8 @@ describe('DateEx', () => {
 
 					expect(date.format(FormatToken.MeridiemLower)).to.be.eql(
 						hours < 12
-							? defaultLocaleSet.Meridiem[0]
-							: defaultLocaleSet.Meridiem[1]
+							? defaultLocaleSet.Meridiem[0].toLowerCase()
+							: defaultLocaleSet.Meridiem[1].toLowerCase()
 					);
 				});
 			});
@@ -1027,6 +1027,84 @@ describe('DateEx', () => {
 					expect(result).to.be.lengthOf(3);
 					expect(result).to.be.eql(padDigit(ms, 3));
 				});
+			});
+		});
+	});
+
+	describe('locale string', () => {
+		let defaultLocaleSet : LocaleSet;
+
+		before(async () => {
+			defaultLocaleSet = await loadLocaleFile(DefaultLocale);
+
+			await wait();
+		});
+
+		describe('toDateTimeLocale()', () => {
+			it('ok', () => {
+				const initParam : InitDataFormat = {
+					year : 2020, month : 10, date : 24,
+					hours : 13, minutes : 53, seconds : 16, ms : 432
+				};
+
+				const date : DateEx = new DateEx(initParam);
+
+				// for default locale
+				expect(date.toLocaleDateTimeString()).to.be.eql([
+					[
+						initParam.month,
+						initParam.date,
+						initParam.year
+					].join('/'),
+					', ',
+					[
+						(initParam.hours + 1) % 12 - 1,
+						padDigit(initParam.minutes, 2),
+						padDigit(initParam.seconds, 2)
+					].join(':'),
+					' ',
+					defaultLocaleSet.Meridiem[initParam.hours < 12 ? 0 : 1]
+				].join(''));
+			});
+		});
+
+		describe('toLocaleDateString()', () => {
+			it('ok', () => {
+				const initParam : InitDataFormat = {
+					year : 2020, month : 10, date : 24,
+					hours : 13, minutes : 53, seconds : 16, ms : 432
+				};
+
+				const date : DateEx = new DateEx(initParam);
+
+				// for default locale
+				expect(date.toLocaleDateString()).to.be.eql([
+					initParam.month,
+					initParam.date,
+					initParam.year
+				].join('/'));
+			});
+		});
+
+		describe('toLocaleTimeString()', () => {
+			it('ok', () => {
+				const initParam : InitDataFormat = {
+					year : 2020, month : 10, date : 24,
+					hours : 13, minutes : 53, seconds : 16, ms : 432
+				};
+
+				const date : DateEx = new DateEx(initParam);
+
+				// for default locale
+				expect(date.toLocaleTimeString()).to.be.eql([
+					[
+						(initParam.hours + 1) % 12 - 1,
+						padDigit(initParam.minutes, 2),
+						padDigit(initParam.seconds, 2)
+					].join(':'),
+					' ',
+					defaultLocaleSet.Meridiem[initParam.hours < 12 ? 0 : 1]
+				].join(''));
 			});
 		});
 	});

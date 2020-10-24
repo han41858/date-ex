@@ -28,4 +28,8 @@ export interface LocaleSet {
 
 	// in lower case
 	Meridiem : String2;
+
+	LocaleDateTimeFormat : string;
+	LocaleDateFormat : string;
+	LocaleTimeFormat : string;
 }

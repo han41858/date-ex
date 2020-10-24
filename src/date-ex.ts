@@ -252,7 +252,7 @@ export class DateEx extends DateProxy {
 					startIndex : omitLength + execResult.index
 				});
 
-				formatFrag = formatFrag.substr(strFound.length);
+				formatFrag = formatFrag.substr(execResult.index + strFound.length);
 				omitLength += execResult.index + strFound.length;
 
 				execResult = regExp.exec(formatFrag);
@@ -413,6 +413,18 @@ export class DateEx extends DateProxy {
 		}
 
 		return returnValue;
+	}
+
+	toLocaleDateTimeString () : string {
+		return this.format(localeSetCached[this.locale()].LocaleDateTimeFormat);
+	}
+
+	toLocaleDateString () : string {
+		return this.format(localeSetCached[this.locale()].LocaleDateFormat);
+	}
+
+	toLocaleTimeString () : string {
+		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
 	// TODO: diff()

@@ -1,4 +1,4 @@
 export { DateEx } from './date-ex';
 
-export { InitDataFormat, DateTimeJson } from './interfaces';
-export { FormatToken } from './constants';
+export { DateTimeJson, InitDataFormat } from './interfaces';
+export { DateTimeDimension, FormatToken } from './constants';

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
-import { DatetimeSetParamKeys, DefaultLocale, FormatToken } from '../src/constants';
+import { DateTimeDimension, DatetimeSetParamKeys, DefaultLocale, FormatToken } from '../src/constants';
 import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
 import { InitDataFormat, LocaleSet } from '../src/interfaces';
 
@@ -241,7 +241,7 @@ describe('DateEx', () => {
 			DatetimeSetParamKeys.forEach(key => {
 				it(key, () => {
 					const date : DateEx = new DateEx({
-						[key] : key === 'year'
+						[key] : key === DateTimeDimension.Year
 							? 1903
 							: 3
 					});
@@ -249,16 +249,16 @@ describe('DateEx', () => {
 					DatetimeSetParamKeys.forEach(checkKey => {
 						if (checkKey === key) {
 							expect(date[checkKey]).to.be.eql(
-								checkKey === 'year'
+								checkKey === DateTimeDimension.Year
 									? 1903
 									: 3
 							);
 						}
 						else {
 							expect(date[checkKey]).to.be.eql(
-								checkKey === 'year'
+								checkKey === DateTimeDimension.Year
 									? 1900
-									: ((checkKey === 'month' || checkKey === 'date')
+									: ((checkKey === DateTimeDimension.Month || checkKey === DateTimeDimension.Date)
 										? 1
 										: 0
 									)
@@ -346,7 +346,7 @@ describe('DateEx', () => {
 				expect(jsonUTC[key]).to.be.eql(initParam[key]);
 
 				switch (key) {
-					case 'hours':
+					case DateTimeDimension.Hours:
 						expect(dateEx.hours).to.be.eql(initParam.hours - timezoneOffsetInHours);
 						expect(dateEx.hours12).to.be.eql((initParam.hours - timezoneOffsetInHours + 1) % 12 - 1);
 
@@ -383,7 +383,7 @@ describe('DateEx', () => {
 				expect(jsonUTC[key]).to.be.eql(initParam[key]);
 
 				switch (key) {
-					case 'date':
+					case DateTimeDimension.Date:
 						expect(dateEx.date).to.be.eql(initParam.date + 1);
 						expect(dateEx.dateUTC).to.be.eql(initParam.date);
 
@@ -391,7 +391,7 @@ describe('DateEx', () => {
 						break;
 
 					// skip hours
-					case 'hours':
+					case DateTimeDimension.Hours:
 						break;
 
 					default:
@@ -422,7 +422,7 @@ describe('DateEx', () => {
 				expect(jsonUTC[key]).to.be.eql(initParam[key]);
 
 				switch (key) {
-					case 'month':
+					case DateTimeDimension.Month:
 						expect(dateEx.date).to.be.eql(1);
 						expect(dateEx.dateUTC).to.be.eql(initParam.date);
 
@@ -431,8 +431,8 @@ describe('DateEx', () => {
 						break;
 
 					// skip of other specs
-					case 'date':
-					case 'hours':
+					case DateTimeDimension.Date:
+					case DateTimeDimension.Hours:
 						break;
 
 					default:
@@ -464,9 +464,9 @@ describe('DateEx', () => {
 
 				switch (key) {
 					// skip of other specs
-					case 'month':
-					case 'date':
-					case 'hours':
+					case DateTimeDimension.Month:
+					case DateTimeDimension.Date:
+					case DateTimeDimension.Hours:
 						break;
 
 					default:
@@ -502,7 +502,7 @@ describe('DateEx', () => {
 				expect(jsonUTC[key]).to.be.eql(initParam[key]);
 
 				switch (key) {
-					case 'year':
+					case DateTimeDimension.Year:
 						expect(dateEx.date).to.be.eql(1);
 						expect(dateEx.dateUTC).to.be.eql(initParam.date);
 
@@ -517,9 +517,9 @@ describe('DateEx', () => {
 						break;
 
 					// skip of other specs
-					case 'month':
-					case 'date':
-					case 'hours':
+					case DateTimeDimension.Month:
+					case DateTimeDimension.Date:
+					case DateTimeDimension.Hours:
 						break;
 
 					default:
@@ -672,31 +672,31 @@ describe('DateEx', () => {
 				let changingValue : number;
 
 				switch (key) {
-					case 'year':
+					case DateTimeDimension.Year:
 						changingValue = now.getFullYear();
 						break;
 
-					case 'month':
+					case DateTimeDimension.Month:
 						changingValue = now.getMonth() + 1;
 						break;
 
-					case 'date':
+					case DateTimeDimension.Date:
 						changingValue = now.getDate();
 						break;
 
-					case 'hours':
+					case DateTimeDimension.Hours:
 						changingValue = now.getHours();
 						break;
 
-					case 'minutes':
+					case DateTimeDimension.Minutes:
 						changingValue = now.getMinutes();
 						break;
 
-					case 'seconds':
+					case DateTimeDimension.Seconds:
 						changingValue = now.getSeconds();
 						break;
 
-					case 'ms':
+					case DateTimeDimension.Ms:
 						changingValue = now.getMilliseconds();
 						break;
 

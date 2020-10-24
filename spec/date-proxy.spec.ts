@@ -17,7 +17,32 @@ describe('DateProxy', () => {
 					month
 				});
 
-				expect(date.month).to.be.eql(month);
+				switch (month) {
+					case 1:
+					case 2:
+					case 3:
+						expect(date.quarter).to.be.eql(1);
+						break;
+
+					case 4:
+					case 5:
+					case 6:
+						expect(date.quarter).to.be.eql(2);
+						break;
+
+					case 7:
+					case 8:
+					case 9:
+						expect(date.quarter).to.be.eql(3);
+						break;
+
+					case 10:
+					case 11:
+					case 12:
+						expect(date.quarter).to.be.eql(4);
+						break;
+
+				}
 			});
 		});
 	});

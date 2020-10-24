@@ -49,7 +49,7 @@ export class DateProxy {
 	}
 
 	get quarter () : number {
-		return Math.floor((this.month - 1) % 3) + 1;
+		return Math.floor((this.month - 1) / 3) + 1;
 	}
 
 	get month () : number {

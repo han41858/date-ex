@@ -1,8 +1,8 @@
 import { DateEx } from './date-ex';
 
-export type InitDataFormat = number | Date | DateEx | DateTimeSetParam;
+export type InitDataFormat = number | Date | DateEx | DateTimeJson;
 
-export interface DateTimeSetParam {
+export interface DateTimeJson {
 	year? : number;
 	month? : number;
 	date? : number;

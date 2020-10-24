@@ -1,11 +1,11 @@
-import { DateTimeSetParam } from './interfaces';
+import { DateTimeJson } from './interfaces';
 
-export const DatetimeSetParamKeys : (keyof DateTimeSetParam)[] = [
+export const DatetimeSetParamKeys : (keyof DateTimeJson)[] = [
 	'year', 'month', 'date',
 	'hours', 'minutes', 'seconds', 'ms'
 ];
 
-export const ZeroDaySetter : DateTimeSetParam = {
+export const ZeroDaySetter : DateTimeJson = {
 	year : 1900,
 	month : 1,
 	date : 1,

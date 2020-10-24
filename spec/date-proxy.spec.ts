@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
 import { newArray } from '../src/util';
-import { DateTimeSetParam } from '../src/interfaces';
+import { DateTimeJson } from '../src/interfaces';
 
 
 describe('DateProxy', () => {
@@ -42,7 +42,7 @@ describe('DateProxy', () => {
 
 	describe('weekOfYear', () => {
 		const targets : {
-			param : DateTimeSetParam,
+			param : DateTimeJson,
 			week : number
 		}[] = [{
 			param : { year : 2020, month : 1, date : 1 },
@@ -84,7 +84,7 @@ describe('DateProxy', () => {
 
 	describe('weekOfMonth', () => {
 		const targets : {
-			param : DateTimeSetParam,
+			param : DateTimeJson,
 			week : number
 		}[] = [{
 			param : { year : 2020, month : 1, date : 1 },
@@ -126,7 +126,7 @@ describe('DateProxy', () => {
 
 	describe('dayOfYear', () => {
 		const targets : {
-			param : DateTimeSetParam,
+			param : DateTimeJson,
 			day : number
 		}[] = [{
 			param : { year : 2020, month : 1, date : 1 },

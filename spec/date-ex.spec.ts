@@ -302,6 +302,24 @@ describe('DateEx', () => {
 		});
 	});
 
+	describe('toJson()', () => {
+		it('ok', () => {
+			const initParam : InitDataFormat = {
+				year : 2020, month : 8, date : 4,
+				hours : 13, minutes : 3, seconds : 16, ms : 32
+			};
+
+			const result : any = new DateEx(initParam).toJson();
+
+			expect(result).to.be.instanceOf(Object);
+
+			DatetimeSetParamKeys.forEach(key => {
+				expect(result[key]).to.be.a('number');
+				expect(result[key]).to.be.eql(initParam[key]);
+			});
+		});
+	});
+
 	describe('locale', () => {
 		const anotherLocale : string = 'ko-kr';
 

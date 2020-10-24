@@ -1,6 +1,6 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeSetParam, InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeJson, InitDataFormat, LocaleSet } from './interfaces';
 import { DatetimeSetParamKeys, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
 import { clone, loadLocaleFile, padDigit } from './util';
 
@@ -43,10 +43,10 @@ export class DateEx extends DateProxy {
 			const initDataKeys : string[] = Object.keys(initData);
 
 			if (initDataKeys.every(key => {
-				return DatetimeSetParamKeys.includes(key as keyof DateTimeSetParam);
+				return DatetimeSetParamKeys.includes(key as keyof DateTimeJson);
 			})) {
 				// others 0
-				const setParam : DateTimeSetParam = Object.assign(clone(ZeroDaySetter), initData);
+				const setParam : DateTimeJson = Object.assign(clone(ZeroDaySetter), initData);
 
 				this.set(setParam);
 			}
@@ -90,6 +90,19 @@ export class DateEx extends DateProxy {
 
 	valueOf () : number {
 		return +this._date;
+	}
+
+	toJson () : Required<DateTimeJson> {
+		return {
+			year : this.year,
+			month : this.month,
+			date : this.date,
+
+			hours : this.hours,
+			minutes : this.minutes,
+			seconds : this.seconds,
+			ms : this.ms
+		};
 	}
 
 	// TODO
@@ -200,7 +213,7 @@ export class DateEx extends DateProxy {
 	}
 
 	// allow null, no limit number range
-	set (param : DateTimeSetParam) : DateEx {
+	set (param : DateTimeJson) : DateEx {
 		param.year !== undefined && this._date.setFullYear(param.year);
 		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
 		param.date !== undefined && this._date.setDate(param.date);
@@ -213,11 +226,11 @@ export class DateEx extends DateProxy {
 		return this;
 	}
 
-	add (param : DateTimeSetParam) : DateEx {
-		const setParam : DateTimeSetParam = {};
+	add (param : DateTimeJson) : DateEx {
+		const setParam : DateTimeJson = {};
 
 		Object.entries(param).forEach(([_key, value]) => {
-			const key : keyof DateTimeSetParam = _key as keyof DateTimeSetParam;
+			const key : keyof DateTimeJson = _key as keyof DateTimeJson;
 
 			if (value !== undefined) {
 				setParam[key] = this[key] + value;

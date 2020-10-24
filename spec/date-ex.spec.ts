@@ -1031,8 +1031,14 @@ describe('DateEx', () => {
 		});
 	});
 
+	// test with default locale
 	describe('locale string', () => {
 		let defaultLocaleSet : LocaleSet;
+
+		const initParam : InitDataFormat = {
+			year : 2020, month : 8, date : 4,
+			hours : 13, minutes : 3, seconds : 16, ms : 32
+		};
 
 		before(async () => {
 			defaultLocaleSet = await loadLocaleFile(DefaultLocale);
@@ -1042,14 +1048,8 @@ describe('DateEx', () => {
 
 		describe('toDateTimeLocale()', () => {
 			it('ok', () => {
-				const initParam : InitDataFormat = {
-					year : 2020, month : 10, date : 24,
-					hours : 13, minutes : 53, seconds : 16, ms : 432
-				};
-
 				const date : DateEx = new DateEx(initParam);
 
-				// for default locale
 				expect(date.toLocaleDateTimeString()).to.be.eql([
 					[
 						initParam.month,
@@ -1070,14 +1070,8 @@ describe('DateEx', () => {
 
 		describe('toLocaleDateString()', () => {
 			it('ok', () => {
-				const initParam : InitDataFormat = {
-					year : 2020, month : 10, date : 24,
-					hours : 13, minutes : 53, seconds : 16, ms : 432
-				};
-
 				const date : DateEx = new DateEx(initParam);
 
-				// for default locale
 				expect(date.toLocaleDateString()).to.be.eql([
 					initParam.month,
 					initParam.date,
@@ -1088,14 +1082,8 @@ describe('DateEx', () => {
 
 		describe('toLocaleTimeString()', () => {
 			it('ok', () => {
-				const initParam : InitDataFormat = {
-					year : 2020, month : 10, date : 24,
-					hours : 13, minutes : 53, seconds : 16, ms : 432
-				};
-
 				const date : DateEx = new DateEx(initParam);
 
-				// for default locale
 				expect(date.toLocaleTimeString()).to.be.eql([
 					[
 						(initParam.hours + 1) % 12 - 1,

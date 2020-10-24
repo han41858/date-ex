@@ -13,15 +13,19 @@ export interface DateTimeSetParam {
 	ms? : number
 }
 
+export type String2 = [string, string];
+export type String7 = [string, string, string, string, string, string, string];
+export type String12 = [string, string, string, string, string, string, string, string, string, string, string, string];
+
 export interface LocaleSet {
-	MonthShort : [string, string, string, string, string, string, string, string, string, string, string, string];
-	MonthLong : [string, string, string, string, string, string, string, string, string, string, string, string];
+	MonthShort : String12;
+	MonthLong : String12;
 
 	// sunday ~ saturday : 0 ~ 6
-	DayOfWeekShort : [string, string, string, string, string, string, string];
-	DayOfWeekMiddle : [string, string, string, string, string, string, string];
-	DayOfWeekLong : [string, string, string, string, string, string, string];
+	DayOfWeekShort : String7;
+	DayOfWeekMiddle : String7;
+	DayOfWeekLong : String7;
 
 	// in lower case
-	Meridiem : [string, string];
+	Meridiem : String2;
 }

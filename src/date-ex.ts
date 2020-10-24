@@ -83,28 +83,6 @@ export class DateEx extends DateProxy {
 		this.locale(defaultLocale);
 	}
 
-
-	toDate () : Date {
-		return this._date;
-	}
-
-	valueOf () : number {
-		return +this._date;
-	}
-
-	toJson () : Required<DateTimeJson> {
-		return {
-			year : this.year,
-			month : this.month,
-			date : this.date,
-
-			hours : this.hours,
-			minutes : this.minutes,
-			seconds : this.seconds,
-			ms : this.ms
-		};
-	}
-
 	// TODO
 	toString () : string {
 		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);

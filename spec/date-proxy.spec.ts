@@ -6,6 +6,31 @@ import { DateTimeJson } from '../src/interfaces';
 
 
 describe('DateProxy', () => {
+	describe('toDate()', () => {
+		it('ok', () => {
+			expect(new DateEx().toDate()).to.be.instanceOf(Date);
+		});
+	});
+
+	describe('+valueOf()', () => {
+		it('ok', () => {
+			expect(new DateEx().valueOf()).to.be.a('number');
+			expect(+new DateEx()).to.be.a('number');
+		});
+	});
+
+	describe('toISOString()', () => {
+		it('ok', () => {
+			expect(new DateEx().toISOString()).to.be.a('string');
+		});
+	});
+
+	describe('toUTCString()', () => {
+		it('ok', () => {
+			expect(new DateEx().toUTCString()).to.be.a('string');
+		});
+	});
+
 	describe('quarter', () => {
 		const months : number[] = newArray(12, i => {
 			return i + 1; // 1 ~ 12

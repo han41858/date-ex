@@ -91,3 +91,11 @@ export const wait = (ms ? : number) : Promise<void> => {
 		resolve();
 	}, ms || 0));
 };
+
+// month is real number : 1 ~ 12
+export const daysOfMonth = (year : number, month : number) : number => {
+	const firstDay : Date = new Date(year, month - 1, 1);
+	const lastDay : Date = new Date(year, month, 0);
+
+	return lastDay.getDate() - firstDay.getDate() + 1;
+};

@@ -2,7 +2,8 @@ import { expect } from 'chai';
 
 import { DateEx } from '../src/date-ex';
 import { newArray } from '../src/util';
-import { DateTimeJson } from '../src/interfaces';
+import { DateTimeJson, InitDataFormat } from '../src/interfaces';
+import { DateTimeDimension, DatetimeSetParamKeys } from '../src/constants';
 
 
 describe('DateProxy', () => {
@@ -238,6 +239,179 @@ describe('DateProxy', () => {
 				});
 
 				expect(date.isAm).to.be.eql(hours < 12);
+			});
+		});
+	});
+
+	// tested in Seoul +09:00
+	describe('about UTC', () => {
+		it('same date', () => {
+			const initParam : InitDataFormat = {
+				year : 2020, month : 8, date : 4,
+				hours : 5, minutes : 3, seconds : 16, ms : 32
+			};
+
+			const date : Date = new Date(Date.UTC(
+				initParam.year, initParam.month - 1, initParam.date,
+				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+			));
+
+			const dateEx : DateEx = new DateEx(date);
+
+			const timezoneOffsetInHours : number = dateEx.timezoneOffset / 60;
+
+			DatetimeSetParamKeys.forEach(key => {
+				switch (key) {
+					case DateTimeDimension.Hours:
+						expect(dateEx.hours).to.be.eql(initParam.hours - timezoneOffsetInHours);
+						expect(dateEx.hours12).to.be.eql((initParam.hours - timezoneOffsetInHours + 1) % 12 - 1);
+
+						expect(dateEx.UTC.hours).to.be.eql(initParam.hours);
+						expect(dateEx.UTC.hours12).to.be.eql((initParam.hours + 1) % 12 - 1);
+						break;
+
+					default:
+						expect(dateEx[key]).to.be.eql(initParam[key]);
+				}
+			});
+		});
+
+		it('different date & day', () => {
+			const initParam : InitDataFormat = {
+				year : 2020, month : 8, date : 4,
+				hours : 17, minutes : 3, seconds : 16, ms : 32
+			};
+
+			const date : Date = new Date(Date.UTC(
+				initParam.year, initParam.month - 1, initParam.date,
+				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+			));
+
+			const dateEx : DateEx = new DateEx(date);
+
+			DatetimeSetParamKeys.forEach(key => {
+				switch (key) {
+					case DateTimeDimension.Date:
+						expect(dateEx.date).to.be.eql(initParam.date + 1);
+						expect(dateEx.UTC.date).to.be.eql(initParam.date);
+
+						expect(dateEx.UTC.day).to.be.eql(dateEx.day + 1);
+						break;
+
+					// skip hours
+					case DateTimeDimension.Hours:
+						break;
+
+					default:
+						expect(dateEx[key]).to.be.eql(initParam[key]);
+				}
+			});
+		});
+
+		it('different month', () => {
+			const initParam : InitDataFormat = {
+				year : 2020, month : 7, date : 31,
+				hours : 15, minutes : 3, seconds : 16, ms : 32
+			};
+
+			const date : Date = new Date(Date.UTC(
+				initParam.year, initParam.month - 1, initParam.date,
+				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+			));
+
+			const dateEx : DateEx = new DateEx(date);
+
+			DatetimeSetParamKeys.forEach(key => {
+				switch (key) {
+					case DateTimeDimension.Month:
+						expect(dateEx.date).to.be.eql(1);
+						expect(dateEx.UTC.date).to.be.eql(initParam.date);
+
+						expect(dateEx.month).to.be.eql(initParam.month + 1);
+						expect(dateEx.UTC.month).to.be.eql(initParam.month);
+						break;
+
+					// skip of other specs
+					case DateTimeDimension.Date:
+					case DateTimeDimension.Hours:
+						break;
+
+					default:
+						expect(dateEx[key]).to.be.eql(initParam[key]);
+				}
+			});
+		});
+
+		it('different quarter', () => {
+			const initParam : InitDataFormat = {
+				year : 2020, month : 6, date : 30,
+				hours : 15, minutes : 3, seconds : 16, ms : 32
+			};
+
+			const date : Date = new Date(Date.UTC(
+				initParam.year, initParam.month - 1, initParam.date,
+				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+			));
+
+			const dateEx : DateEx = new DateEx(date);
+
+			DatetimeSetParamKeys.forEach(key => {
+				switch (key) {
+					// skip of other specs
+					case DateTimeDimension.Month:
+					case DateTimeDimension.Date:
+					case DateTimeDimension.Hours:
+						break;
+
+					default:
+						expect(dateEx[key]).to.be.eql(initParam[key]);
+				}
+			});
+
+			expect(dateEx.month).to.be.eql(initParam.month + 1);
+			expect(dateEx.UTC.month).to.be.eql(initParam.month);
+
+			expect(dateEx.UTC.quarter).to.be.eql(dateEx.quarter - 1);
+		});
+
+		it('different year', () => {
+			const initParam : InitDataFormat = {
+				year : 2020, month : 12, date : 31,
+				hours : 15, minutes : 3, seconds : 16, ms : 32
+			};
+
+			const date : Date = new Date(Date.UTC(
+				initParam.year, initParam.month - 1, initParam.date,
+				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+			));
+
+			const dateEx : DateEx = new DateEx(date);
+
+			DatetimeSetParamKeys.forEach(key => {
+				switch (key) {
+					case DateTimeDimension.Year:
+						expect(dateEx.date).to.be.eql(1);
+						expect(dateEx.UTC.date).to.be.eql(initParam.date);
+
+						expect(dateEx.month).to.be.eql(1);
+						expect(dateEx.UTC.month).to.be.eql(initParam.month);
+
+						expect(dateEx.quarter).to.be.eql(1);
+						expect(dateEx.UTC.quarter).to.be.eql(4);
+
+						expect(dateEx.year).to.be.eql(initParam.year + 1);
+						expect(dateEx.UTC.year).to.be.eql(initParam.year);
+						break;
+
+					// skip of other specs
+					case DateTimeDimension.Month:
+					case DateTimeDimension.Date:
+					case DateTimeDimension.Hours:
+						break;
+
+					default:
+						expect(dateEx[key]).to.be.eql(initParam[key]);
+				}
 			});
 		});
 	});

@@ -45,7 +45,7 @@ export class DateProxy {
 		return this._date.getFullYear();
 	}
 
-	get yearUTC () : number {
+	private get yearUTC () : number {
 		let year : number = this.year;
 
 		if (this.isMonthChangingWithUTC() && this.month === 1) {
@@ -60,7 +60,7 @@ export class DateProxy {
 		return Math.floor((this.month - 1) / 3) + 1;
 	}
 
-	get quarterUTC () : number {
+	private get quarterUTC () : number {
 		let quarter : number = this.quarter;
 
 		if (this.isMonthChangingWithUTC() && (this.month % 3 === 1)) {
@@ -104,7 +104,7 @@ export class DateProxy {
 		return this.isDateChangingWithUTC() && this.isFirstDayOfMonth();
 	}
 
-	get monthUTC () : number {
+	private get monthUTC () : number {
 		let month : number = this.month;
 
 		if (this.isMonthChangingWithUTC()) {
@@ -156,7 +156,7 @@ export class DateProxy {
 		return hours - timezoneOffsetInHours > 23;
 	}
 
-	get dateUTC () : number {
+	private get dateUTC () : number {
 		let date : number = this.date;
 
 		if (this.isDateChangingWithUTC()) {
@@ -192,7 +192,7 @@ export class DateProxy {
 		return this._date.getDay();
 	}
 
-	get dayUTC () : number {
+	private get dayUTC () : number {
 		const day : number = this.day;
 
 		return !this.isDateChangingWithUTC()
@@ -224,11 +224,11 @@ export class DateProxy {
 		return hours > 12 ? hours % 12 : hours;
 	}
 
-	get hours12UTC () : number {
+	private get hours12UTC () : number {
 		return (this.hours24UTC + 1) % 12 - 1;
 	}
 
-	get hours24UTC () : number {
+	private get hours24UTC () : number {
 		let hours : number = this.hours + this.timezoneOffset / 60;
 
 		return hours < 0
@@ -277,13 +277,17 @@ export class DateProxy {
 		};
 	}
 
-	toJsonUTC () : Required<DateTimeJson> {
+	get UTC () {
 		return {
 			year : this.yearUTC,
+			quarter : this.quarterUTC,
 			month : this.monthUTC,
 			date : this.dateUTC,
+			day : this.dayUTC,
 
 			hours : this.hours24UTC,
+			hours12 : this.hours12UTC,
+
 			minutes : this.minutes,
 			seconds : this.seconds,
 			ms : this.ms

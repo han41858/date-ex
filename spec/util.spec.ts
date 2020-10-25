@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { daysOfMonth } from '../src/util';
+import { getMaxDateOfMonth } from '../src/util';
 
 
 describe('util', () => {
@@ -22,8 +22,7 @@ describe('util', () => {
 			];
 
 			targets.forEach(obj => {
-				console.log(obj.year, obj.month, daysOfMonth(obj.year, obj.month), obj.expectDays);
-				expect(daysOfMonth(obj.year, obj.month)).to.be.eql(obj.expectDays);
+				expect(getMaxDateOfMonth(obj.year, obj.month)).to.be.eql(obj.expectDays);
 			});
 		});
 	});

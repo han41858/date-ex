@@ -197,32 +197,62 @@ describe('DateProxy', () => {
 		});
 	});
 
-	describe('dayOfYear', () => {
+	describe('daysOfYear', () => {
 		const targets : {
 			param : DateTimeJson,
-			day : number
+			days : number
 		}[] = [{
 			param : { year : 2020, month : 1, date : 1 },
-			day : 1
+			days : 1
 		}, {
 			param : { year : 2020, month : 1, date : 4 },
-			day : 4
+			days : 4
 		}, {
 			param : { year : 2020, month : 2, date : 1 },
-			day : 32
+			days : 32
 		}, {
 			param : { year : 2020, month : 12, date : 31 },
-			day : 366
+			days : 366
 		}, {
 			param : { year : 2021, month : 1, date : 1 },
-			day : 1
+			days : 1
 		}];
 
 		it('ok', () => {
 			targets.forEach(target => {
 				const date : DateEx = new DateEx(target.param);
 
-				expect(date.dayOfYear).to.be.eql(target.day);
+				expect(date.dayOfYear).to.be.eql(target.days);
+			});
+		});
+	});
+
+	describe('maxDateOfMonth', () => {
+		const targets : {
+			param : DateTimeJson,
+			days : number
+		}[] = [{
+			param : { year : 2020, month : 1 },
+			days : 31
+		}, {
+			param : { year : 2020, month : 2 },
+			days : 29
+		}, {
+			param : { year : 2020, month : 3 },
+			days : 31
+		}, {
+			param : { year : 2020, month : 12 },
+			days : 31
+		}, {
+			param : { year : 2021, month : 1 },
+			days : 31
+		}];
+
+		it('ok', () => {
+			targets.forEach(target => {
+				const date : DateEx = new DateEx(target.param);
+
+				expect(date.maxDateOfMonth).to.be.eql(target.days);
 			});
 		});
 	});

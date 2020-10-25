@@ -516,8 +516,60 @@ export class DateEx extends DateProxy {
 		return diffValue;
 	}
 
-	// TODO: isBefore()
-	// TODO: isAfter()
-	// TODO: isBetween()
+	isBefore (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+		return this.diff(date, dimension || DateTimeDimension.Ms) < 0;
+	}
+
+	isBeforeOrEqual (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+		return this.diff(date, dimension || DateTimeDimension.Ms) <= 0;
+	}
+
+	isAfter (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+		return this.diff(date, dimension || DateTimeDimension.Ms) > 0;
+	}
+
+	isAfterOrEqual (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+		return this.diff(date, dimension || DateTimeDimension.Ms) >= 0;
+	}
+
+	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+		let smallerDate : DateEx;
+		let biggerDate : DateEx;
+
+		const dateEx1 : DateEx = new DateEx(date1);
+		const dateEx2 : DateEx = new DateEx(date2);
+
+		if (+dateEx1 <= +dateEx2) {
+			smallerDate = dateEx1;
+			biggerDate = dateEx2;
+		}
+		else {
+			smallerDate = dateEx2;
+			biggerDate = dateEx1;
+		}
+
+		return this.diff(smallerDate, dimension || DateTimeDimension.Ms) > 0
+			&& this.diff(biggerDate, dimension || DateTimeDimension.Ms) < 0;
+	}
+
+	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+		let smallerDate : DateEx;
+		let biggerDate : DateEx;
+
+		const dateEx1 : DateEx = new DateEx(date1);
+		const dateEx2 : DateEx = new DateEx(date2);
+
+		if (+dateEx1 <= +dateEx2) {
+			smallerDate = dateEx1;
+			biggerDate = dateEx2;
+		}
+		else {
+			smallerDate = dateEx2;
+			biggerDate = dateEx1;
+		}
+
+		return this.diff(smallerDate, dimension || DateTimeDimension.Ms) >= 0
+			&& this.diff(biggerDate, dimension || DateTimeDimension.Ms) <= 0;
+	}
 
 }

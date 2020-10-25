@@ -1582,4 +1582,256 @@ describe('DateEx', () => {
 			});
 		});
 	});
+
+	describe('isBefore()', () => {
+		it('no dimension param', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22,
+				ms : 1
+			});
+
+			expect(date1.isBefore(date2)).to.be.true;
+		});
+
+		it('same date', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isBefore(date2, DateTimeDimension.Date)).to.be.false;
+		});
+
+		it('is before, but same with dimension', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 21
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isBefore(date2, DateTimeDimension.Month)).to.be.false;
+		});
+	});
+
+	describe('isBeforeOrEqual()', () => {
+		it('no dimension param', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22,
+				ms : 1
+			});
+
+			expect(date1.isBeforeOrEqual(date2)).to.be.true;
+		});
+
+		it('same date', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isBeforeOrEqual(date2, DateTimeDimension.Date)).to.be.true;
+		});
+
+		it('is before, but same with dimension', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 21
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isBeforeOrEqual(date2, DateTimeDimension.Month)).to.be.true;
+		});
+	});
+
+	describe('isAfter()', () => {
+		it('no dimension param', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22,
+				ms : 1
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isAfter(date2)).to.be.true;
+		});
+
+		it('same date', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isAfter(date2, DateTimeDimension.Date)).to.be.false;
+		});
+
+		it('is after, but same with dimension', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 23
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isAfter(date2, DateTimeDimension.Month)).to.be.false;
+		});
+	});
+
+	describe('isAfterOrEqual()', () => {
+		it('no dimension param', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22,
+				ms : 1
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isAfterOrEqual(date2)).to.be.true;
+		});
+
+		it('same date', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isAfterOrEqual(date2, DateTimeDimension.Date)).to.be.true;
+		});
+
+		it('is after, but same with dimension', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 23
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isAfterOrEqual(date2, DateTimeDimension.Month)).to.be.true;
+		});
+	});
+
+	describe('isBetween()', () => {
+		it('different days', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 20
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date3 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 24
+			});
+
+			expect(date1.isBetween(date2, date3)).to.be.false;
+			expect(date1.isBetween(date3, date2)).to.be.false;
+
+			expect(date2.isBetween(date1, date3)).to.be.true;
+			expect(date2.isBetween(date3, date1)).to.be.true;
+
+			expect(date3.isBetween(date1, date2)).to.be.false;
+			expect(date3.isBetween(date2, date1)).to.be.false;
+		});
+
+		it('same day', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date3 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isBetween(date2, date3)).to.be.false;
+			expect(date1.isBetween(date3, date2)).to.be.false;
+
+			expect(date2.isBetween(date1, date3)).to.be.false;
+			expect(date2.isBetween(date3, date1)).to.be.false;
+
+			expect(date3.isBetween(date1, date2)).to.be.false;
+			expect(date3.isBetween(date2, date1)).to.be.false;
+		});
+	});
+
+	describe('isBetweenOrEqual()', () => {
+		it('different days', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 20
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date3 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 24
+			});
+
+			expect(date1.isBetweenOrEqual(date2, date3)).to.be.false;
+			expect(date1.isBetweenOrEqual(date3, date2)).to.be.false;
+
+			expect(date2.isBetweenOrEqual(date1, date3)).to.be.true;
+			expect(date2.isBetweenOrEqual(date3, date1)).to.be.true;
+
+			expect(date3.isBetweenOrEqual(date1, date2)).to.be.false;
+			expect(date3.isBetweenOrEqual(date2, date1)).to.be.false;
+		});
+
+		it('same day', () => {
+			const date1 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date3 : DateEx = new DateEx({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isBetweenOrEqual(date2, date3)).to.be.true;
+			expect(date1.isBetweenOrEqual(date3, date2)).to.be.true;
+
+			expect(date2.isBetweenOrEqual(date1, date3)).to.be.true;
+			expect(date2.isBetweenOrEqual(date3, date1)).to.be.true;
+
+			expect(date3.isBetweenOrEqual(date1, date2)).to.be.true;
+			expect(date3.isBetweenOrEqual(date2, date1)).to.be.true;
+		});
+	});
 });

@@ -29,7 +29,7 @@ describe('DateEx', () => {
 		});
 
 		// test string initializer
-		describe.only('by string', () => {
+		describe('by string', () => {
 			describe('by date string', () => {
 				describe('ok', () => {
 					it('YYYY-MM-DD', () => {

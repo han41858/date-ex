@@ -12,17 +12,17 @@ export class DateProxy {
 			this._date = new Date();
 		}
 		else {
-			if (typeof initDate === 'string') {
-				this._date = new Date(initDate);
-			}
-			else if (typeof initDate === 'number') {
-				this._date = new Date(initDate);
+			if (initDate instanceof DateEx) {
+				this._date = new Date(initDate.toDate());
 			}
 			else if (initDate instanceof Date) {
 				this._date = new Date(initDate);
 			}
-			else if (initDate instanceof DateEx) {
-				this._date = new Date(initDate.toDate());
+			else if (typeof initDate === 'string') {
+				this._date = new Date(initDate);
+			}
+			else if (typeof initDate === 'number') {
+				this._date = new Date(initDate);
 			}
 			else {
 				this._date = new Date();

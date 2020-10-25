@@ -1,7 +1,7 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeJson, InitDataFormat, LocaleSet } from './interfaces';
-import { DatetimeSetParamKeys, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
+import { DateTimeDimension, DatetimeSetParamKeys, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
 import { clone, loadLocaleFile, padDigit } from './util';
 
 // load default locale
@@ -418,7 +418,103 @@ export class DateEx extends DateProxy {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
-	// TODO: diff()
+	diff (date : InitDataFormat, dimension : DateTimeDimension) : number {
+		let dateWith : DateEx;
+
+		if (date instanceof DateEx) {
+			dateWith = date;
+		}
+		else {
+			dateWith = new DateEx(date);
+		}
+
+		let diffValue : number;
+
+		switch (dimension) {
+			case DateTimeDimension.Year:
+				diffValue = this.year - dateWith.year;
+				break;
+
+			case DateTimeDimension.Quarter: {
+				const yearModifier : number = (this.year - dateWith.year) * 4;
+
+				diffValue = yearModifier + this.quarter - dateWith.quarter;
+				break;
+			}
+
+			case DateTimeDimension.Month: {
+				const yearModifier : number = (this.year - dateWith.year) * 12;
+
+				diffValue = yearModifier + this.month - dateWith.month;
+				break;
+			}
+
+			case DateTimeDimension.Week: {
+				const sign : number = Math.sign(+this - +dateWith);
+
+				let smallerDate : DateEx;
+				let biggerDate : DateEx;
+
+				if (sign < 0) {
+					smallerDate = this;
+					biggerDate = dateWith;
+				}
+				else {
+					smallerDate = dateWith;
+					biggerDate = this;
+				}
+
+				const numberOfDays : number = Math.floor((+biggerDate - +smallerDate) / (24 * 60 * 60 * 1000));
+
+				// add 1 for day starting from 0
+				const diffWeeks : number = Math.ceil(sign * (smallerDate.day + 1 + numberOfDays) / 7);
+
+				// can be -0
+				diffValue = diffWeeks === -0
+					? 0
+					: diffWeeks;
+				break;
+			}
+
+			case DateTimeDimension.Date: {
+				const diffInMs : number = +this - +dateWith;
+				const diffInDays : number = diffInMs / 1000 / 60 / 60 / 24;
+
+				diffValue = Math.floor(diffInDays);
+				break;
+			}
+
+			case DateTimeDimension.Hours: {
+				const diffInMs : number = +this - +dateWith;
+				const diffInHours : number = diffInMs / 1000 / 60 / 60;
+
+				diffValue = Math.floor(diffInHours);
+				break;
+			}
+
+			case DateTimeDimension.Minutes: {
+				const diffInMs : number = +this - +dateWith;
+				const diffInMinutes : number = diffInMs / 1000 / 60;
+
+				diffValue = Math.floor(diffInMinutes);
+				break;
+			}
+
+			case DateTimeDimension.Seconds: {
+				const diffInMs : number = +this - +dateWith;
+				const diffInSeconds : number = diffInMs / 1000;
+
+				diffValue = Math.floor(diffInSeconds);
+				break;
+			}
+
+			case DateTimeDimension.Ms:
+				diffValue = +this - +dateWith;
+				break;
+		}
+
+		return diffValue;
+	}
 
 	// TODO: isBefore()
 	// TODO: isAfter()

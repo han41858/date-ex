@@ -1172,4 +1172,414 @@ describe('DateEx', () => {
 			});
 		});
 	});
+
+	describe('diff()', () => {
+		describe(DateTimeDimension.Year, () => {
+			it('ok', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2021
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Year)).to.be.eql(-1);
+			});
+		});
+		describe(DateTimeDimension.Quarter, () => {
+			it('same year', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 3
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 5
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Quarter)).to.be.eql(-1);
+			});
+
+			it('different year', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2021,
+					month : 6,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 8
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Quarter)).to.be.eql(3);
+			});
+		});
+
+
+		describe(DateTimeDimension.Month, () => {
+			it('same year', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 3,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 5
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Month)).to.be.eql(-2);
+			});
+
+			it('different year', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2021,
+					month : 3,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 5
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Month)).to.be.eql(10);
+			});
+		});
+
+		describe(DateTimeDimension.Week, () => {
+			it('same week', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 10
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(0);
+			});
+
+			it('different week', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 11
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(-1);
+			});
+
+			it('different month', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 11,
+					date : 5
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(-5);
+			});
+
+			it('different year, but same week', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 12,
+					date : 30,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2021,
+					month : 1,
+					date : 2
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(0);
+			});
+
+			it('different year, but different week', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 12,
+					date : 30,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2021,
+					month : 1,
+					date : 3
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(-1);
+			});
+		});
+
+		describe(DateTimeDimension.Date, () => {
+			it('same month', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 13,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 20
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Date)).to.be.eql(-7);
+			});
+
+			it('different month', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 8,
+					date : 5,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 7,
+					date : 31
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Date)).to.be.eql(5);
+			});
+
+			it('different year', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 5,
+					date : 5,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2021,
+					month : 5,
+					date : 6
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Date)).to.be.eql(-366);
+			});
+		});
+
+		describe(DateTimeDimension.Hours, () => {
+			it('same day', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					hours : 10,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					hours : 12
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Hours)).to.be.eql(-2);
+			});
+
+			it('different dates', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					hours : 5,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					hours : 5
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Hours)).to.be.eql(-2 * 24);
+			});
+		});
+
+		describe(DateTimeDimension.Minutes, () => {
+			it('same day', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					minutes : 10,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					minutes : 30
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Minutes)).to.be.eql(-20);
+			});
+
+			it('different dates', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					minutes : 5,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					minutes : 5
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Minutes)).to.be.eql(-2 * 24 * 60);
+			});
+		});
+
+		describe(DateTimeDimension.Seconds, () => {
+			it('same day', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					seconds : 10,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					seconds : 30
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Seconds)).to.be.eql(-20);
+			});
+
+			it('different minutes', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					minutes : 8,
+					seconds : 10,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					minutes : 5,
+					seconds : 30
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Seconds)).to.be.eql(160);
+			});
+
+			it('different day', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					seconds : 10,
+					ms : 3 // margin
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 5,
+					seconds : 30
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Seconds)).to.be.eql(-2 * 24 * 60 * 60 - 20);
+			});
+		});
+
+		describe(DateTimeDimension.Ms, () => {
+			it('same seconds', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					hours : 13,
+					minutes : 53,
+					seconds : 10,
+					ms : 100
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					hours : 13,
+					minutes : 53,
+					seconds : 10,
+					ms : 300
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Ms)).to.be.eql(date1.ms - date2.ms);
+			});
+
+			it('different seconds', () => {
+				const date1 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					hours : 13,
+					minutes : 53,
+					seconds : 12,
+					ms : 100
+				});
+
+				const date2 : DateEx = new DateEx({
+					year : 2020,
+					month : 10,
+					date : 3,
+					hours : 13,
+					minutes : 53,
+					seconds : 10,
+					ms : 300
+				});
+
+				expect(date1.diff(date2, DateTimeDimension.Ms)).to.be.eql(2 * 1000 + date1.ms - date2.ms);
+			});
+		});
+	});
 });

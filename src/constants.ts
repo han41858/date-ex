@@ -2,7 +2,9 @@ import { DateTimeJson } from './interfaces';
 
 export enum DateTimeDimension {
 	Year = 'year',
+	Quarter = 'quarter',
 	Month = 'month',
+	Week = 'week',
 	Date = 'date',
 
 	Hours = 'hours',
@@ -11,7 +13,16 @@ export enum DateTimeDimension {
 	Ms = 'ms'
 }
 
-export const DatetimeSetParamKeys : (keyof DateTimeJson)[] = Object.values(DateTimeDimension) as (keyof DateTimeJson)[];
+export const DatetimeSetParamKeys : (keyof DateTimeJson)[] = [
+	DateTimeDimension.Year,
+	DateTimeDimension.Month,
+	DateTimeDimension.Date,
+
+	DateTimeDimension.Hours,
+	DateTimeDimension.Minutes,
+	DateTimeDimension.Seconds,
+	DateTimeDimension.Ms
+];
 
 export const ZeroDaySetter : DateTimeJson = {
 	[DateTimeDimension.Year] : 1900,

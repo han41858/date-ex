@@ -265,7 +265,7 @@ describe('DateProxy', () => {
 				targets.forEach(target => {
 					const date : DateEx = new DateEx(target.param);
 
-					expect(date.maxDateOfMonth).to.be.eql(target.days);
+					expect(date.lastDateOfMonth).to.be.eql(target.days);
 				});
 			});
 		});

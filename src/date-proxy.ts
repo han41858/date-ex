@@ -1,6 +1,6 @@
 import { DateTimeJson, InitDataFormat } from './interfaces';
 import { DateEx } from './date-ex';
-import { getMaxDateOfMonth } from './util';
+import { getLastDateOfMonth } from './util';
 
 
 export class DateProxy {
@@ -90,8 +90,8 @@ export class DateProxy {
 	}
 
 	// return day count of this month
-	get maxDateOfMonth () : number {
-		return getMaxDateOfMonth(this.year, this.month);
+	get lastDateOfMonth () : number {
+		return getLastDateOfMonth(this.year, this.month);
 	}
 
 	private isFirstDayOfMonth () : boolean {

@@ -94,7 +94,7 @@ export const wait = (ms ? : number) : Promise<void> => {
 };
 
 // month is real number : 1 ~ 12
-export const getMaxDateOfMonth = (year : number, month : number) : number => {
+export const getLastDateOfMonth = (year : number, month : number) : number => {
 	const lastDayOfThisMonth : Date = new Date(year, month, 0);
 
 	return lastDayOfThisMonth.getDate();

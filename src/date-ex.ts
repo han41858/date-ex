@@ -423,7 +423,7 @@ export class DateEx extends DateProxy {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
-	diff (date : InitDataFormat, dimension : DateTimeDimension) : number {
+	diff (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : number {
 		let dateWith : DateEx;
 
 		if (date instanceof DateEx) {
@@ -521,23 +521,23 @@ export class DateEx extends DateProxy {
 		return diffValue;
 	}
 
-	isBefore (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
-		return this.diff(date, dimension || DateTimeDimension.Ms) < 0;
+	isBefore (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+		return this.diff(date, dimension) < 0;
 	}
 
-	isBeforeOrEqual (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
-		return this.diff(date, dimension || DateTimeDimension.Ms) <= 0;
+	isBeforeOrEqual (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+		return this.diff(date, dimension) <= 0;
 	}
 
-	isAfter (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
-		return this.diff(date, dimension || DateTimeDimension.Ms) > 0;
+	isAfter (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+		return this.diff(date, dimension) > 0;
 	}
 
-	isAfterOrEqual (date : InitDataFormat, dimension? : DateTimeDimension) : boolean {
-		return this.diff(date, dimension || DateTimeDimension.Ms) >= 0;
+	isAfterOrEqual (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+		return this.diff(date, dimension) >= 0;
 	}
 
-	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
 		let smallerDate : DateEx;
 		let biggerDate : DateEx;
 
@@ -553,11 +553,11 @@ export class DateEx extends DateProxy {
 			biggerDate = dateEx1;
 		}
 
-		return this.diff(smallerDate, dimension || DateTimeDimension.Ms) > 0
-			&& this.diff(biggerDate, dimension || DateTimeDimension.Ms) < 0;
+		return this.diff(smallerDate, dimension) > 0
+			&& this.diff(biggerDate, dimension) < 0;
 	}
 
-	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension? : DateTimeDimension) : boolean {
+	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
 		let smallerDate : DateEx;
 		let biggerDate : DateEx;
 
@@ -573,8 +573,8 @@ export class DateEx extends DateProxy {
 			biggerDate = dateEx1;
 		}
 
-		return this.diff(smallerDate, dimension || DateTimeDimension.Ms) >= 0
-			&& this.diff(biggerDate, dimension || DateTimeDimension.Ms) <= 0;
+		return this.diff(smallerDate, dimension) >= 0
+			&& this.diff(biggerDate, dimension) <= 0;
 	}
 
 }

@@ -1,4 +1,5 @@
-import { LocaleSet } from './interfaces';
+import { InitDataFormat, LocaleSet } from './interfaces';
+import { DateEx } from './date-ex';
 
 export const newArray = <T> (length : number, callback? : (i? : number, arr? : T[]) => T) : (undefined | T)[] => {
 	const arr : any[] = new Array(length).fill(undefined);
@@ -97,4 +98,17 @@ export const getMaxDateOfMonth = (year : number, month : number) : number => {
 	const lastDayOfThisMonth : Date = new Date(year, month, 0);
 
 	return lastDayOfThisMonth.getDate();
+};
+
+export const dateFormat = (date : InitDataFormat, format : string) : string => {
+	let dateEx : DateEx;
+
+	if (date instanceof DateEx) {
+		dateEx = date;
+	}
+	else {
+		dateEx = new DateEx(date);
+	}
+
+	return dateEx.isValid() ? dateEx.format(format) : date as string;
 };

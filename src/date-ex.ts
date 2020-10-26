@@ -222,7 +222,7 @@ export class DateEx extends DateProxy {
 		let result : string = format;
 
 		// find tokens
-		const regExp : RegExp = /YYYY|YY|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+		const regExp : RegExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
 		const matchArr : {
 			token : FormatToken,
@@ -273,6 +273,11 @@ export class DateEx extends DateProxy {
 
 			case FormatToken.YearShort:
 				returnValue = padDigit(this.year % 100, 2);
+				break;
+
+
+			case FormatToken.Quarter:
+				returnValue = '' + (Math.floor((this.month - 1) / 3) + 1);
 				break;
 
 

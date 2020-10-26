@@ -636,6 +636,50 @@ describe('DateEx', () => {
 			});
 		});
 
+		describe('quarter', () => {
+			it(FormatToken.Quarter, () => {
+				const months : number[] = newArray(12, i => {
+					return i + 1; // 1 ~ 12
+				});
+
+				months.forEach(month => {
+					const date : DateEx = new DateEx({
+						month
+					});
+
+					const result : string = date.format(FormatToken.Quarter);
+
+					expect(result).to.be.lengthOf(1);
+
+					switch (month) {
+						case 1:
+						case 2:
+						case 3:
+							expect(result).to.be.eql('1');
+							break;
+
+						case 4:
+						case 5:
+						case 6:
+							expect(result).to.be.eql('2');
+							break;
+
+						case 7:
+						case 8:
+						case 9:
+							expect(result).to.be.eql('3');
+							break;
+
+						case 10:
+						case 11:
+						case 12:
+							expect(result).to.be.eql('4');
+							break;
+					}
+				});
+			});
+		});
+
 		describe('month', () => {
 			let defaultLocaleSet : LocaleSet;
 

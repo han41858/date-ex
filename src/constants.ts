@@ -39,6 +39,8 @@ export enum FormatToken {
 	YearShort = 'YY', // 20
 	Year = 'YYYY', // 2020
 
+	Quarter = 'Q',
+
 	Month = 'M', // 1
 	MonthPadded = 'MM', // 01
 	MonthStringShort = 'MMM', // Jan

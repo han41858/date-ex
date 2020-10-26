@@ -54,7 +54,7 @@ describe('DateProxy', () => {
 		});
 	});
 
-	describe.only('getter', () => {
+	describe('getter', () => {
 		describe('year', () => {
 			it('ok', () => {
 				const years : number[] = [2020, 2021, 2020];

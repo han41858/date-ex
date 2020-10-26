@@ -399,6 +399,85 @@ describe('DateProxy', () => {
 		});
 	});
 
+	describe('setter', () => {
+		describe('year', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.year = 3000;
+
+				expect(date.year).to.be.eql(3000);
+				expect(date.toDate().getFullYear()).to.be.eql(3000);
+			});
+		});
+
+		describe('month', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.month = 5;
+
+				expect(date.month).to.be.eql(5);
+				expect(date.toDate().getMonth()).to.be.eql(4);
+			});
+		});
+
+		describe('date', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.date = 10;
+
+				expect(date.month).to.be.eql(10);
+				expect(date.toDate().getDate()).to.be.eql(10);
+			});
+		});
+
+		describe('hours', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.hours = 13;
+
+				expect(date.hours).to.be.eql(13);
+				expect(date.toDate().getHours()).to.be.eql(13);
+			});
+		});
+
+		describe('minutes', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.minutes = 59;
+
+				expect(date.minutes).to.be.eql(59);
+				expect(date.toDate().getMinutes()).to.be.eql(59);
+			});
+		});
+
+		describe('seconds', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.seconds = 30;
+
+				expect(date.seconds).to.be.eql(30);
+				expect(date.toDate().getSeconds()).to.be.eql(30);
+			});
+		});
+
+		describe('ms', () => {
+			it('ok', () => {
+				const date : DateEx = new DateEx();
+
+				date.ms = 133;
+
+				expect(date.ms).to.be.eql(133);
+				expect(date.toDate().getMilliseconds()).to.be.eql(133);
+			});
+		});
+	});
+
 	// tested in Seoul +09:00
 	describe('about UTC', () => {
 		it('same date', () => {

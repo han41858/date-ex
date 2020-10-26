@@ -46,6 +46,10 @@ export class DateProxy {
 		return this._date.getFullYear();
 	}
 
+	set year (year : number) {
+		this._date.setFullYear(year);
+	}
+
 	private get yearUTC () : number {
 		let year : number = this.year;
 
@@ -79,6 +83,10 @@ export class DateProxy {
 
 	get month () : number {
 		return this._date.getMonth() + 1;
+	}
+
+	set month (month : number) {
+		this._date.setMonth(month - 1);
 	}
 
 	// return day count of this month
@@ -154,6 +162,10 @@ export class DateProxy {
 		return this._date.getDate();
 	}
 
+	set date (date : number) {
+		this._date.setDate(date);
+	}
+
 	private isDateChangingWithUTC () : boolean {
 		const hours : number = this.hours24UTC;
 		const timezoneOffsetInHours : number = this.timezoneOffset / 60;
@@ -218,6 +230,10 @@ export class DateProxy {
 		return this._date.getHours();
 	}
 
+	set hours (hours : number) {
+		this._date.setHours(hours);
+	}
+
 	// 0 ~ 23
 	get hours24 () : number {
 		return this.hours;
@@ -246,12 +262,24 @@ export class DateProxy {
 		return this._date.getMinutes();
 	}
 
+	set minutes (minutes : number) {
+		this._date.setMinutes(minutes);
+	}
+
 	get seconds () : number {
 		return this._date.getSeconds();
 	}
 
+	set seconds (seconds : number) {
+		this._date.setSeconds(seconds);
+	}
+
 	get ms () : number {
 		return this._date.getMilliseconds();
+	}
+
+	set ms (ms : number) {
+		this._date.setMilliseconds(ms);
 	}
 
 	toDate () : Date {

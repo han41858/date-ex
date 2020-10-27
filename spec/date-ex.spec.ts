@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { DateTime } from '../src/date-time';
-import { DateTimeDimension, DatetimeSetParamKeys, DefaultLocale, FormatToken } from '../src/constants';
+import { DatetimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from '../src/constants';
 import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
 import { InitDataFormat, LocaleSet } from '../src/interfaces';
 
@@ -299,7 +299,7 @@ describe('DateTime', () => {
 			DatetimeSetParamKeys.forEach(key => {
 				it(key, () => {
 					const date : DateTime = new DateTime({
-						[key] : key === DateTimeDimension.Year
+						[key] : key === DateTimeUnit.Year
 							? 1903
 							: 3
 					});
@@ -307,16 +307,16 @@ describe('DateTime', () => {
 					DatetimeSetParamKeys.forEach(checkKey => {
 						if (checkKey === key) {
 							expect(date[checkKey]).to.be.eql(
-								checkKey === DateTimeDimension.Year
+								checkKey === DateTimeUnit.Year
 									? 1903
 									: 3
 							);
 						}
 						else {
 							expect(date[checkKey]).to.be.eql(
-								checkKey === DateTimeDimension.Year
+								checkKey === DateTimeUnit.Year
 									? 1900
-									: ((checkKey === DateTimeDimension.Month || checkKey === DateTimeDimension.Date)
+									: ((checkKey === DateTimeUnit.Month || checkKey === DateTimeUnit.Date)
 										? 1
 										: 0
 									)
@@ -521,31 +521,31 @@ describe('DateTime', () => {
 				let changingValue : number;
 
 				switch (key) {
-					case DateTimeDimension.Year:
+					case DateTimeUnit.Year:
 						changingValue = now.getFullYear();
 						break;
 
-					case DateTimeDimension.Month:
+					case DateTimeUnit.Month:
 						changingValue = now.getMonth() + 1;
 						break;
 
-					case DateTimeDimension.Date:
+					case DateTimeUnit.Date:
 						changingValue = now.getDate();
 						break;
 
-					case DateTimeDimension.Hours:
+					case DateTimeUnit.Hours:
 						changingValue = now.getHours();
 						break;
 
-					case DateTimeDimension.Minutes:
+					case DateTimeUnit.Minutes:
 						changingValue = now.getMinutes();
 						break;
 
-					case DateTimeDimension.Seconds:
+					case DateTimeUnit.Seconds:
 						changingValue = now.getSeconds();
 						break;
 
-					case DateTimeDimension.Ms:
+					case DateTimeUnit.Ms:
 						changingValue = now.getMilliseconds();
 						break;
 
@@ -1218,7 +1218,7 @@ describe('DateTime', () => {
 	});
 
 	describe('diff()', () => {
-		describe(DateTimeDimension.Year, () => {
+		describe(DateTimeUnit.Year, () => {
 			it('ok', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020
@@ -1228,10 +1228,10 @@ describe('DateTime', () => {
 					year : 2021
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Year)).to.be.eql(-1);
+				expect(date1.diff(date2, DateTimeUnit.Year)).to.be.eql(-1);
 			});
 		});
-		describe(DateTimeDimension.Quarter, () => {
+		describe(DateTimeUnit.Quarter, () => {
 			it('same year', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1243,7 +1243,7 @@ describe('DateTime', () => {
 					month : 5
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Quarter)).to.be.eql(-1);
+				expect(date1.diff(date2, DateTimeUnit.Quarter)).to.be.eql(-1);
 			});
 
 			it('different year', () => {
@@ -1258,12 +1258,12 @@ describe('DateTime', () => {
 					month : 8
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Quarter)).to.be.eql(3);
+				expect(date1.diff(date2, DateTimeUnit.Quarter)).to.be.eql(3);
 			});
 		});
 
 
-		describe(DateTimeDimension.Month, () => {
+		describe(DateTimeUnit.Month, () => {
 			it('same year', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1276,7 +1276,7 @@ describe('DateTime', () => {
 					month : 5
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Month)).to.be.eql(-2);
+				expect(date1.diff(date2, DateTimeUnit.Month)).to.be.eql(-2);
 			});
 
 			it('different year', () => {
@@ -1291,11 +1291,11 @@ describe('DateTime', () => {
 					month : 5
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Month)).to.be.eql(10);
+				expect(date1.diff(date2, DateTimeUnit.Month)).to.be.eql(10);
 			});
 		});
 
-		describe(DateTimeDimension.Week, () => {
+		describe(DateTimeUnit.Week, () => {
 			it('same week', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1310,7 +1310,7 @@ describe('DateTime', () => {
 					date : 10
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(0);
+				expect(date1.diff(date2, DateTimeUnit.Week)).to.be.eql(0);
 			});
 
 			it('different week', () => {
@@ -1327,7 +1327,7 @@ describe('DateTime', () => {
 					date : 11
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(-1);
+				expect(date1.diff(date2, DateTimeUnit.Week)).to.be.eql(-1);
 			});
 
 			it('different month', () => {
@@ -1344,7 +1344,7 @@ describe('DateTime', () => {
 					date : 5
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(-5);
+				expect(date1.diff(date2, DateTimeUnit.Week)).to.be.eql(-5);
 			});
 
 			it('different year, but same week', () => {
@@ -1361,7 +1361,7 @@ describe('DateTime', () => {
 					date : 2
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(0);
+				expect(date1.diff(date2, DateTimeUnit.Week)).to.be.eql(0);
 			});
 
 			it('different year, but different week', () => {
@@ -1378,11 +1378,11 @@ describe('DateTime', () => {
 					date : 3
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Week)).to.be.eql(-1);
+				expect(date1.diff(date2, DateTimeUnit.Week)).to.be.eql(-1);
 			});
 		});
 
-		describe(DateTimeDimension.Date, () => {
+		describe(DateTimeUnit.Date, () => {
 			it('same month', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1397,7 +1397,7 @@ describe('DateTime', () => {
 					date : 20
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Date)).to.be.eql(-7);
+				expect(date1.diff(date2, DateTimeUnit.Date)).to.be.eql(-7);
 			});
 
 			it('different month', () => {
@@ -1414,7 +1414,7 @@ describe('DateTime', () => {
 					date : 31
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Date)).to.be.eql(5);
+				expect(date1.diff(date2, DateTimeUnit.Date)).to.be.eql(5);
 			});
 
 			it('different year', () => {
@@ -1431,11 +1431,11 @@ describe('DateTime', () => {
 					date : 6
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Date)).to.be.eql(-366);
+				expect(date1.diff(date2, DateTimeUnit.Date)).to.be.eql(-366);
 			});
 		});
 
-		describe(DateTimeDimension.Hours, () => {
+		describe(DateTimeUnit.Hours, () => {
 			it('same day', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1452,7 +1452,7 @@ describe('DateTime', () => {
 					hours : 12
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Hours)).to.be.eql(-2);
+				expect(date1.diff(date2, DateTimeUnit.Hours)).to.be.eql(-2);
 			});
 
 			it('different dates', () => {
@@ -1471,11 +1471,11 @@ describe('DateTime', () => {
 					hours : 5
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Hours)).to.be.eql(-2 * 24);
+				expect(date1.diff(date2, DateTimeUnit.Hours)).to.be.eql(-2 * 24);
 			});
 		});
 
-		describe(DateTimeDimension.Minutes, () => {
+		describe(DateTimeUnit.Minutes, () => {
 			it('same day', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1492,7 +1492,7 @@ describe('DateTime', () => {
 					minutes : 30
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Minutes)).to.be.eql(-20);
+				expect(date1.diff(date2, DateTimeUnit.Minutes)).to.be.eql(-20);
 			});
 
 			it('different dates', () => {
@@ -1511,11 +1511,11 @@ describe('DateTime', () => {
 					minutes : 5
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Minutes)).to.be.eql(-2 * 24 * 60);
+				expect(date1.diff(date2, DateTimeUnit.Minutes)).to.be.eql(-2 * 24 * 60);
 			});
 		});
 
-		describe(DateTimeDimension.Seconds, () => {
+		describe(DateTimeUnit.Seconds, () => {
 			it('same day', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1532,7 +1532,7 @@ describe('DateTime', () => {
 					seconds : 30
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Seconds)).to.be.eql(-20);
+				expect(date1.diff(date2, DateTimeUnit.Seconds)).to.be.eql(-20);
 			});
 
 			it('different minutes', () => {
@@ -1553,7 +1553,7 @@ describe('DateTime', () => {
 					seconds : 30
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Seconds)).to.be.eql(160);
+				expect(date1.diff(date2, DateTimeUnit.Seconds)).to.be.eql(160);
 			});
 
 			it('different day', () => {
@@ -1572,11 +1572,11 @@ describe('DateTime', () => {
 					seconds : 30
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Seconds)).to.be.eql(-2 * 24 * 60 * 60 - 20);
+				expect(date1.diff(date2, DateTimeUnit.Seconds)).to.be.eql(-2 * 24 * 60 * 60 - 20);
 			});
 		});
 
-		describe(DateTimeDimension.Ms, () => {
+		describe(DateTimeUnit.Ms, () => {
 			it('same seconds', () => {
 				const date1 : DateTime = new DateTime({
 					year : 2020,
@@ -1598,7 +1598,7 @@ describe('DateTime', () => {
 					ms : 300
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Ms)).to.be.eql(date1.ms - date2.ms);
+				expect(date1.diff(date2, DateTimeUnit.Ms)).to.be.eql(date1.ms - date2.ms);
 			});
 
 			it('different seconds', () => {
@@ -1622,7 +1622,7 @@ describe('DateTime', () => {
 					ms : 300
 				});
 
-				expect(date1.diff(date2, DateTimeDimension.Ms)).to.be.eql(2 * 1000 + date1.ms - date2.ms);
+				expect(date1.diff(date2, DateTimeUnit.Ms)).to.be.eql(2 * 1000 + date1.ms - date2.ms);
 			});
 		});
 	});
@@ -1650,7 +1650,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isBefore(date2, DateTimeDimension.Date)).to.be.false;
+			expect(date1.isBefore(date2, DateTimeUnit.Date)).to.be.false;
 		});
 
 		it('is before, but same with dimension', () => {
@@ -1662,7 +1662,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isBefore(date2, DateTimeDimension.Month)).to.be.false;
+			expect(date1.isBefore(date2, DateTimeUnit.Month)).to.be.false;
 		});
 	});
 
@@ -1689,7 +1689,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isBeforeOrEqual(date2, DateTimeDimension.Date)).to.be.true;
+			expect(date1.isBeforeOrEqual(date2, DateTimeUnit.Date)).to.be.true;
 		});
 
 		it('is before, but same with dimension', () => {
@@ -1701,7 +1701,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isBeforeOrEqual(date2, DateTimeDimension.Month)).to.be.true;
+			expect(date1.isBeforeOrEqual(date2, DateTimeUnit.Month)).to.be.true;
 		});
 	});
 
@@ -1728,7 +1728,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isAfter(date2, DateTimeDimension.Date)).to.be.false;
+			expect(date1.isAfter(date2, DateTimeUnit.Date)).to.be.false;
 		});
 
 		it('is after, but same with dimension', () => {
@@ -1740,7 +1740,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isAfter(date2, DateTimeDimension.Month)).to.be.false;
+			expect(date1.isAfter(date2, DateTimeUnit.Month)).to.be.false;
 		});
 	});
 
@@ -1767,7 +1767,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isAfterOrEqual(date2, DateTimeDimension.Date)).to.be.true;
+			expect(date1.isAfterOrEqual(date2, DateTimeUnit.Date)).to.be.true;
 		});
 
 		it('is after, but same with dimension', () => {
@@ -1779,7 +1779,7 @@ describe('DateTime', () => {
 				year : 2020, month : 10, date : 22
 			});
 
-			expect(date1.isAfterOrEqual(date2, DateTimeDimension.Month)).to.be.true;
+			expect(date1.isAfterOrEqual(date2, DateTimeUnit.Month)).to.be.true;
 		});
 	});
 

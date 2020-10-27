@@ -1,8 +1,8 @@
 import { DateTime } from './date-time';
 
-export type InitDataFormat = number | string | Date | DateTime | DateTimeJson;
+export type InitDataFormat = number | string | Date | DateTime | DateTimeObject;
 
-export interface DateTimeJson {
+export interface DateTimeObject {
 	year? : number;
 	month? : number;
 	date? : number;

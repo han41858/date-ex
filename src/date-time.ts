@@ -1,7 +1,7 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeJson, InitDataFormat, LocaleSet } from './interfaces';
-import { DateTimeDimension, DatetimeSetParamKeys, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
+import { DateTimeObject, InitDataFormat, LocaleSet } from './interfaces';
+import { DatetimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
 import { clone, loadLocaleFile, padDigit } from './util';
 
 // load default locale
@@ -43,10 +43,10 @@ export class DateTime extends DateProxy {
 			const initDataKeys : string[] = Object.keys(initData);
 
 			if (initDataKeys.every(key => {
-				return DatetimeSetParamKeys.includes(key as keyof DateTimeJson);
+				return DatetimeSetParamKeys.includes(key as keyof DateTimeObject);
 			})) {
 				// others 0
-				const setParam : DateTimeJson = Object.assign(clone(ZeroDaySetter), initData);
+				const setParam : DateTimeObject = Object.assign(clone(ZeroDaySetter), initData);
 
 				this.set(setParam);
 			}
@@ -191,7 +191,7 @@ export class DateTime extends DateProxy {
 	}
 
 	// allow null, no limit number range
-	set (param : DateTimeJson) : DateTime {
+	set (param : DateTimeObject) : DateTime {
 		param.year !== undefined && this._date.setFullYear(param.year);
 		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
 		param.date !== undefined && this._date.setDate(param.date);
@@ -204,11 +204,11 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	add (param : DateTimeJson) : DateTime {
-		const setParam : DateTimeJson = {};
+	add (param : DateTimeObject) : DateTime {
+		const setParam : DateTimeObject = {};
 
 		Object.entries(param).forEach(([_key, value]) => {
-			const key : keyof DateTimeJson = _key as keyof DateTimeJson;
+			const key : keyof DateTimeObject = _key as keyof DateTimeObject;
 
 			if (value !== undefined) {
 				setParam[key] = this[key] + value;
@@ -423,7 +423,7 @@ export class DateTime extends DateProxy {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
-	diff (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : number {
+	diff (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : number {
 		let dateWith : DateTime;
 
 		if (date instanceof DateTime) {
@@ -436,25 +436,25 @@ export class DateTime extends DateProxy {
 		let diffValue : number;
 
 		switch (dimension) {
-			case DateTimeDimension.Year:
+			case DateTimeUnit.Year:
 				diffValue = this.year - dateWith.year;
 				break;
 
-			case DateTimeDimension.Quarter: {
+			case DateTimeUnit.Quarter: {
 				const yearModifier : number = (this.year - dateWith.year) * 4;
 
 				diffValue = yearModifier + this.quarter - dateWith.quarter;
 				break;
 			}
 
-			case DateTimeDimension.Month: {
+			case DateTimeUnit.Month: {
 				const yearModifier : number = (this.year - dateWith.year) * 12;
 
 				diffValue = yearModifier + this.month - dateWith.month;
 				break;
 			}
 
-			case DateTimeDimension.Week: {
+			case DateTimeUnit.Week: {
 				const sign : number = Math.sign(+this - +dateWith);
 
 				let smallerDate : DateTime;
@@ -481,7 +481,7 @@ export class DateTime extends DateProxy {
 				break;
 			}
 
-			case DateTimeDimension.Date: {
+			case DateTimeUnit.Date: {
 				const diffInMs : number = +this - +dateWith;
 				const diffInDays : number = diffInMs / 1000 / 60 / 60 / 24;
 
@@ -489,7 +489,7 @@ export class DateTime extends DateProxy {
 				break;
 			}
 
-			case DateTimeDimension.Hours: {
+			case DateTimeUnit.Hours: {
 				const diffInMs : number = +this - +dateWith;
 				const diffInHours : number = diffInMs / 1000 / 60 / 60;
 
@@ -497,7 +497,7 @@ export class DateTime extends DateProxy {
 				break;
 			}
 
-			case DateTimeDimension.Minutes: {
+			case DateTimeUnit.Minutes: {
 				const diffInMs : number = +this - +dateWith;
 				const diffInMinutes : number = diffInMs / 1000 / 60;
 
@@ -505,7 +505,7 @@ export class DateTime extends DateProxy {
 				break;
 			}
 
-			case DateTimeDimension.Seconds: {
+			case DateTimeUnit.Seconds: {
 				const diffInMs : number = +this - +dateWith;
 				const diffInSeconds : number = diffInMs / 1000;
 
@@ -513,7 +513,7 @@ export class DateTime extends DateProxy {
 				break;
 			}
 
-			case DateTimeDimension.Ms:
+			case DateTimeUnit.Ms:
 				diffValue = +this - +dateWith;
 				break;
 		}
@@ -521,23 +521,23 @@ export class DateTime extends DateProxy {
 		return diffValue;
 	}
 
-	isBefore (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+	isBefore (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, dimension) < 0;
 	}
 
-	isBeforeOrEqual (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+	isBeforeOrEqual (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, dimension) <= 0;
 	}
 
-	isAfter (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+	isAfter (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, dimension) > 0;
 	}
 
-	isAfterOrEqual (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+	isAfterOrEqual (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, dimension) >= 0;
 	}
 
-	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		let smallerDate : DateTime;
 		let biggerDate : DateTime;
 
@@ -557,7 +557,7 @@ export class DateTime extends DateProxy {
 			&& this.diff(biggerDate, dimension) < 0;
 	}
 
-	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
+	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		let smallerDate : DateTime;
 		let biggerDate : DateTime;
 

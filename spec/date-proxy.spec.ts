@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import { DateTime } from '../src/date-time';
 import { newArray } from '../src/util';
-import { DateTimeJson, InitDataFormat } from '../src/interfaces';
-import { DateTimeDimension, DatetimeSetParamKeys } from '../src/constants';
+import { DateTimeObject, InitDataFormat } from '../src/interfaces';
+import { DatetimeSetParamKeys, DateTimeUnit } from '../src/constants';
 
 
 describe('DateProxy', () => {
@@ -128,7 +128,7 @@ describe('DateProxy', () => {
 
 		describe('weekOfYear', () => {
 			const targets : {
-				param : DateTimeJson,
+				param : DateTimeObject,
 				week : number
 			}[] = [{
 				param : { year : 2020, month : 1, date : 1 },
@@ -170,7 +170,7 @@ describe('DateProxy', () => {
 
 		describe('weekOfMonth', () => {
 			const targets : {
-				param : DateTimeJson,
+				param : DateTimeObject,
 				week : number
 			}[] = [{
 				param : { year : 2020, month : 1, date : 1 },
@@ -212,7 +212,7 @@ describe('DateProxy', () => {
 
 		describe('daysOfYear', () => {
 			const targets : {
-				param : DateTimeJson,
+				param : DateTimeObject,
 				days : number
 			}[] = [{
 				param : { year : 2020, month : 1, date : 1 },
@@ -242,7 +242,7 @@ describe('DateProxy', () => {
 
 		describe('maxDateOfMonth', () => {
 			const targets : {
-				param : DateTimeJson,
+				param : DateTimeObject,
 				days : number
 			}[] = [{
 				param : { year : 2020, month : 1 },
@@ -497,7 +497,7 @@ describe('DateProxy', () => {
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
-					case DateTimeDimension.Hours:
+					case DateTimeUnit.Hours:
 						expect(dateTime.hours).to.be.eql(initParam.hours - timezoneOffsetInHours);
 						expect(dateTime.hours12).to.be.eql((initParam.hours - timezoneOffsetInHours + 1) % 12 - 1);
 
@@ -527,7 +527,7 @@ describe('DateProxy', () => {
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
-					case DateTimeDimension.Date:
+					case DateTimeUnit.Date:
 						expect(dateTime.date).to.be.eql(initParam.date + 1);
 						expect(dateTime.UTC.date).to.be.eql(initParam.date);
 
@@ -535,7 +535,7 @@ describe('DateProxy', () => {
 						break;
 
 					// skip hours
-					case DateTimeDimension.Hours:
+					case DateTimeUnit.Hours:
 						break;
 
 					default:
@@ -559,7 +559,7 @@ describe('DateProxy', () => {
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
-					case DateTimeDimension.Month:
+					case DateTimeUnit.Month:
 						expect(dateTime.date).to.be.eql(1);
 						expect(dateTime.UTC.date).to.be.eql(initParam.date);
 
@@ -568,8 +568,8 @@ describe('DateProxy', () => {
 						break;
 
 					// skip of other specs
-					case DateTimeDimension.Date:
-					case DateTimeDimension.Hours:
+					case DateTimeUnit.Date:
+					case DateTimeUnit.Hours:
 						break;
 
 					default:
@@ -594,9 +594,9 @@ describe('DateProxy', () => {
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
 					// skip of other specs
-					case DateTimeDimension.Month:
-					case DateTimeDimension.Date:
-					case DateTimeDimension.Hours:
+					case DateTimeUnit.Month:
+					case DateTimeUnit.Date:
+					case DateTimeUnit.Hours:
 						break;
 
 					default:
@@ -625,7 +625,7 @@ describe('DateProxy', () => {
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
-					case DateTimeDimension.Year:
+					case DateTimeUnit.Year:
 						expect(dateTime.date).to.be.eql(1);
 						expect(dateTime.UTC.date).to.be.eql(initParam.date);
 
@@ -640,9 +640,9 @@ describe('DateProxy', () => {
 						break;
 
 					// skip of other specs
-					case DateTimeDimension.Month:
-					case DateTimeDimension.Date:
-					case DateTimeDimension.Hours:
+					case DateTimeUnit.Month:
+					case DateTimeUnit.Date:
+					case DateTimeUnit.Hours:
 						break;
 
 					default:

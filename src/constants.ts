@@ -1,6 +1,6 @@
-import { DateTimeJson } from './interfaces';
+import { DateTimeObject } from './interfaces';
 
-export enum DateTimeDimension {
+export enum DateTimeUnit {
 	Year = 'year',
 	Quarter = 'quarter',
 	Month = 'month',
@@ -13,26 +13,26 @@ export enum DateTimeDimension {
 	Ms = 'ms'
 }
 
-export const DatetimeSetParamKeys : (keyof DateTimeJson)[] = [
-	DateTimeDimension.Year,
-	DateTimeDimension.Month,
-	DateTimeDimension.Date,
+export const DatetimeSetParamKeys : (keyof DateTimeObject)[] = [
+	DateTimeUnit.Year,
+	DateTimeUnit.Month,
+	DateTimeUnit.Date,
 
-	DateTimeDimension.Hours,
-	DateTimeDimension.Minutes,
-	DateTimeDimension.Seconds,
-	DateTimeDimension.Ms
+	DateTimeUnit.Hours,
+	DateTimeUnit.Minutes,
+	DateTimeUnit.Seconds,
+	DateTimeUnit.Ms
 ];
 
-export const ZeroDaySetter : DateTimeJson = {
-	[DateTimeDimension.Year] : 1900,
-	[DateTimeDimension.Month] : 1,
-	[DateTimeDimension.Date] : 1,
+export const ZeroDaySetter : DateTimeObject = {
+	year : 1900,
+	month : 1,
+	date : 1,
 
-	[DateTimeDimension.Hours] : 0,
-	[DateTimeDimension.Minutes] : 0,
-	[DateTimeDimension.Seconds] : 0,
-	[DateTimeDimension.Ms] : 0
+	hours : 0,
+	minutes : 0,
+	seconds : 0,
+	ms : 0
 };
 
 export enum FormatToken {

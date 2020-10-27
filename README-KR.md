@@ -33,7 +33,7 @@ const newDateByDateEx : DateEx = new DateEx(new DateEx());
 
 일자와 시각을 표현하는 객체입니다. 이 객체는 다음과 같은 필드로 구성됩니다.
 
-| 필드 | 인자 타입 | 값 범위 | 설명 |
+| 필드 | 필드 타입 | 값 범위 | 설명 |
 |---|---|---|---|
 | `year` | `number` | - | 연도를 반환합니다. |
 | `month` | `number` | `1` ~ `12` | 월을 반환합니다. |

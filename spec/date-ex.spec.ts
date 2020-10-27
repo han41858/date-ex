@@ -1628,7 +1628,7 @@ describe('DateTime', () => {
 	});
 
 	describe('isBefore()', () => {
-		it('no dimension param', () => {
+		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
@@ -1653,7 +1653,7 @@ describe('DateTime', () => {
 			expect(date1.isBefore(date2, DateTimeUnit.Date)).to.be.false;
 		});
 
-		it('is before, but same with dimension', () => {
+		it('is before, but same with unit', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 21
 			});
@@ -1667,7 +1667,7 @@ describe('DateTime', () => {
 	});
 
 	describe('isBeforeOrEqual()', () => {
-		it('no dimension param', () => {
+		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
@@ -1692,7 +1692,7 @@ describe('DateTime', () => {
 			expect(date1.isBeforeOrEqual(date2, DateTimeUnit.Date)).to.be.true;
 		});
 
-		it('is before, but same with dimension', () => {
+		it('is before, but same with unit', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 21
 			});
@@ -1706,7 +1706,7 @@ describe('DateTime', () => {
 	});
 
 	describe('isAfter()', () => {
-		it('no dimension param', () => {
+		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
 				ms : 1
@@ -1731,7 +1731,7 @@ describe('DateTime', () => {
 			expect(date1.isAfter(date2, DateTimeUnit.Date)).to.be.false;
 		});
 
-		it('is after, but same with dimension', () => {
+		it('is after, but same with unit', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 23
 			});
@@ -1745,7 +1745,7 @@ describe('DateTime', () => {
 	});
 
 	describe('isAfterOrEqual()', () => {
-		it('no dimension param', () => {
+		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
 				ms : 1
@@ -1770,7 +1770,7 @@ describe('DateTime', () => {
 			expect(date1.isAfterOrEqual(date2, DateTimeUnit.Date)).to.be.true;
 		});
 
-		it('is after, but same with dimension', () => {
+		it('is after, but same with unit', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 23
 			});

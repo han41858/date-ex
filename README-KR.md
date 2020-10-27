@@ -46,21 +46,21 @@ const newDateByDateTime : DateTime = new DateTime(new DateTime());
 * `month` 필드는 `0` ~ `11` 값을 반환하지 않습니다. 이 필드는 실제 월 값 `1` ~ `12`를 반환합니다.
 
 
-### `DateTimeDimension`
+### `DateTimeUnit`
 
 일자, 시각 단위를 표현하는 값입니다.
 
 | 토큰 | 필드 | 타입 | 설명 |
 |---|---|---|---|
-| `DateTimeDimension.Year` | `year` | `number` | 연도 |
-| `DateTimeDimension.Quarter` | `quarter` | `number` | 분기 |
-| `DateTimeDimension.Month` | `month` | `number` | 월 |
-| `DateTimeDimension.Week` | `week` | `number` | 주 |
-| `DateTimeDimension.Date` | `date` | `number` | 일자 |
-| `DateTimeDimension.Hours` | `hours` | `number` | 시간 |
-| `DateTimeDimension.Minutes` | `minutes` | `number` | 분 |
-| `DateTimeDimension.Seconds` | `seconds` | `number` | 초 |
-| `DateTimeDimension.Ms` | `ms` | `number` | 밀리초 |
+| `DateTimeUnit.Year` | `year` | `number` | 연도 |
+| `DateTimeUnit.Quarter` | `quarter` | `number` | 분기 |
+| `DateTimeUnit.Month` | `month` | `number` | 월 |
+| `DateTimeUnit.Week` | `week` | `number` | 주 |
+| `DateTimeUnit.Date` | `date` | `number` | 일자 |
+| `DateTimeUnit.Hours` | `hours` | `number` | 시간 |
+| `DateTimeUnit.Minutes` | `minutes` | `number` | 분 |
+| `DateTimeUnit.Seconds` | `seconds` | `number` | 초 |
+| `DateTimeUnit.Ms` | `ms` | `number` | 밀리초 |
 
 
 ## 값 가져오기
@@ -274,7 +274,7 @@ console.log(date3.locale()); // 'en'
 
 ## 비교 함수
 
-모든 비교 함수는 `DateTimeDimension` 단위를 인자로 받습니다. 계산의 정확도는 이 단위를 기준으로 하며, 단위를 생략하면 밀리초 단위로 계산합니다.
+모든 비교 함수는 `DateTimeUnit` 단위를 인자로 받습니다. 계산의 정확도는 이 단위를 기준으로 하며, 단위를 생략하면 밀리초 단위로 계산합니다.
 
 | 함수 | 반환값 | 설명 |
 |---|---|---|

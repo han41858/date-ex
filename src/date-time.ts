@@ -423,7 +423,7 @@ export class DateTime extends DateProxy {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
-	diff (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : number {
+	diff (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : number {
 		let dateWith : DateTime;
 
 		if (date instanceof DateTime) {
@@ -435,7 +435,7 @@ export class DateTime extends DateProxy {
 
 		let diffValue : number;
 
-		switch (dimension) {
+		switch (unit) {
 			case DateTimeUnit.Year:
 				diffValue = this.year - dateWith.year;
 				break;
@@ -521,23 +521,23 @@ export class DateTime extends DateProxy {
 		return diffValue;
 	}
 
-	isBefore (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
-		return this.diff(date, dimension) < 0;
+	isBefore (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+		return this.diff(date, unit) < 0;
 	}
 
-	isBeforeOrEqual (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
-		return this.diff(date, dimension) <= 0;
+	isBeforeOrEqual (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+		return this.diff(date, unit) <= 0;
 	}
 
-	isAfter (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
-		return this.diff(date, dimension) > 0;
+	isAfter (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+		return this.diff(date, unit) > 0;
 	}
 
-	isAfterOrEqual (date : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
-		return this.diff(date, dimension) >= 0;
+	isAfterOrEqual (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+		return this.diff(date, unit) >= 0;
 	}
 
-	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		let smallerDate : DateTime;
 		let biggerDate : DateTime;
 
@@ -553,11 +553,11 @@ export class DateTime extends DateProxy {
 			biggerDate = dateTime1;
 		}
 
-		return this.diff(smallerDate, dimension) > 0
-			&& this.diff(biggerDate, dimension) < 0;
+		return this.diff(smallerDate, unit) > 0
+			&& this.diff(biggerDate, unit) < 0;
 	}
 
-	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
 		let smallerDate : DateTime;
 		let biggerDate : DateTime;
 
@@ -573,8 +573,14 @@ export class DateTime extends DateProxy {
 			biggerDate = dateTime1;
 		}
 
-		return this.diff(smallerDate, dimension) >= 0
-			&& this.diff(biggerDate, dimension) <= 0;
+		return this.diff(smallerDate, unit) >= 0
+			&& this.diff(biggerDate, unit) <= 0;
 	}
+
+	// TODO:
+	// relativeTo(datetime : DateTime, unit : DateTimeUnit)
+
+	// TODO:
+	// at(countryCode: string, city : string) : DateTime;
 
 }

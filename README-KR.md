@@ -1,4 +1,4 @@
-# date-ex
+# DateEx
 
 Date 클래스 확장 패키지
 
@@ -9,23 +9,23 @@ Date 클래스 확장 패키지
 
 ## 활용방법
 
-`DateEx` 객체는 `new` 생성자로 생성합니다.
+`DateTime` 객체는 `new` 생성자로 생성합니다.
 
 ```TypeScript
-const date: DateEx = new DateEx();
+const date: DateTime = new DateTime();
 ```
 
 생성자에 인자를 전달하면 원하는 날짜를 지정하며 인스턴스를 생성할 수 있습니다.
-이 때 인자는 `number`, `string`, `Date`, `DateEx`, [`json` 타입(`DateTimeJson`)](#DateTimeJson)을 지원합니다.
+이 때 인자는 `number`, `string`, `Date`, `DateTime`, [`json` 타입(`DateTimeJson`)](#DateTimeJson)을 지원합니다.
 
 ```TypeScript
-const newDateByNumber : DateEx = new DateEx(1603722868252);
+const newDateByNumber : DateTime = new DateTime(1603722868252);
 
-const newDateByString : DateEx = new DateEx('2020-10-26');
+const newDateByString : DateTime = new DateTime('2020-10-26');
 
-const newDateByDate : DateEx = new DateEx(new Date());
+const newDateByDate : DateTime = new DateTime(new Date());
 
-const newDateByDateEx : DateEx = new DateEx(new DateEx());
+const newDateByDateTime : DateTime = new DateTime(new DateTime());
 ```
 
 
@@ -120,7 +120,7 @@ const newDateByDateEx : DateEx = new DateEx(new DateEx());
 
 | 게터 | 반환 타입 | 설명 |
 |---|---|---|
-| `valueOf()` | `number` | 유닉스 타임스탬프를 반환합니다. `+new Date()`와 같으며 `+new DateEx()`로 사용할 수 있습니다. |
+| `valueOf()` | `number` | 유닉스 타임스탬프를 반환합니다. `+new Date()`와 같으며 `+new DateTime()`로 사용할 수 있습니다. |
 | `toDate()` | `Date` | `Date` 형식을 반환합니다. |
 | `toISOString()` | `string` | ISO 문자열 형식을 반환합니다. `Date.toISOString()`과 같습니다. |
 | `toUTCString()` | `string` | UTC 문자열 형식을 반환합니다. `Date.toUTCString()`과 같습니다. |
@@ -134,7 +134,7 @@ const newDateByDateEx : DateEx = new DateEx(new DateEx());
 [`DateTimeJson`](#DateTimeJson) 형식으로 일자, 시각을 설정합니다. 각 필드는 생략할 수 있습니다.
 
 ```typescript
-const date: DateEx = new DateEx();
+const date: DateTime = new DateTime();
 
 // 2020년 10월 27일로 설정합니다.
 date.set({
@@ -169,7 +169,7 @@ date.set({
 [`DateTimeJson`](#DateTimeJson) 타입으로 일자, 시각을 이동합니다. 0보다 작은 값을 하면 이전 일자, 시각으로 설정합니다.
 
 ```typescript
-const date: DateEx = new DateEx();
+const date: DateTime = new DateTime();
 
 // 11개월 뒤로 일자를 설정합니다.
 date.add({
@@ -219,29 +219,29 @@ date.add({
 
 ## 다국어
 
-`DateEx`의 다국어 설정은 전역으로 설정할 수 있으며, 개별 객체에 설정할 수도 있습니다. 전역에 설정된 다국어와 개별 객체에 설정된 다국어가 다르면 개별 객체에 설정된 다국어를 기준으로 동작합니다.
+`DateTime`의 다국어 설정은 전역으로 설정할 수 있으며, 개별 객체에 설정할 수도 있습니다. 전역에 설정된 다국어와 개별 객체에 설정된 다국어가 다르면 개별 객체에 설정된 다국어를 기준으로 동작합니다.
 
-전역 설정으로 다국어를 변경한 이후 생성하는 `DateEx` 객체에는 전역 설정값이 적용됩니다.
+전역 설정으로 다국어를 변경한 이후 생성하는 `DateTime` 객체에는 전역 설정값이 적용됩니다.
 
 ```typescript
-console.log(DateEx.locale()); // 'en'
+console.log(DateTime.locale()); // 'en'
 
-const date1 : DateEx = new DateEx();
+const date1 : DateTime = new DateTime();
 console.log(date1.locale()); // 'en'
 
-DateEx.locale('ko-kr'); // 전역 다국어 설정
-console.log(DateEx.locale()); // 'ko-kr'
+DateTime.locale('ko-kr'); // 전역 다국어 설정
+console.log(DateTime.locale()); // 'ko-kr'
 
-const date2 : DateEx = new DateEx();
+const date2 : DateTime = new DateTime();
 console.log(date2.locale()); // 'ko-kr'
 
-const date3 : DateEx = new DateEx();
+const date3 : DateTime = new DateTime();
 date3.locale('en'); // 객체 다국어 설정
 console.log(date3.locale()); // 'en'
 
 ```
 
-전역 함수 `DateEx.locale()`과 `DateEx` 클래스 함수 `locale()`을 인자없이 사용하면 현재 설정된 다국어 코드를 반환합니다.
+전역 함수 `DateTime.locale()`과 `DateTime` 클래스 함수 `locale()`을 인자없이 사용하면 현재 설정된 다국어 코드를 반환합니다.
 그리고 전역/객체의 다국어를 변경하려면 `locale()` 함수에 다국어 코드를 전달하면 됩니다.
 
 기본 설정은 `en` 입니다.
@@ -254,7 +254,7 @@ console.log(date3.locale()); // 'en'
 다국어 코드가 유효하지 않거나 1 싸이클 이후에 다국어 파일 로드를 실패하면 이전값으로 원복됩니다.
 
 
-### `DateEx.locale()`
+### `DateTime.locale()`
 
 전역 변수로 다국어를 설정합니다.
 
@@ -287,13 +287,13 @@ console.log(date3.locale()); // 'en'
 | `isAfterOrEqual()` | `boolean` | 인자로 전달한 두 일자 사이에 있거나 같으면 `true`를 반환합니다. |
 
 ```typescript
-const date1: DateEx = new DateEx({
+const date1: DateTime = new DateTime({
 	year : 2020,
 	month : 10,
 	date : 20
 });
 
-const date2: DateEx = new DateEx({
+const date2: DateTime = new DateTime({
 	year : 2020,
 	month : 10,
 	date : 27
@@ -307,7 +307,7 @@ console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 console.log(date1.isAfter(date2, 'date')); // false
 console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 
-const date3: DateEx = new DateEx({
+const date3: DateTime = new DateTime({
 	year : 2020,
 	month : 10,
 	date : 27

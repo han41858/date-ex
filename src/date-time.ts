@@ -24,7 +24,7 @@ const localeSetCached : {
 };
 
 
-export class DateEx extends DateProxy {
+export class DateTime extends DateProxy {
 
 	private ownLocale ! : string;
 	private setLocaleTimer : undefined | number;
@@ -37,7 +37,7 @@ export class DateEx extends DateProxy {
 
 		if (initData !== null
 			&& !(initData instanceof Date)
-			&& !(initData instanceof DateEx)
+			&& !(initData instanceof DateTime)
 			&& typeof initData === 'object') {
 			// with DateTimeSetParam
 			const initDataKeys : string[] = Object.keys(initData);
@@ -53,25 +53,25 @@ export class DateEx extends DateProxy {
 		}
 
 
-		let localeFromAnotherDateEx : undefined | string;
+		let localeFromAnotherDateTime : undefined | string;
 
-		if (initData instanceof DateEx) {
-			localeFromAnotherDateEx = initData.locale();
+		if (initData instanceof DateTime) {
+			localeFromAnotherDateTime = initData.locale();
 		}
 
 		if (!!globalConfig.localeTimer) {
 			// wait global set
 			setTimeout(() => {
-				this.setDefaultLocale(localeFromAnotherDateEx);
+				this.setDefaultLocale(localeFromAnotherDateTime);
 			});
 		}
 		else {
-			this.setDefaultLocale(localeFromAnotherDateEx);
+			this.setDefaultLocale(localeFromAnotherDateTime);
 		}
 	}
 
-	private setDefaultLocale (localeFromAnotherDateEx ? : string) : void {
-		const defaultLocale : string = localeFromAnotherDateEx
+	private setDefaultLocale (localeFromAnotherDateTime ? : string) : void {
+		const defaultLocale : string = localeFromAnotherDateTime
 			|| this.ownLocale
 			|| globalConfig.locale
 			|| DefaultLocale;
@@ -191,7 +191,7 @@ export class DateEx extends DateProxy {
 	}
 
 	// allow null, no limit number range
-	set (param : DateTimeJson) : DateEx {
+	set (param : DateTimeJson) : DateTime {
 		param.year !== undefined && this._date.setFullYear(param.year);
 		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
 		param.date !== undefined && this._date.setDate(param.date);
@@ -204,7 +204,7 @@ export class DateEx extends DateProxy {
 		return this;
 	}
 
-	add (param : DateTimeJson) : DateEx {
+	add (param : DateTimeJson) : DateTime {
 		const setParam : DateTimeJson = {};
 
 		Object.entries(param).forEach(([_key, value]) => {
@@ -424,13 +424,13 @@ export class DateEx extends DateProxy {
 	}
 
 	diff (date : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : number {
-		let dateWith : DateEx;
+		let dateWith : DateTime;
 
-		if (date instanceof DateEx) {
+		if (date instanceof DateTime) {
 			dateWith = date;
 		}
 		else {
-			dateWith = new DateEx(date);
+			dateWith = new DateTime(date);
 		}
 
 		let diffValue : number;
@@ -457,8 +457,8 @@ export class DateEx extends DateProxy {
 			case DateTimeDimension.Week: {
 				const sign : number = Math.sign(+this - +dateWith);
 
-				let smallerDate : DateEx;
-				let biggerDate : DateEx;
+				let smallerDate : DateTime;
+				let biggerDate : DateTime;
 
 				if (sign < 0) {
 					smallerDate = this;
@@ -538,19 +538,19 @@ export class DateEx extends DateProxy {
 	}
 
 	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
-		let smallerDate : DateEx;
-		let biggerDate : DateEx;
+		let smallerDate : DateTime;
+		let biggerDate : DateTime;
 
-		const dateEx1 : DateEx = new DateEx(date1);
-		const dateEx2 : DateEx = new DateEx(date2);
+		const dateTime1 : DateTime = new DateTime(date1);
+		const dateTime2 : DateTime = new DateTime(date2);
 
-		if (+dateEx1 <= +dateEx2) {
-			smallerDate = dateEx1;
-			biggerDate = dateEx2;
+		if (+dateTime1 <= +dateTime2) {
+			smallerDate = dateTime1;
+			biggerDate = dateTime2;
 		}
 		else {
-			smallerDate = dateEx2;
-			biggerDate = dateEx1;
+			smallerDate = dateTime2;
+			biggerDate = dateTime1;
 		}
 
 		return this.diff(smallerDate, dimension) > 0
@@ -558,19 +558,19 @@ export class DateEx extends DateProxy {
 	}
 
 	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, dimension : DateTimeDimension = DateTimeDimension.Ms) : boolean {
-		let smallerDate : DateEx;
-		let biggerDate : DateEx;
+		let smallerDate : DateTime;
+		let biggerDate : DateTime;
 
-		const dateEx1 : DateEx = new DateEx(date1);
-		const dateEx2 : DateEx = new DateEx(date2);
+		const dateTime1 : DateTime = new DateTime(date1);
+		const dateTime2 : DateTime = new DateTime(date2);
 
-		if (+dateEx1 <= +dateEx2) {
-			smallerDate = dateEx1;
-			biggerDate = dateEx2;
+		if (+dateTime1 <= +dateTime2) {
+			smallerDate = dateTime1;
+			biggerDate = dateTime2;
 		}
 		else {
-			smallerDate = dateEx2;
-			biggerDate = dateEx1;
+			smallerDate = dateTime2;
+			biggerDate = dateTime1;
 		}
 
 		return this.diff(smallerDate, dimension) >= 0

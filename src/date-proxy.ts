@@ -1,5 +1,5 @@
 import { DateTimeJson, InitDataFormat } from './interfaces';
-import { DateEx } from './date-ex';
+import { DateTime } from './date-time';
 import { getLastDateOfMonth } from './util';
 
 
@@ -13,7 +13,7 @@ export class DateProxy {
 			this._date = new Date();
 		}
 		else {
-			if (initDate instanceof DateEx) {
+			if (initDate instanceof DateTime) {
 				this._date = new Date(initDate.toDate());
 			}
 			else if (initDate instanceof Date) {
@@ -95,7 +95,7 @@ export class DateProxy {
 	}
 
 	private isFirstDayOfMonth () : boolean {
-		const nextDay : DateEx = new DateEx(this);
+		const nextDay : DateTime = new DateTime(this);
 
 		nextDay.add({
 			date : -1
@@ -105,7 +105,7 @@ export class DateProxy {
 	}
 
 	private isLastDayOfMonth () : boolean {
-		const nextDay : DateEx = new DateEx(this);
+		const nextDay : DateTime = new DateTime(this);
 
 		nextDay.add({
 			date : 1
@@ -133,7 +133,7 @@ export class DateProxy {
 	}
 
 	get weekOfYear () : number {
-		const firstDayOfYear : DateEx = new DateEx({
+		const firstDayOfYear : DateTime = new DateTime({
 			year : this.year,
 			month : 1,
 			date : 1
@@ -146,7 +146,7 @@ export class DateProxy {
 	}
 
 	get weekOfMonth () : number {
-		const firstDayOfMonth : DateEx = new DateEx({
+		const firstDayOfMonth : DateTime = new DateTime({
 			year : this.year,
 			month : this.month,
 			date : 1
@@ -182,7 +182,7 @@ export class DateProxy {
 				date -= 1;
 			}
 			else {
-				const previousDay : DateEx = new DateEx(this);
+				const previousDay : DateTime = new DateTime(this);
 				previousDay.add({
 					date : -1
 				});
@@ -195,7 +195,7 @@ export class DateProxy {
 	}
 
 	get dayOfYear () : number {
-		const firstDayOfYear : DateEx = new DateEx({
+		const firstDayOfYear : DateTime = new DateTime({
 			year : this.year,
 			month : 1,
 			date : 1

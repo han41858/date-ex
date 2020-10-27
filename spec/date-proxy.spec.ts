@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { DateEx } from '../src/date-ex';
+import { DateTime } from '../src/date-time';
 import { newArray } from '../src/util';
 import { DateTimeJson, InitDataFormat } from '../src/interfaces';
 import { DateTimeDimension, DatetimeSetParamKeys } from '../src/constants';
@@ -9,48 +9,48 @@ import { DateTimeDimension, DatetimeSetParamKeys } from '../src/constants';
 describe('DateProxy', () => {
 	describe('isValid()', () => {
 		it('ok', () => {
-			expect(new DateEx().isValid()).to.be.true;
+			expect(new DateTime().isValid()).to.be.true;
 		});
 
 		it('invalid case - with invalid Date', () => {
 			const date : Date = new Date(1000000, 1);
 
-			expect(new DateEx(date).isValid()).to.be.false;
+			expect(new DateTime(date).isValid()).to.be.false;
 		});
 
 		it('invalid case - with invalid years', () => {
-			expect(new DateEx({
+			expect(new DateTime({
 				year : -20000010
 			}).isValid()).to.be.false;
 		});
 
 		it('invalid case - with invalid string', () => {
-			expect(new DateEx('abc' as unknown).isValid()).to.be.false;
+			expect(new DateTime('abc' as unknown).isValid()).to.be.false;
 		});
 	});
 
 	describe('toDate()', () => {
 		it('ok', () => {
-			expect(new DateEx().toDate()).to.be.instanceOf(Date);
+			expect(new DateTime().toDate()).to.be.instanceOf(Date);
 		});
 	});
 
 	describe('+valueOf()', () => {
 		it('ok', () => {
-			expect(new DateEx().valueOf()).to.be.a('number');
-			expect(+new DateEx()).to.be.a('number');
+			expect(new DateTime().valueOf()).to.be.a('number');
+			expect(+new DateTime()).to.be.a('number');
 		});
 	});
 
 	describe('toISOString()', () => {
 		it('ok', () => {
-			expect(new DateEx().toISOString()).to.be.a('string');
+			expect(new DateTime().toISOString()).to.be.a('string');
 		});
 	});
 
 	describe('toUTCString()', () => {
 		it('ok', () => {
-			expect(new DateEx().toUTCString()).to.be.a('string');
+			expect(new DateTime().toUTCString()).to.be.a('string');
 		});
 	});
 
@@ -60,7 +60,7 @@ describe('DateProxy', () => {
 				const years : number[] = [2020, 2021, 2020];
 
 				years.forEach(year => {
-					expect(new DateEx({
+					expect(new DateTime({
 						year
 					}).year).to.be.eql(year);
 				});
@@ -74,7 +74,7 @@ describe('DateProxy', () => {
 
 			it('ok', () => {
 				months.forEach(month => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						month
 					});
 
@@ -118,10 +118,10 @@ describe('DateProxy', () => {
 					const date : Date = new Date();
 					date.setMonth(month);
 
-					const dateEx : DateEx = new DateEx(date);
+					const dateTime : DateTime = new DateTime(date);
 
-					expect(dateEx.toDate().getMonth()).to.be.eql(month); // 0 ~ 11
-					expect(dateEx.month).to.be.eql(month + 1); // 1 ~ 12
+					expect(dateTime.toDate().getMonth()).to.be.eql(month); // 0 ~ 11
+					expect(dateTime.month).to.be.eql(month + 1); // 1 ~ 12
 				});
 			});
 		});
@@ -161,7 +161,7 @@ describe('DateProxy', () => {
 
 			it('ok', () => {
 				targets.forEach(target => {
-					const date : DateEx = new DateEx(target.param);
+					const date : DateTime = new DateTime(target.param);
 
 					expect(date.weekOfYear).to.be.eql(target.week);
 				});
@@ -203,7 +203,7 @@ describe('DateProxy', () => {
 
 			it('ok', () => {
 				targets.forEach(target => {
-					const date : DateEx = new DateEx(target.param);
+					const date : DateTime = new DateTime(target.param);
 
 					expect(date.weekOfMonth).to.be.eql(target.week);
 				});
@@ -233,7 +233,7 @@ describe('DateProxy', () => {
 
 			it('ok', () => {
 				targets.forEach(target => {
-					const date : DateEx = new DateEx(target.param);
+					const date : DateTime = new DateTime(target.param);
 
 					expect(date.dayOfYear).to.be.eql(target.days);
 				});
@@ -263,7 +263,7 @@ describe('DateProxy', () => {
 
 			it('ok', () => {
 				targets.forEach(target => {
-					const date : DateEx = new DateEx(target.param);
+					const date : DateTime = new DateTime(target.param);
 
 					expect(date.lastDateOfMonth).to.be.eql(target.days);
 				});
@@ -277,7 +277,7 @@ describe('DateProxy', () => {
 				});
 
 				dates.forEach(date => {
-					expect(new DateEx({
+					expect(new DateTime({
 						year : 2020,
 						month : 1,
 						date
@@ -293,7 +293,7 @@ describe('DateProxy', () => {
 				});
 
 				days.forEach((day, i) => {
-					expect(new DateEx({
+					expect(new DateTime({
 						year : 2020,
 						month : 1,
 						date : day
@@ -309,7 +309,7 @@ describe('DateProxy', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					expect(new DateEx({
+					expect(new DateTime({
 						hours
 					}).hours).to.be.eql(hours);
 				});
@@ -321,7 +321,7 @@ describe('DateProxy', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					expect(new DateEx({
+					expect(new DateTime({
 						hours
 					}).hours24).to.be.eql(hours);
 				});
@@ -333,7 +333,7 @@ describe('DateProxy', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					expect(new DateEx({
+					expect(new DateTime({
 						hours
 					}).hours12).to.be.eql(hours > 12 ? hours % 12 : hours);
 				});
@@ -347,7 +347,7 @@ describe('DateProxy', () => {
 				});
 
 				minutesArr.forEach(minutes => {
-					expect(new DateEx({
+					expect(new DateTime({
 						minutes
 					}).minutes).to.be.eql(minutes);
 				});
@@ -361,7 +361,7 @@ describe('DateProxy', () => {
 				});
 
 				secondsArr.forEach(seconds => {
-					expect(new DateEx({
+					expect(new DateTime({
 						seconds
 					}).seconds).to.be.eql(seconds);
 				});
@@ -375,7 +375,7 @@ describe('DateProxy', () => {
 				});
 
 				msArr.forEach(ms => {
-					expect(new DateEx({
+					expect(new DateTime({
 						ms
 					}).ms).to.be.eql(ms);
 				});
@@ -389,7 +389,7 @@ describe('DateProxy', () => {
 
 			it('ok', () => {
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						hours
 					});
 
@@ -402,7 +402,7 @@ describe('DateProxy', () => {
 	describe('setter', () => {
 		describe('year', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.year = 3000;
 
@@ -413,7 +413,7 @@ describe('DateProxy', () => {
 
 		describe('month', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.month = 5;
 
@@ -424,7 +424,7 @@ describe('DateProxy', () => {
 
 		describe('date', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.date = 10;
 
@@ -435,7 +435,7 @@ describe('DateProxy', () => {
 
 		describe('hours', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.hours = 13;
 
@@ -446,7 +446,7 @@ describe('DateProxy', () => {
 
 		describe('minutes', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.minutes = 59;
 
@@ -457,7 +457,7 @@ describe('DateProxy', () => {
 
 		describe('seconds', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.seconds = 30;
 
@@ -468,7 +468,7 @@ describe('DateProxy', () => {
 
 		describe('ms', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx();
+				const date : DateTime = new DateTime();
 
 				date.ms = 133;
 
@@ -491,23 +491,24 @@ describe('DateProxy', () => {
 				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
 			));
 
-			const dateEx : DateEx = new DateEx(date);
+			const dateTime : DateTime = new DateTime(date);
 
-			const timezoneOffsetInHours : number = dateEx.timezoneOffset / 60;
+			const timezoneOffsetInHours : number = dateTime.timezoneOffset / 60;
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeDimension.Hours:
-						expect(dateEx.hours).to.be.eql(initParam.hours - timezoneOffsetInHours);
-						expect(dateEx.hours12).to.be.eql((initParam.hours - timezoneOffsetInHours + 1) % 12 - 1);
+						expect(dateTime.hours).to.be.eql(initParam.hours - timezoneOffsetInHours);
+						expect(dateTime.hours12).to.be.eql((initParam.hours - timezoneOffsetInHours + 1) % 12 - 1);
 
-						expect(dateEx.UTC.hours).to.be.eql(initParam.hours);
-						expect(dateEx.UTC.hours12).to.be.eql((initParam.hours + 1) % 12 - 1);
+						expect(dateTime.UTC.hours).to.be.eql(initParam.hours);
+						expect(dateTime.UTC.hours12).to.be.eql((initParam.hours + 1) % 12 - 1);
 						break;
 
 					default:
-						expect(dateEx[key]).to.be.eql(initParam[key]);
+						expect(dateTime[key]).to.be.eql(initParam[key]);
 				}
+				``;
 			});
 		});
 
@@ -522,15 +523,15 @@ describe('DateProxy', () => {
 				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
 			));
 
-			const dateEx : DateEx = new DateEx(date);
+			const dateTime : DateTime = new DateTime(date);
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeDimension.Date:
-						expect(dateEx.date).to.be.eql(initParam.date + 1);
-						expect(dateEx.UTC.date).to.be.eql(initParam.date);
+						expect(dateTime.date).to.be.eql(initParam.date + 1);
+						expect(dateTime.UTC.date).to.be.eql(initParam.date);
 
-						expect(dateEx.UTC.day).to.be.eql(dateEx.day + 1);
+						expect(dateTime.UTC.day).to.be.eql(dateTime.day + 1);
 						break;
 
 					// skip hours
@@ -538,7 +539,7 @@ describe('DateProxy', () => {
 						break;
 
 					default:
-						expect(dateEx[key]).to.be.eql(initParam[key]);
+						expect(dateTime[key]).to.be.eql(initParam[key]);
 				}
 			});
 		});
@@ -554,16 +555,16 @@ describe('DateProxy', () => {
 				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
 			));
 
-			const dateEx : DateEx = new DateEx(date);
+			const dateTime : DateTime = new DateTime(date);
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeDimension.Month:
-						expect(dateEx.date).to.be.eql(1);
-						expect(dateEx.UTC.date).to.be.eql(initParam.date);
+						expect(dateTime.date).to.be.eql(1);
+						expect(dateTime.UTC.date).to.be.eql(initParam.date);
 
-						expect(dateEx.month).to.be.eql(initParam.month + 1);
-						expect(dateEx.UTC.month).to.be.eql(initParam.month);
+						expect(dateTime.month).to.be.eql(initParam.month + 1);
+						expect(dateTime.UTC.month).to.be.eql(initParam.month);
 						break;
 
 					// skip of other specs
@@ -572,7 +573,7 @@ describe('DateProxy', () => {
 						break;
 
 					default:
-						expect(dateEx[key]).to.be.eql(initParam[key]);
+						expect(dateTime[key]).to.be.eql(initParam[key]);
 				}
 			});
 		});
@@ -588,7 +589,7 @@ describe('DateProxy', () => {
 				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
 			));
 
-			const dateEx : DateEx = new DateEx(date);
+			const dateTime : DateTime = new DateTime(date);
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
@@ -599,14 +600,14 @@ describe('DateProxy', () => {
 						break;
 
 					default:
-						expect(dateEx[key]).to.be.eql(initParam[key]);
+						expect(dateTime[key]).to.be.eql(initParam[key]);
 				}
 			});
 
-			expect(dateEx.month).to.be.eql(initParam.month + 1);
-			expect(dateEx.UTC.month).to.be.eql(initParam.month);
+			expect(dateTime.month).to.be.eql(initParam.month + 1);
+			expect(dateTime.UTC.month).to.be.eql(initParam.month);
 
-			expect(dateEx.UTC.quarter).to.be.eql(dateEx.quarter - 1);
+			expect(dateTime.UTC.quarter).to.be.eql(dateTime.quarter - 1);
 		});
 
 		it('different year', () => {
@@ -620,22 +621,22 @@ describe('DateProxy', () => {
 				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
 			));
 
-			const dateEx : DateEx = new DateEx(date);
+			const dateTime : DateTime = new DateTime(date);
 
 			DatetimeSetParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeDimension.Year:
-						expect(dateEx.date).to.be.eql(1);
-						expect(dateEx.UTC.date).to.be.eql(initParam.date);
+						expect(dateTime.date).to.be.eql(1);
+						expect(dateTime.UTC.date).to.be.eql(initParam.date);
 
-						expect(dateEx.month).to.be.eql(1);
-						expect(dateEx.UTC.month).to.be.eql(initParam.month);
+						expect(dateTime.month).to.be.eql(1);
+						expect(dateTime.UTC.month).to.be.eql(initParam.month);
 
-						expect(dateEx.quarter).to.be.eql(1);
-						expect(dateEx.UTC.quarter).to.be.eql(4);
+						expect(dateTime.quarter).to.be.eql(1);
+						expect(dateTime.UTC.quarter).to.be.eql(4);
 
-						expect(dateEx.year).to.be.eql(initParam.year + 1);
-						expect(dateEx.UTC.year).to.be.eql(initParam.year);
+						expect(dateTime.year).to.be.eql(initParam.year + 1);
+						expect(dateTime.UTC.year).to.be.eql(initParam.year);
 						break;
 
 					// skip of other specs
@@ -645,7 +646,7 @@ describe('DateProxy', () => {
 						break;
 
 					default:
-						expect(dateEx[key]).to.be.eql(initParam[key]);
+						expect(dateTime[key]).to.be.eql(initParam[key]);
 				}
 			});
 		});

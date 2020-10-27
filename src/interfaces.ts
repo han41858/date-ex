@@ -1,6 +1,6 @@
-import { DateEx } from './date-ex';
+import { DateTime } from './date-time';
 
-export type InitDataFormat = number | string | Date | DateEx | DateTimeJson;
+export type InitDataFormat = number | string | Date | DateTime | DateTimeJson;
 
 export interface DateTimeJson {
 	year? : number;

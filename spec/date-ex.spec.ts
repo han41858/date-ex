@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { DateEx } from '../src/date-ex';
+import { DateTime } from '../src/date-time';
 import { DateTimeDimension, DatetimeSetParamKeys, DefaultLocale, FormatToken } from '../src/constants';
 import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
 import { InitDataFormat, LocaleSet } from '../src/interfaces';
@@ -8,11 +8,11 @@ import { InitDataFormat, LocaleSet } from '../src/interfaces';
 
 const MilliSecondsCloseTo : number = 10;
 
-describe('DateEx', () => {
+describe('DateTime', () => {
 	describe('constructor()', () => {
 		it('empty initializer', () => {
 			const now : Date = new Date();
-			const newDate : DateEx = new DateEx();
+			const newDate : DateTime = new DateTime();
 
 			expect(newDate).to.be.ok;
 
@@ -44,20 +44,20 @@ describe('DateEx', () => {
 						const newDate : Date = new Date(dateStr);
 						const timezoneOffsetInHours : number = now.getTimezoneOffset() / 60;
 
-						const newDateEx : DateEx = new DateEx(dateStr);
+						const newDateTime : DateTime = new DateTime(dateStr);
 
-						expect(newDateEx).to.be.ok;
+						expect(newDateTime).to.be.ok;
 
-						expect(+newDateEx).to.be.eql(+newDate);
+						expect(+newDateTime).to.be.eql(+newDate);
 
-						expect(newDateEx.year).to.be.eql(newDate.getFullYear());
-						expect(newDateEx.month).to.be.eql(newDate.getMonth() + 1);
-						expect(newDateEx.date).to.be.eql(newDate.getDate());
+						expect(newDateTime.year).to.be.eql(newDate.getFullYear());
+						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
+						expect(newDateTime.date).to.be.eql(newDate.getDate());
 
-						expect(newDateEx.hours).to.be.eql(-timezoneOffsetInHours);
-						expect(newDateEx.minutes).to.be.eql(0);
-						expect(newDateEx.seconds).to.be.eql(0);
-						expect(newDateEx.ms).to.be.eql(0);
+						expect(newDateTime.hours).to.be.eql(-timezoneOffsetInHours);
+						expect(newDateTime.minutes).to.be.eql(0);
+						expect(newDateTime.seconds).to.be.eql(0);
+						expect(newDateTime.ms).to.be.eql(0);
 					});
 
 					it('YYYY-MM', () => {
@@ -71,20 +71,20 @@ describe('DateEx', () => {
 						const newDate : Date = new Date(dateStr);
 						const timezoneOffsetInHours : number = now.getTimezoneOffset() / 60;
 
-						const newDateEx : DateEx = new DateEx(dateStr);
+						const newDateTime : DateTime = new DateTime(dateStr);
 
-						expect(newDateEx).to.be.ok;
+						expect(newDateTime).to.be.ok;
 
-						expect(+newDateEx).to.be.eql(+newDate);
+						expect(+newDateTime).to.be.eql(+newDate);
 
-						expect(newDateEx.year).to.be.eql(newDate.getFullYear());
-						expect(newDateEx.month).to.be.eql(newDate.getMonth() + 1);
-						expect(newDateEx.date).to.be.eql(1);
+						expect(newDateTime.year).to.be.eql(newDate.getFullYear());
+						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
+						expect(newDateTime.date).to.be.eql(1);
 
-						expect(newDateEx.hours).to.be.eql(-timezoneOffsetInHours);
-						expect(newDateEx.minutes).to.be.eql(0);
-						expect(newDateEx.seconds).to.be.eql(0);
-						expect(newDateEx.ms).to.be.eql(0);
+						expect(newDateTime.hours).to.be.eql(-timezoneOffsetInHours);
+						expect(newDateTime.minutes).to.be.eql(0);
+						expect(newDateTime.seconds).to.be.eql(0);
+						expect(newDateTime.ms).to.be.eql(0);
 					});
 
 					it('--MM-DD', () => {
@@ -99,20 +99,20 @@ describe('DateEx', () => {
 
 						const newDate : Date = new Date(dateStr);
 
-						const newDateEx : DateEx = new DateEx(dateStr);
+						const newDateTime : DateTime = new DateTime(dateStr);
 
-						expect(newDateEx).to.be.ok;
+						expect(newDateTime).to.be.ok;
 
-						expect(+newDateEx).to.be.eql(+newDate);
+						expect(+newDateTime).to.be.eql(+newDate);
 
-						expect(newDateEx.year).to.be.eql(newDate.getFullYear());
-						expect(newDateEx.month).to.be.eql(newDate.getMonth() + 1);
-						expect(newDateEx.date).to.be.eql(newDate.getDate());
+						expect(newDateTime.year).to.be.eql(newDate.getFullYear());
+						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
+						expect(newDateTime.date).to.be.eql(newDate.getDate());
 
-						expect(newDateEx.hours).to.be.eql(0);
-						expect(newDateEx.minutes).to.be.eql(0);
-						expect(newDateEx.seconds).to.be.eql(0);
-						expect(newDateEx.ms).to.be.eql(0);
+						expect(newDateTime.hours).to.be.eql(0);
+						expect(newDateTime.minutes).to.be.eql(0);
+						expect(newDateTime.seconds).to.be.eql(0);
+						expect(newDateTime.ms).to.be.eql(0);
 					});
 				});
 
@@ -128,7 +128,7 @@ describe('DateEx', () => {
 							padDigit(now.getDate(), 2)
 						].join('');
 
-						expect(new DateEx(dateStr).isValid()).to.be.false;
+						expect(new DateTime(dateStr).isValid()).to.be.false;
 					});
 				});
 			});
@@ -149,9 +149,9 @@ describe('DateEx', () => {
 								padDigit(now.getMilliseconds(), 3)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 
 						it('Thh:mm:ss.SSS', () => {
@@ -168,9 +168,9 @@ describe('DateEx', () => {
 								padDigit(now.getMilliseconds(), 3)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 
 						it('hh:mm:ss', () => {
@@ -184,9 +184,9 @@ describe('DateEx', () => {
 								padDigit(now.getSeconds(), 2)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 
 						// hhmmss : not error, but invalid parsed with Date
@@ -201,9 +201,9 @@ describe('DateEx', () => {
 								padDigit(now.getSeconds(), 2)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 
 						it('hh:mm', () => {
@@ -215,9 +215,9 @@ describe('DateEx', () => {
 								padDigit(now.getMinutes(), 2)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 
 						it('Thhmm', () => {
@@ -229,9 +229,9 @@ describe('DateEx', () => {
 								padDigit(now.getMinutes(), 2)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 
 						it('Thh', () => {
@@ -242,9 +242,9 @@ describe('DateEx', () => {
 								padDigit(now.getHours(), 2)
 							].join('');
 
-							const dateEx : DateEx = new DateEx(timeStr);
+							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateEx.isValid()).to.be.false;
+							expect(dateTime.isValid()).to.be.false;
 						});
 					});
 				});
@@ -256,49 +256,49 @@ describe('DateEx', () => {
 				const now : Date = new Date();
 
 				const newDate : Date = new Date(now);
-				const newDateEx : DateEx = new DateEx(now);
+				const newDateTime : DateTime = new DateTime(now);
 
-				expect(newDateEx).to.be.ok;
+				expect(newDateTime).to.be.ok;
 
-				expect(+newDate).to.be.eql(+newDateEx);
+				expect(+newDate).to.be.eql(+newDateTime);
 
-				expect(newDateEx.year).to.be.eql(newDate.getFullYear());
-				expect(newDateEx.month).to.be.eql(newDate.getMonth() + 1);
-				expect(newDateEx.date).to.be.eql(newDate.getDate());
+				expect(newDateTime.year).to.be.eql(newDate.getFullYear());
+				expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
+				expect(newDateTime.date).to.be.eql(newDate.getDate());
 
-				expect(newDateEx.hours).to.be.eql(newDate.getHours());
-				expect(newDateEx.minutes).to.be.eql(newDate.getMinutes());
-				expect(newDateEx.seconds).to.be.eql(newDate.getSeconds());
-				expect(newDateEx.ms).to.be.eql(newDate.getMilliseconds());
+				expect(newDateTime.hours).to.be.eql(newDate.getHours());
+				expect(newDateTime.minutes).to.be.eql(newDate.getMinutes());
+				expect(newDateTime.seconds).to.be.eql(newDate.getSeconds());
+				expect(newDateTime.ms).to.be.eql(newDate.getMilliseconds());
 			});
 		});
 
-		describe('with DateEx', () => {
+		describe('with DateTime', () => {
 			it('ok', () => {
 				const now : Date = new Date();
 
-				const newDateEx1 : DateEx = new DateEx(now);
-				const newDateEx2 : DateEx = new DateEx(newDateEx1);
+				const newDateTime1 : DateTime = new DateTime(now);
+				const newDateTime2 : DateTime = new DateTime(newDateTime1);
 
-				expect(newDateEx2).to.be.ok;
+				expect(newDateTime2).to.be.ok;
 
-				expect(+newDateEx1).to.be.eql(+newDateEx2);
+				expect(+newDateTime1).to.be.eql(+newDateTime2);
 
-				expect(newDateEx2.year).to.be.eql(newDateEx1.year);
-				expect(newDateEx2.month).to.be.eql(newDateEx1.month);
-				expect(newDateEx2.date).to.be.eql(newDateEx1.date);
+				expect(newDateTime2.year).to.be.eql(newDateTime1.year);
+				expect(newDateTime2.month).to.be.eql(newDateTime1.month);
+				expect(newDateTime2.date).to.be.eql(newDateTime1.date);
 
-				expect(newDateEx2.hours).to.be.eql(newDateEx1.hours);
-				expect(newDateEx2.minutes).to.be.eql(newDateEx1.minutes);
-				expect(newDateEx2.seconds).to.be.eql(newDateEx1.seconds);
-				expect(newDateEx2.ms).to.be.eql(newDateEx1.ms);
+				expect(newDateTime2.hours).to.be.eql(newDateTime1.hours);
+				expect(newDateTime2.minutes).to.be.eql(newDateTime1.minutes);
+				expect(newDateTime2.seconds).to.be.eql(newDateTime1.seconds);
+				expect(newDateTime2.ms).to.be.eql(newDateTime1.ms);
 			});
 		});
 
 		describe('with set param', () => {
 			DatetimeSetParamKeys.forEach(key => {
 				it(key, () => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						[key] : key === DateTimeDimension.Year
 							? 1903
 							: 3
@@ -329,7 +329,7 @@ describe('DateEx', () => {
 			it('all', () => {
 				const now : Date = new Date();
 
-				const newDate : DateEx = new DateEx({
+				const newDate : DateTime = new DateTime({
 					year : now.getFullYear(),
 					month : now.getMonth() + 1,
 					date : now.getDate(),
@@ -356,7 +356,7 @@ describe('DateEx', () => {
 
 	describe('toDate()', () => {
 		it('is Date', () => {
-			expect(new DateEx().toDate()).to.be.instanceOf(Date);
+			expect(new DateTime().toDate()).to.be.instanceOf(Date);
 		});
 	});
 
@@ -367,7 +367,7 @@ describe('DateEx', () => {
 				hours : 13, minutes : 3, seconds : 16, ms : 32
 			};
 
-			const result : any = new DateEx(initParam).toJson();
+			const result : any = new DateTime(initParam).toJson();
 
 			expect(result).to.be.instanceOf(Object);
 
@@ -383,7 +383,7 @@ describe('DateEx', () => {
 
 		beforeEach(async () => {
 			// reset locale
-			DateEx.locale(DefaultLocale);
+			DateTime.locale(DefaultLocale);
 
 			await wait();
 		});
@@ -394,19 +394,19 @@ describe('DateEx', () => {
 				const invalidLocale : string = 'invalid-locale';
 
 				it('with static setter', async () => {
-					DateEx.locale(invalidLocale);
+					DateTime.locale(invalidLocale);
 
 					// wait for load
 					await wait();
 
-					const date : DateEx = new DateEx();
+					const date : DateTime = new DateTime();
 
 					// not changed
 					expect(date.locale()).to.be.eql(DefaultLocale);
 				});
 
 				it('with local setter', async () => {
-					const date : DateEx = new DateEx();
+					const date : DateTime = new DateTime();
 
 					date.locale(invalidLocale);
 
@@ -421,26 +421,26 @@ describe('DateEx', () => {
 		});
 
 		it('default locale', async () => {
-			const date : DateEx = new DateEx();
+			const date : DateTime = new DateTime();
 
 			expect(date.locale()).to.be.eql(DefaultLocale);
 		});
 
 		it('start with another', async () => {
-			DateEx.locale(anotherLocale);
+			DateTime.locale(anotherLocale);
 
 			// wait for load
 			await wait();
 
-			const date1 : DateEx = new DateEx();
-			const date2 : DateEx = new DateEx();
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
 
 			expect(date1.locale()).to.be.eql(anotherLocale);
 			expect(date2.locale()).to.be.eql(anotherLocale);
 		});
 
 		it('change to another', async () => {
-			const date1 : DateEx = new DateEx();
+			const date1 : DateTime = new DateTime();
 
 			// set locally
 			date1.locale(anotherLocale);
@@ -450,17 +450,17 @@ describe('DateEx', () => {
 
 			expect(date1.locale()).to.be.eql(anotherLocale);
 
-			const date2 : DateEx = new DateEx();
+			const date2 : DateTime = new DateTime();
 
 			expect(date2.locale()).to.be.eql(DefaultLocale);
 
 			// set globally
-			DateEx.locale(anotherLocale);
+			DateTime.locale(anotherLocale);
 
 			// wait for load
 			await wait();
 
-			const date3 : DateEx = new DateEx();
+			const date3 : DateTime = new DateTime();
 
 			expect(date1.locale()).to.be.eql(anotherLocale);
 			expect(date2.locale()).to.be.eql(DefaultLocale);
@@ -468,19 +468,19 @@ describe('DateEx', () => {
 		});
 
 		it('called multiple - global', async () => {
-			DateEx.locale(anotherLocale);
-			DateEx.locale(DefaultLocale);
-			DateEx.locale(anotherLocale);
+			DateTime.locale(anotherLocale);
+			DateTime.locale(DefaultLocale);
+			DateTime.locale(anotherLocale);
 
 			// wait for load
 			await wait();
 
-			const date : DateEx = new DateEx();
+			const date : DateTime = new DateTime();
 			expect(date.locale()).to.be.eql(anotherLocale);
 		});
 
 		it('called multiple - local', async () => {
-			const date : DateEx = new DateEx();
+			const date : DateTime = new DateTime();
 
 			date.locale(anotherLocale);
 			date.locale(DefaultLocale);
@@ -492,31 +492,31 @@ describe('DateEx', () => {
 			expect(date.locale()).to.be.eql(anotherLocale);
 		});
 
-		it('from DateEx', async () => {
-			const date1 : DateEx = new DateEx();
+		it('from DateTime', async () => {
+			const date1 : DateTime = new DateTime();
 			date1.locale(anotherLocale);
 
 			// wait for load
 			await wait();
 
-			const date2 : DateEx = new DateEx(date1);
+			const date2 : DateTime = new DateTime(date1);
 
 			expect(date2.locale()).to.be.eql(anotherLocale);
 		});
 	});
 
 	describe('set()', () => {
-		let refDate : DateEx;
+		let refDate : DateTime;
 
 		before(() => {
-			refDate = new DateEx(0); // zero base
+			refDate = new DateTime(0); // zero base
 		});
 
 		it('ok', () => {
 			DatetimeSetParamKeys.forEach(key => {
 				const now : Date = new Date();
 
-				const newDate : DateEx = new DateEx(refDate);
+				const newDate : DateTime = new DateTime(refDate);
 
 				let changingValue : number;
 
@@ -571,15 +571,15 @@ describe('DateEx', () => {
 	});
 
 	describe('add()', () => {
-		let refDate : DateEx;
+		let refDate : DateTime;
 
 		before(() => {
-			refDate = new DateEx(0); // zero base
+			refDate = new DateTime(0); // zero base
 		});
 
 		it('ok', () => {
 			DatetimeSetParamKeys.forEach(key => {
-				const newDate : DateEx = new DateEx(refDate);
+				const newDate : DateTime = new DateTime(refDate);
 
 				// add
 				newDate.add({
@@ -607,7 +607,7 @@ describe('DateEx', () => {
 				});
 
 				years.forEach(year => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						year
 					});
 
@@ -624,7 +624,7 @@ describe('DateEx', () => {
 				});
 
 				years.forEach(year => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						year
 					});
 
@@ -643,7 +643,7 @@ describe('DateEx', () => {
 				});
 
 				months.forEach(month => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						month
 					});
 
@@ -685,7 +685,7 @@ describe('DateEx', () => {
 
 			before(async () => {
 				defaultLocaleSet = await loadLocaleFile(DefaultLocale);
-				DateEx.locale(DefaultLocale);
+				DateTime.locale(DefaultLocale);
 
 				await wait();
 			});
@@ -696,7 +696,7 @@ describe('DateEx', () => {
 				});
 
 				months.forEach(month => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						month
 					});
 
@@ -713,7 +713,7 @@ describe('DateEx', () => {
 				});
 
 				months.forEach(month => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						month
 					});
 
@@ -730,7 +730,7 @@ describe('DateEx', () => {
 				});
 
 				months.forEach((month, i) => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						month
 					});
 
@@ -746,7 +746,7 @@ describe('DateEx', () => {
 				});
 
 				months.forEach((month, i) => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						month
 					});
 
@@ -759,8 +759,8 @@ describe('DateEx', () => {
 
 		describe('week', () => {
 			it(FormatToken.Week, () => {
-				const dates : DateEx[] = newArray(43, i => {
-					return new DateEx({ year : 2020, month : 1, date : i + 1 });
+				const dates : DateTime[] = newArray(43, i => {
+					return new DateTime({ year : 2020, month : 1, date : i + 1 });
 				});
 
 				dates.forEach(date => {
@@ -772,8 +772,8 @@ describe('DateEx', () => {
 			});
 
 			it(FormatToken.WeekPadded, () => {
-				const dates : DateEx[] = newArray(43, i => {
-					return new DateEx({ year : 2020, month : 1, date : i + 1 });
+				const dates : DateTime[] = newArray(43, i => {
+					return new DateTime({ year : 2020, month : 1, date : i + 1 });
 				});
 
 				dates.forEach(date => {
@@ -785,8 +785,8 @@ describe('DateEx', () => {
 			});
 
 			it(FormatToken.WeekPaddedWithPrefix, () => {
-				const dates : DateEx[] = newArray(43, i => {
-					return new DateEx({ year : 2020, month : 1, date : i + 1 });
+				const dates : DateTime[] = newArray(43, i => {
+					return new DateTime({ year : 2020, month : 1, date : i + 1 });
 				});
 
 				dates.forEach(date => {
@@ -805,11 +805,11 @@ describe('DateEx', () => {
 				});
 
 				dates.forEach(date => {
-					const dateEx : DateEx = new DateEx({
+					const dateTime : DateTime = new DateTime({
 						date
 					});
 
-					const result : string = dateEx.format(FormatToken.DayOfYear);
+					const result : string = dateTime.format(FormatToken.DayOfYear);
 
 					expect(result).to.be.lengthOf(date < 10 ? 1 : (date < 100 ? 2 : 3));
 					expect(result).to.be.eql('' + date);
@@ -822,11 +822,11 @@ describe('DateEx', () => {
 				});
 
 				dates.forEach(date => {
-					const dateEx : DateEx = new DateEx({
+					const dateTime : DateTime = new DateTime({
 						date
 					});
 
-					const result : string = dateEx.format(FormatToken.DayOfYearPadded);
+					const result : string = dateTime.format(FormatToken.DayOfYearPadded);
 
 					expect(result).to.be.lengthOf(3);
 					expect(result).to.be.eql(padDigit(date, 3));
@@ -839,11 +839,11 @@ describe('DateEx', () => {
 				});
 
 				dates.forEach(date => {
-					const dateEx : DateEx = new DateEx({
+					const dateTime : DateTime = new DateTime({
 						date
 					});
 
-					const result : string = dateEx.format(FormatToken.DayOfMonth);
+					const result : string = dateTime.format(FormatToken.DayOfMonth);
 
 					expect(result).to.be.lengthOf(date < 10 ? 1 : 2);
 					expect(result).to.be.eql('' + date);
@@ -856,11 +856,11 @@ describe('DateEx', () => {
 				});
 
 				dates.forEach(date => {
-					const dateEx : DateEx = new DateEx({
+					const dateTime : DateTime = new DateTime({
 						date
 					});
 
-					const result : string = dateEx.format(FormatToken.DayOfMonthPadded);
+					const result : string = dateTime.format(FormatToken.DayOfMonthPadded);
 
 					expect(result).to.be.lengthOf(2);
 					expect(result).to.be.eql(padDigit(date, 2));
@@ -873,14 +873,14 @@ describe('DateEx', () => {
 
 			before(async () => {
 				defaultLocaleSet = await loadLocaleFile(DefaultLocale);
-				DateEx.locale(DefaultLocale);
+				DateTime.locale(DefaultLocale);
 
 				await wait();
 			});
 
 			it(FormatToken.DayOfWeek, () => {
-				const dates : DateEx[] = newArray(7, i => {
-					return new DateEx({ year : 2020, month : 1, date : i });
+				const dates : DateTime[] = newArray(7, i => {
+					return new DateTime({ year : 2020, month : 1, date : i });
 				});
 
 				dates.forEach(date => {
@@ -892,8 +892,8 @@ describe('DateEx', () => {
 			});
 
 			it(FormatToken.DayOfWeekStringShort, () => {
-				const dates : DateEx[] = newArray(7, i => {
-					return new DateEx({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
+				const dates : DateTime[] = newArray(7, i => {
+					return new DateTime({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
 				});
 
 				dates.forEach((date, i) => {
@@ -905,8 +905,8 @@ describe('DateEx', () => {
 			});
 
 			it(FormatToken.DayOfWeekStringMiddle, () => {
-				const dates : DateEx[] = newArray(7, i => {
-					return new DateEx({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
+				const dates : DateTime[] = newArray(7, i => {
+					return new DateTime({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
 				});
 
 				dates.forEach((date, i) => {
@@ -918,8 +918,8 @@ describe('DateEx', () => {
 			});
 
 			it(FormatToken.DayOfWeekStringLong, () => {
-				const dates : DateEx[] = newArray(7, i => {
-					return new DateEx({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
+				const dates : DateTime[] = newArray(7, i => {
+					return new DateTime({ year : 2020, month : 1, date : 5 + i }); // start with sunday (0)
 				});
 
 				dates.forEach((date, i) => {
@@ -935,7 +935,7 @@ describe('DateEx', () => {
 
 			before(async () => {
 				defaultLocaleSet = await loadLocaleFile(DefaultLocale);
-				DateEx.locale(DefaultLocale);
+				DateTime.locale(DefaultLocale);
 
 				await wait();
 			});
@@ -944,7 +944,7 @@ describe('DateEx', () => {
 				const hoursArr : number[] = newArray(24, i => i); // 0 ~ 23
 
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						hours
 					});
 
@@ -960,7 +960,7 @@ describe('DateEx', () => {
 				const hoursArr : number[] = newArray(24, i => i); // 0 ~ 23
 
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({
+					const date : DateTime = new DateTime({
 						hours
 					});
 
@@ -980,7 +980,7 @@ describe('DateEx', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({ hours });
+					const date : DateTime = new DateTime({ hours });
 
 					const result : string = date.format(FormatToken.Hours24);
 
@@ -996,7 +996,7 @@ describe('DateEx', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({ hours });
+					const date : DateTime = new DateTime({ hours });
 
 					const result : string = date.format(FormatToken.Hours24Padded);
 
@@ -1011,7 +1011,7 @@ describe('DateEx', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({ hours });
+					const date : DateTime = new DateTime({ hours });
 
 					const result : string = date.format(FormatToken.Hours12);
 
@@ -1026,7 +1026,7 @@ describe('DateEx', () => {
 				});
 
 				hoursArr.forEach(hours => {
-					const date : DateEx = new DateEx({ hours });
+					const date : DateTime = new DateTime({ hours });
 
 					const result : string = date.format(FormatToken.Hours12Padded);
 
@@ -1043,7 +1043,7 @@ describe('DateEx', () => {
 				});
 
 				minutesArr.forEach(minutes => {
-					const date : DateEx = new DateEx({ minutes });
+					const date : DateTime = new DateTime({ minutes });
 
 					const result : string = date.format(FormatToken.Minutes);
 
@@ -1059,7 +1059,7 @@ describe('DateEx', () => {
 				});
 
 				minutesArr.forEach(minutes => {
-					const date : DateEx = new DateEx({ minutes });
+					const date : DateTime = new DateTime({ minutes });
 
 					const result : string = date.format(FormatToken.MinutesPadded);
 
@@ -1076,7 +1076,7 @@ describe('DateEx', () => {
 				});
 
 				secondsArr.forEach(seconds => {
-					const date : DateEx = new DateEx({ seconds });
+					const date : DateTime = new DateTime({ seconds });
 
 					const result : string = date.format(FormatToken.Seconds);
 
@@ -1092,7 +1092,7 @@ describe('DateEx', () => {
 				});
 
 				secondsArr.forEach(seconds => {
-					const date : DateEx = new DateEx({ seconds });
+					const date : DateTime = new DateTime({ seconds });
 
 					const result : string = date.format(FormatToken.SecondsPadded);
 
@@ -1109,7 +1109,7 @@ describe('DateEx', () => {
 				});
 
 				msArr.forEach(ms => {
-					const date : DateEx = new DateEx({ ms });
+					const date : DateTime = new DateTime({ ms });
 
 					const result : string = date.format(FormatToken.MilliSeconds);
 
@@ -1125,7 +1125,7 @@ describe('DateEx', () => {
 				});
 
 				msArr.forEach(ms => {
-					const date : DateEx = new DateEx({ ms });
+					const date : DateTime = new DateTime({ ms });
 
 					const result : string = date.format(FormatToken.MilliSecondsPadded2);
 
@@ -1140,7 +1140,7 @@ describe('DateEx', () => {
 				});
 
 				msArr.forEach(ms => {
-					const date : DateEx = new DateEx({ ms });
+					const date : DateTime = new DateTime({ ms });
 
 					const result : string = date.format(FormatToken.MilliSecondsPadded3);
 
@@ -1168,7 +1168,7 @@ describe('DateEx', () => {
 
 		describe('toDateTimeLocale()', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx(initParam);
+				const date : DateTime = new DateTime(initParam);
 
 				expect(date.toLocaleDateTimeString()).to.be.eql([
 					[
@@ -1190,7 +1190,7 @@ describe('DateEx', () => {
 
 		describe('toLocaleDateString()', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx(initParam);
+				const date : DateTime = new DateTime(initParam);
 
 				expect(date.toLocaleDateString()).to.be.eql([
 					initParam.month,
@@ -1202,7 +1202,7 @@ describe('DateEx', () => {
 
 		describe('toLocaleTimeString()', () => {
 			it('ok', () => {
-				const date : DateEx = new DateEx(initParam);
+				const date : DateTime = new DateTime(initParam);
 
 				expect(date.toLocaleTimeString()).to.be.eql([
 					[
@@ -1220,11 +1220,11 @@ describe('DateEx', () => {
 	describe('diff()', () => {
 		describe(DateTimeDimension.Year, () => {
 			it('ok', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2021
 				});
 
@@ -1233,12 +1233,12 @@ describe('DateEx', () => {
 		});
 		describe(DateTimeDimension.Quarter, () => {
 			it('same year', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 3
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 5
 				});
@@ -1247,13 +1247,13 @@ describe('DateEx', () => {
 			});
 
 			it('different year', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2021,
 					month : 6,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 8
 				});
@@ -1265,13 +1265,13 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Month, () => {
 			it('same year', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 3,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 5
 				});
@@ -1280,13 +1280,13 @@ describe('DateEx', () => {
 			});
 
 			it('different year', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2021,
 					month : 3,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 5
 				});
@@ -1297,14 +1297,14 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Week, () => {
 			it('same week', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 10
@@ -1314,14 +1314,14 @@ describe('DateEx', () => {
 			});
 
 			it('different week', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 11
@@ -1331,14 +1331,14 @@ describe('DateEx', () => {
 			});
 
 			it('different month', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 11,
 					date : 5
@@ -1348,14 +1348,14 @@ describe('DateEx', () => {
 			});
 
 			it('different year, but same week', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 12,
 					date : 30,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2021,
 					month : 1,
 					date : 2
@@ -1365,14 +1365,14 @@ describe('DateEx', () => {
 			});
 
 			it('different year, but different week', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 12,
 					date : 30,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2021,
 					month : 1,
 					date : 3
@@ -1384,14 +1384,14 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Date, () => {
 			it('same month', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 13,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 20
@@ -1401,14 +1401,14 @@ describe('DateEx', () => {
 			});
 
 			it('different month', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 8,
 					date : 5,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 7,
 					date : 31
@@ -1418,14 +1418,14 @@ describe('DateEx', () => {
 			});
 
 			it('different year', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 5,
 					date : 5,
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2021,
 					month : 5,
 					date : 6
@@ -1437,7 +1437,7 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Hours, () => {
 			it('same day', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1445,7 +1445,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1456,7 +1456,7 @@ describe('DateEx', () => {
 			});
 
 			it('different dates', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1464,7 +1464,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1477,7 +1477,7 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Minutes, () => {
 			it('same day', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1485,7 +1485,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1496,7 +1496,7 @@ describe('DateEx', () => {
 			});
 
 			it('different dates', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1504,7 +1504,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1517,7 +1517,7 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Seconds, () => {
 			it('same day', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1525,7 +1525,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1536,7 +1536,7 @@ describe('DateEx', () => {
 			});
 
 			it('different minutes', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1545,7 +1545,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1557,7 +1557,7 @@ describe('DateEx', () => {
 			});
 
 			it('different day', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1565,7 +1565,7 @@ describe('DateEx', () => {
 					ms : 3 // margin
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 5,
@@ -1578,7 +1578,7 @@ describe('DateEx', () => {
 
 		describe(DateTimeDimension.Ms, () => {
 			it('same seconds', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1588,7 +1588,7 @@ describe('DateEx', () => {
 					ms : 100
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1602,7 +1602,7 @@ describe('DateEx', () => {
 			});
 
 			it('different seconds', () => {
-				const date1 : DateEx = new DateEx({
+				const date1 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1612,7 +1612,7 @@ describe('DateEx', () => {
 					ms : 100
 				});
 
-				const date2 : DateEx = new DateEx({
+				const date2 : DateTime = new DateTime({
 					year : 2020,
 					month : 10,
 					date : 3,
@@ -1629,11 +1629,11 @@ describe('DateEx', () => {
 
 	describe('isBefore()', () => {
 		it('no dimension param', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
 				ms : 1
 			});
@@ -1642,11 +1642,11 @@ describe('DateEx', () => {
 		});
 
 		it('same date', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1654,11 +1654,11 @@ describe('DateEx', () => {
 		});
 
 		it('is before, but same with dimension', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 21
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1668,11 +1668,11 @@ describe('DateEx', () => {
 
 	describe('isBeforeOrEqual()', () => {
 		it('no dimension param', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
 				ms : 1
 			});
@@ -1681,11 +1681,11 @@ describe('DateEx', () => {
 		});
 
 		it('same date', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1693,11 +1693,11 @@ describe('DateEx', () => {
 		});
 
 		it('is before, but same with dimension', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 21
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1707,12 +1707,12 @@ describe('DateEx', () => {
 
 	describe('isAfter()', () => {
 		it('no dimension param', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
 				ms : 1
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1720,11 +1720,11 @@ describe('DateEx', () => {
 		});
 
 		it('same date', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1732,11 +1732,11 @@ describe('DateEx', () => {
 		});
 
 		it('is after, but same with dimension', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 23
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1746,12 +1746,12 @@ describe('DateEx', () => {
 
 	describe('isAfterOrEqual()', () => {
 		it('no dimension param', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
 				ms : 1
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1759,11 +1759,11 @@ describe('DateEx', () => {
 		});
 
 		it('same date', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1771,11 +1771,11 @@ describe('DateEx', () => {
 		});
 
 		it('is after, but same with dimension', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 23
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1785,15 +1785,15 @@ describe('DateEx', () => {
 
 	describe('isBetween()', () => {
 		it('different days', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 20
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date3 : DateEx = new DateEx({
+			const date3 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 24
 			});
 
@@ -1808,15 +1808,15 @@ describe('DateEx', () => {
 		});
 
 		it('same day', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date3 : DateEx = new DateEx({
+			const date3 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
@@ -1833,15 +1833,15 @@ describe('DateEx', () => {
 
 	describe('isBetweenOrEqual()', () => {
 		it('different days', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 20
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date3 : DateEx = new DateEx({
+			const date3 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 24
 			});
 
@@ -1856,15 +1856,15 @@ describe('DateEx', () => {
 		});
 
 		it('same day', () => {
-			const date1 : DateEx = new DateEx({
+			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date2 : DateEx = new DateEx({
+			const date2 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 
-			const date3 : DateEx = new DateEx({
+			const date3 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
 			});
 

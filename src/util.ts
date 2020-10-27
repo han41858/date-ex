@@ -1,5 +1,5 @@
 import { InitDataFormat, LocaleSet } from './interfaces';
-import { DateEx } from './date-ex';
+import { DateTime } from './date-time';
 
 export const newArray = <T> (length : number, callback? : (i? : number, arr? : T[]) => T) : (undefined | T)[] => {
 	const arr : any[] = new Array(length).fill(undefined);
@@ -101,14 +101,14 @@ export const getLastDateOfMonth = (year : number, month : number) : number => {
 };
 
 export const dateFormat = (date : InitDataFormat, format : string) : string => {
-	let dateEx : DateEx;
+	let dateTime : DateTime;
 
-	if (date instanceof DateEx) {
-		dateEx = date;
+	if (date instanceof DateTime) {
+		dateTime = date;
 	}
 	else {
-		dateEx = new DateEx(date);
+		dateTime = new DateTime(date);
 	}
 
-	return dateEx.isValid() ? dateEx.format(format) : date as string;
+	return dateTime.isValid() ? dateTime.format(format) : date as string;
 };

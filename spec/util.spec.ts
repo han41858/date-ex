@@ -4,7 +4,7 @@ import { getLastDateOfMonth } from '../src/util';
 
 
 describe('util', () => {
-	describe('daysOfMonth()', () => {
+	describe('getLastDateOfMonth()', () => {
 		it('ok', () => {
 			const targets : {
 				year : number,

@@ -1,8 +1,8 @@
 import { DateTime } from './date-time';
 
-export type InitDataFormat = number | string | Date | DateTime | DateTimeObject;
+export type InitDataFormat = number | string | Date | DateTime | DateTimeParam;
 
-export interface DateTimeObject {
+export interface DateTimeParam {
 	year? : number;
 	month? : number;
 	date? : number;
@@ -32,4 +32,15 @@ export interface LocaleSet {
 	LocaleDateTimeFormat : string;
 	LocaleDateFormat : string;
 	LocaleTimeFormat : string;
+}
+
+export interface DurationParam {
+	years? : number;
+	months? : number;
+	dates? : number;
+
+	hours? : number;
+	minutes? : number;
+	seconds? : number;
+	ms? : number;
 }

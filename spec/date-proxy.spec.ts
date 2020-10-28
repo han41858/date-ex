@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { DateTime } from '../src/date-time';
 import { newArray } from '../src/util';
-import { DateTimeObject, InitDataFormat } from '../src/interfaces';
+import { DateTimeParam, InitDataFormat } from '../src/interfaces';
 import { DatetimeSetParamKeys, DateTimeUnit } from '../src/constants';
 
 
@@ -128,7 +128,7 @@ describe('DateProxy', () => {
 
 		describe('weekOfYear', () => {
 			const targets : {
-				param : DateTimeObject,
+				param : DateTimeParam,
 				week : number
 			}[] = [{
 				param : { year : 2020, month : 1, date : 1 },
@@ -170,7 +170,7 @@ describe('DateProxy', () => {
 
 		describe('weekOfMonth', () => {
 			const targets : {
-				param : DateTimeObject,
+				param : DateTimeParam,
 				week : number
 			}[] = [{
 				param : { year : 2020, month : 1, date : 1 },
@@ -212,7 +212,7 @@ describe('DateProxy', () => {
 
 		describe('daysOfYear', () => {
 			const targets : {
-				param : DateTimeObject,
+				param : DateTimeParam,
 				days : number
 			}[] = [{
 				param : { year : 2020, month : 1, date : 1 },
@@ -242,7 +242,7 @@ describe('DateProxy', () => {
 
 		describe('maxDateOfMonth', () => {
 			const targets : {
-				param : DateTimeObject,
+				param : DateTimeParam,
 				days : number
 			}[] = [{
 				param : { year : 2020, month : 1 },

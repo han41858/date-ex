@@ -1,6 +1,6 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeObject, InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeParam, InitDataFormat, LocaleSet } from './interfaces';
 import { DatetimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
 import { clone, loadLocaleFile, padDigit } from './util';
 
@@ -43,10 +43,10 @@ export class DateTime extends DateProxy {
 			const initDataKeys : string[] = Object.keys(initData);
 
 			if (initDataKeys.every(key => {
-				return DatetimeSetParamKeys.includes(key as keyof DateTimeObject);
+				return DatetimeSetParamKeys.includes(key as keyof DateTimeParam);
 			})) {
 				// others 0
-				const setParam : DateTimeObject = Object.assign(clone(ZeroDaySetter), initData);
+				const setParam : DateTimeParam = Object.assign(clone(ZeroDaySetter), initData);
 
 				this.set(setParam);
 			}
@@ -191,7 +191,7 @@ export class DateTime extends DateProxy {
 	}
 
 	// allow null, no limit number range
-	set (param : DateTimeObject) : DateTime {
+	set (param : DateTimeParam) : DateTime {
 		param.year !== undefined && this._date.setFullYear(param.year);
 		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
 		param.date !== undefined && this._date.setDate(param.date);
@@ -204,11 +204,11 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	add (param : DateTimeObject) : DateTime {
-		const setParam : DateTimeObject = {};
+	add (param : DateTimeParam) : DateTime {
+		const setParam : DateTimeParam = {};
 
 		Object.entries(param).forEach(([_key, value]) => {
-			const key : keyof DateTimeObject = _key as keyof DateTimeObject;
+			const key : keyof DateTimeParam = _key as keyof DateTimeParam;
 
 			if (value !== undefined) {
 				setParam[key] = this[key] + value;

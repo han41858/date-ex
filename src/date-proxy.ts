@@ -1,4 +1,4 @@
-import { DateTimeObject, InitDataFormat } from './interfaces';
+import { DateTimeParam, InitDataFormat } from './interfaces';
 import { DateTime } from './date-time';
 import { getLastDateOfMonth } from './util';
 
@@ -298,7 +298,7 @@ export class DateProxy {
 		return this._date.toUTCString();
 	}
 
-	toJson () : Required<DateTimeObject> {
+	toJson () : Required<DateTimeParam> {
 		return {
 			year : this.year,
 			month : this.month,

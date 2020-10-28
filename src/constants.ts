@@ -1,4 +1,4 @@
-import { DateTimeObject } from './interfaces';
+import { DateTimeParam, DurationParam } from './interfaces';
 
 export enum DateTimeUnit {
 	Year = 'year',
@@ -13,7 +13,7 @@ export enum DateTimeUnit {
 	Ms = 'ms'
 }
 
-export const DatetimeSetParamKeys : (keyof DateTimeObject)[] = [
+export const DatetimeSetParamKeys : (keyof DateTimeParam)[] = [
 	DateTimeUnit.Year,
 	DateTimeUnit.Month,
 	DateTimeUnit.Date,
@@ -24,7 +24,31 @@ export const DatetimeSetParamKeys : (keyof DateTimeObject)[] = [
 	DateTimeUnit.Ms
 ];
 
-export const ZeroDaySetter : DateTimeObject = {
+export enum DurationUnit {
+	Years = 'years',
+	Quarters = 'quarters',
+	Months = 'months',
+	Weeks = 'weeks',
+	Dates = 'dates',
+
+	Hours = 'hours',
+	Minutes = 'minutes',
+	Seconds = 'seconds',
+	Ms = 'ms'
+}
+
+export const DurationSetParamKeys : (keyof DurationParam)[] = [
+	DurationUnit.Years,
+	DurationUnit.Months,
+	DurationUnit.Dates,
+
+	DurationUnit.Hours,
+	DurationUnit.Minutes,
+	DurationUnit.Seconds,
+	DurationUnit.Ms
+];
+
+export const ZeroDaySetter : DateTimeParam = {
 	year : 1900,
 	month : 1,
 	date : 1,

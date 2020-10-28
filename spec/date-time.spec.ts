@@ -300,7 +300,7 @@ describe('DateTime', () => {
 				it(key, () => {
 					const date : DateTime = new DateTime({
 						[key] : key === DateTimeUnit.Year
-							? 1903
+							? 1973
 							: 3
 					});
 
@@ -308,14 +308,14 @@ describe('DateTime', () => {
 						if (checkKey === key) {
 							expect(date[checkKey]).to.be.eql(
 								checkKey === DateTimeUnit.Year
-									? 1903
+									? 1973
 									: 3
 							);
 						}
 						else {
 							expect(date[checkKey]).to.be.eql(
 								checkKey === DateTimeUnit.Year
-									? 1900
+									? 1970
 									: ((checkKey === DateTimeUnit.Month || checkKey === DateTimeUnit.Date)
 										? 1
 										: 0

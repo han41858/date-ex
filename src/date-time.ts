@@ -1,8 +1,8 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeParam, InitDataFormat, LocaleSet } from './interfaces';
-import { DatetimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken, ZeroDaySetter } from './constants';
-import { clone, loadLocaleFile, padDigit } from './util';
+import { DatetimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
+import { loadLocaleFile, padDigit } from './util';
 
 // load default locale
 import { locale } from './locale/en';
@@ -45,10 +45,20 @@ export class DateTime extends DateProxy {
 			if (initDataKeys.every(key => {
 				return DatetimeSetParamKeys.includes(key as keyof DateTimeParam);
 			})) {
-				// others 0
-				const setParam : DateTimeParam = Object.assign(clone(ZeroDaySetter), initData);
+				// others 0 with new Date(0)
+				const ZeroDaySetter : DateTimeParam = {
+					year : 1970,
+					month : 1,
+					date : 1,
 
-				this.set(setParam);
+					hours : 0,
+					minutes : 0,
+					seconds : 0,
+					ms : 0
+				};
+				this.set(ZeroDaySetter);
+
+				this.set(initData);
 			}
 		}
 
@@ -192,14 +202,15 @@ export class DateTime extends DateProxy {
 
 	// allow null, no limit number range
 	set (param : DateTimeParam) : DateTime {
-		param.year !== undefined && this._date.setFullYear(param.year);
-		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
-		param.date !== undefined && this._date.setDate(param.date);
-
-		param.hours !== undefined && this._date.setHours(param.hours);
-		param.minutes !== undefined && this._date.setMinutes(param.minutes);
-		param.seconds !== undefined && this._date.setSeconds(param.seconds);
+		// reverse order for dates
 		param.ms !== undefined && this._date.setMilliseconds(param.ms);
+		param.seconds !== undefined && this._date.setSeconds(param.seconds);
+		param.minutes !== undefined && this._date.setMinutes(param.minutes);
+		param.hours !== undefined && this._date.setHours(param.hours);
+
+		param.date !== undefined && this._date.setDate(param.date);
+		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
+		param.year !== undefined && this._date.setFullYear(param.year);
 
 		return this;
 	}

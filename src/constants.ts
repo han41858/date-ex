@@ -48,17 +48,6 @@ export const DurationSetParamKeys : (keyof DurationParam)[] = [
 	DurationUnit.Ms
 ];
 
-export const ZeroDaySetter : DateTimeParam = {
-	year : 1900,
-	month : 1,
-	date : 1,
-
-	hours : 0,
-	minutes : 0,
-	seconds : 0,
-	ms : 0
-};
-
 export enum FormatToken {
 	YearShort = 'YY', // 20
 	Year = 'YYYY', // 2020

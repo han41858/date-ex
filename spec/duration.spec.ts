@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { Duration } from '../src/duration';
-import { DurationUnit } from '../src/constants';
+import { DurationParamKeys, DurationUnit } from '../src/constants';
 
 
 describe('Duration', () => {
@@ -23,7 +23,21 @@ describe('Duration', () => {
 
 		// TODO: by string
 
-		// TODO: by Duration
+		describe('by Duration', () => {
+			it('ok', () => {
+				DurationParamKeys.forEach(key => {
+					const refDuration : Duration = new Duration({
+						[key] : 1
+					});
+
+					const newDuration : Duration = new Duration(refDuration);
+
+					DurationParamKeys.forEach(checkKey => {
+						expect(newDuration[checkKey]).to.be.eql(refDuration[checkKey]);
+					});
+				});
+			});
+		});
 
 		describe('by DurationParam', () => {
 			const DatesError : number = .5;

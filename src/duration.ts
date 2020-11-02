@@ -1,29 +1,31 @@
 import { DurationParam } from './interfaces';
-import { DurationParamKeys, Gregorian1Month } from './constants';
+import { Gregorian1Month } from './constants';
+import { isDurationParam } from './util';
 
 
 export class Duration {
 
-	private values : DurationParam = {};
+	private readonly values : DurationParam = {};
 
 
-	constructor (initData? : string | DurationParam) {
+	constructor (initData? : string | Duration | DurationParam) {
 		if (initData !== undefined && initData !== null) {
 			if (typeof initData === 'string') {
 				// TODO
 			}
-			else {
-				if (Object.keys(initData).every(key => {
-					return DurationParamKeys.includes(key as keyof DurationParam);
-				})) {
-					Object.entries(initData).forEach(([key, value] : [string, number]) => {
-						if (value !== undefined && value !== null) {
-							this.values[key as keyof DurationParam] = value;
-						}
-					});
-
-					this.rebalancing();
+			else if(initData instanceof Duration){
+				this.values = {
+					...initData.values
 				}
+			}
+			else if (isDurationParam(initData)) {
+				Object.entries(initData).forEach(([key, value] : [string, number]) => {
+					if (value !== undefined && value !== null) {
+						this.values[key as keyof DurationParam] = value;
+					}
+				});
+
+				this.rebalancing();
 			}
 		}
 	}

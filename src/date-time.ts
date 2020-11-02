@@ -1,7 +1,7 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeParam, InitDataFormat, LocaleSet } from './interfaces';
-import { DatetimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
+import { DateTimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
 import { loadLocaleFile, padDigit } from './util';
 
 // load default locale
@@ -43,20 +43,10 @@ export class DateTime extends DateProxy {
 			const initDataKeys : string[] = Object.keys(initData);
 
 			if (initDataKeys.every(key => {
-				return DatetimeSetParamKeys.includes(key as keyof DateTimeParam);
+				return DateTimeSetParamKeys.includes(key as keyof DateTimeParam);
 			})) {
-				// others 0 with new Date(0)
-				const ZeroDaySetter : DateTimeParam = {
-					year : 1970,
-					month : 1,
-					date : 1,
-
-					hours : 0,
-					minutes : 0,
-					seconds : 0,
-					ms : 0
-				};
-				this.set(ZeroDaySetter);
+				// from zero date time
+				this._date = new Date(0);
 
 				this.set(initData);
 			}
@@ -202,15 +192,18 @@ export class DateTime extends DateProxy {
 
 	// allow null, no limit number range
 	set (param : DateTimeParam) : DateTime {
-		// reverse order for dates
-		param.ms !== undefined && this._date.setMilliseconds(param.ms);
-		param.seconds !== undefined && this._date.setSeconds(param.seconds);
-		param.minutes !== undefined && this._date.setMinutes(param.minutes);
-		param.hours !== undefined && this._date.setHours(param.hours);
+		this._date.setFullYear(
+			param.year !== undefined ? param.year : this.year,
+			param.month !== undefined ? param.month - 1 : this.month - 1,
+			param.date !== undefined ? param.date : this.date
+		);
 
-		param.date !== undefined && this._date.setDate(param.date);
-		param.month !== undefined && this._date.setMonth(param.month - 1); // param.month : 1 ~ 12
-		param.year !== undefined && this._date.setFullYear(param.year);
+		this._date.setHours(
+			param.hours !== undefined ? param.hours : this.hours,
+			param.minutes !== undefined ? param.minutes : this.minutes,
+			param.seconds !== undefined ? param.seconds : this.seconds,
+			param.ms !== undefined ? param.ms : this.ms
+		);
 
 		return this;
 	}
@@ -218,8 +211,8 @@ export class DateTime extends DateProxy {
 	add (param : DateTimeParam) : DateTime {
 		const setParam : DateTimeParam = {};
 
-		Object.entries(param).forEach(([_key, value]) => {
-			const key : keyof DateTimeParam = _key as keyof DateTimeParam;
+		DateTimeSetParamKeys.forEach((key : keyof DateTimeParam) => {
+			const value : number = param[key] as number;
 
 			if (value !== undefined) {
 				setParam[key] = this[key] + value;

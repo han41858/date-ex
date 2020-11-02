@@ -1,8 +1,5 @@
 import { DurationParam } from './interfaces';
-import { DurationSetParamKeys } from './constants';
-
-
-const Gregorian365Days : number = 146097 / 400; // 365.2425
+import { DurationSetParamKeys, Gregorian1Month } from './constants';
 
 
 export class Duration {
@@ -177,7 +174,7 @@ export class Duration {
 		}
 
 		if (this.values.dates !== undefined) {
-			const datesToMonth : number = Gregorian365Days / 12;
+			const datesToMonth : number = Gregorian1Month;
 
 			if (this.values.dates < 0) {
 				const monthsDown : number = Math.floor(-this.values.dates / datesToMonth);
@@ -202,7 +199,7 @@ export class Duration {
 				this.values.months += yearsDown * 12;
 			}
 
-			if (this.values.months >= 24) {
+			if (this.values.months >= 12) {
 				const yearsUp : number = Math.floor(this.values.months / 12);
 
 				this.values.years = (this.values.years || 0) + yearsUp;

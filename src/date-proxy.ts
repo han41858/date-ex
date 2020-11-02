@@ -183,6 +183,7 @@ export class DateProxy {
 			}
 			else {
 				const previousDay : DateTime = new DateTime(this);
+
 				previousDay.add({
 					date : -1
 				});

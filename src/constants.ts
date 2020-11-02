@@ -13,7 +13,7 @@ export enum DateTimeUnit {
 	Ms = 'ms'
 }
 
-export const DatetimeSetParamKeys : (keyof DateTimeParam)[] = [
+export const DateTimeSetParamKeys : (keyof DateTimeParam)[] = [
 	DateTimeUnit.Year,
 	DateTimeUnit.Month,
 	DateTimeUnit.Date,
@@ -106,3 +106,6 @@ export enum ISO8601Format {
 }
 
 export const DefaultLocale : string = 'en';
+
+export const Gregorian1Year : number = 146097 / 400; // 365.2425
+export const Gregorian1Month : number = Gregorian1Year / 12; // 30.436875

@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 
 import { DateTime } from '../src/date-time';
-import { DateTimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from '../src/constants';
-import { loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { InitDataFormat, LocaleSet } from '../src/interfaces';
+import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from '../src/constants';
+import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
+import { DateTimeParam, InitDataFormat, LocaleSet } from '../src/interfaces';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -297,7 +297,7 @@ describe('DateTime', () => {
 
 		describe('with set param', () => {
 			describe('each field', () => {
-				DateTimeSetParamKeys.forEach(key => {
+				DateTimeParamKeys.forEach(key => {
 					it(key, () => {
 						const date : DateTime = new DateTime({
 							[key] : key === DateTimeUnit.Year
@@ -305,7 +305,7 @@ describe('DateTime', () => {
 								: 3
 						});
 
-						DateTimeSetParamKeys.forEach(checkKey => {
+						DateTimeParamKeys.forEach(checkKey => {
 							if (checkKey === key) {
 								expect(date[checkKey]).to.be.eql(
 									checkKey === DateTimeUnit.Year
@@ -916,7 +916,7 @@ describe('DateTime', () => {
 
 			expect(result).to.be.instanceOf(Object);
 
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				expect(result[key]).to.be.a('number');
 				expect(result[key]).to.be.eql(initParam[key]);
 			});
@@ -1058,7 +1058,7 @@ describe('DateTime', () => {
 		});
 
 		it('ok', () => {
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				const now : Date = new Date();
 
 				const newDate : DateTime = new DateTime(refDate);
@@ -1103,7 +1103,7 @@ describe('DateTime', () => {
 				});
 
 				// check
-				DateTimeSetParamKeys.forEach(checkKey => {
+				DateTimeParamKeys.forEach(checkKey => {
 					if (checkKey === key) {
 						expect(newDate[checkKey]).to.be.eql(changingValue);
 					}
@@ -1122,23 +1122,50 @@ describe('DateTime', () => {
 			refDate = new DateTime(0); // zero base
 		});
 
-		it('ok', () => {
-			DateTimeSetParamKeys.forEach(key => {
-				const newDate : DateTime = new DateTime(refDate);
+		describe('with DateTimeParam', () => {
+			it('ok', () => {
+				DateTimeParamKeys.forEach(key => {
+					const newDate : DateTime = new DateTime(refDate);
 
-				// add
-				newDate.add({
-					[key] : 1
+					// add
+					newDate.add({
+						[key] : 1
+					});
+
+					// check
+					DateTimeParamKeys.forEach(checkKey => {
+						if (checkKey === key) {
+							expect(newDate[checkKey]).to.be.eql(refDate[checkKey] + 1);
+						}
+						else {
+							expect(newDate[checkKey]).to.be.eql(refDate[checkKey]);
+						}
+					});
 				});
+			});
+		});
 
-				// check
-				DateTimeSetParamKeys.forEach(checkKey => {
-					if (checkKey === key) {
-						expect(newDate[checkKey]).to.be.eql(refDate[checkKey] + 1);
-					}
-					else {
-						expect(newDate[checkKey]).to.be.eql(refDate[checkKey]);
-					}
+		describe('with DurationParam', () => {
+			it('ok', () => {
+				DurationParamKeys.forEach(durationKey => {
+					const newDate : DateTime = new DateTime(refDate);
+
+					// add
+					newDate.add({
+						[durationKey] : 1
+					});
+
+					// check
+					const changedKey : keyof DateTimeParam = durationUnitToDateTimeUnit(durationKey);
+
+					DateTimeParamKeys.forEach(key => {
+						if (changedKey === key) {
+							expect(newDate[key]).to.be.eql(refDate[key] + 1);
+						}
+						else {
+							expect(newDate[key]).to.be.eql(refDate[key]);
+						}
+					});
 				});
 			});
 		});

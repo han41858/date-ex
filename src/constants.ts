@@ -13,7 +13,7 @@ export enum DateTimeUnit {
 	Ms = 'ms'
 }
 
-export const DateTimeSetParamKeys : (keyof DateTimeParam)[] = [
+export const DateTimeParamKeys : (keyof DateTimeParam)[] = [
 	DateTimeUnit.Year,
 	DateTimeUnit.Month,
 	DateTimeUnit.Date,
@@ -37,7 +37,7 @@ export enum DurationUnit {
 	Ms = 'ms'
 }
 
-export const DurationSetParamKeys : (keyof DurationParam)[] = [
+export const DurationParamKeys : (keyof DurationParam)[] = [
 	DurationUnit.Years,
 	DurationUnit.Months,
 	DurationUnit.Dates,

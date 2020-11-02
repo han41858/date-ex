@@ -1,8 +1,8 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeParam, InitDataFormat, LocaleSet } from './interfaces';
-import { DateTimeSetParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
-import { loadLocaleFile, padDigit } from './util';
+import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
+import { durationUnitToDateTimeUnit, isDateTimeParam, isDurationParam, loadLocaleFile, padDigit } from './util';
 
 // load default locale
 import { locale } from './locale/en';
@@ -40,11 +40,7 @@ export class DateTime extends DateProxy {
 			&& !(initData instanceof DateTime)
 			&& typeof initData === 'object') {
 			// with DateTimeSetParam
-			const initDataKeys : string[] = Object.keys(initData);
-
-			if (initDataKeys.every(key => {
-				return DateTimeSetParamKeys.includes(key as keyof DateTimeParam);
-			})) {
+			if (isDateTimeParam(initData)) {
 				// from zero date time
 				this._date = new Date(0);
 
@@ -208,18 +204,31 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	add (param : DateTimeParam) : DateTime {
+	add (param : DateTimeParam | DurationParam) : DateTime {
 		const setParam : DateTimeParam = {};
 
-		DateTimeSetParamKeys.forEach((key : keyof DateTimeParam) => {
-			const value : number = param[key] as number;
+		if (isDateTimeParam(param)) {
+			DateTimeParamKeys.forEach((key : keyof DateTimeParam) => {
+				const value : number = param[key] as number;
 
-			if (value !== undefined) {
-				setParam[key] = this[key] + value;
-			}
-		});
+				if (value !== undefined) {
+					setParam[key] = this[key] + value;
+				}
+			});
 
-		return this.set(setParam);
+			this.set(setParam);
+		}
+		else if (isDurationParam(param)) {
+			Object.entries(param).forEach(([key, value]) => {
+				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as keyof DurationParam);
+
+				setParam[datetimeUnit] = this[datetimeUnit] + value;
+			});
+
+			this.set(setParam);
+		}
+
+		return this;
 	}
 
 	format (format : string) : string {

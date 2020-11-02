@@ -1,5 +1,6 @@
-import { InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
 import { DateTime } from './date-time';
+import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit } from './constants';
 
 export const newArray = <T> (length : number, callback? : (i? : number, arr? : T[]) => T) : (undefined | T)[] => {
 	const arr : any[] = new Array(length).fill(undefined);
@@ -111,4 +112,52 @@ export const dateFormat = (date : InitDataFormat, format : string) : string => {
 	}
 
 	return dateTime.isValid() ? dateTime.format(format) : date as string;
+};
+
+export const isDateTimeParam = (param : any) : param is DateTimeParam => {
+	return Object.keys(param).every(key => {
+		return DateTimeParamKeys.includes(key as keyof DateTimeParam);
+	});
+};
+
+export const isDurationParam = (param : any) : param is DurationParam => {
+	return Object.keys(param).every(key => {
+		return DurationParamKeys.includes(key as keyof DurationParam);
+	});
+};
+
+export const durationUnitToDateTimeUnit = (unit : keyof DurationParam) : keyof DateTimeParam => {
+	let dateTimeKey ! : keyof DateTimeParam;
+
+	switch (unit) {
+		case DurationUnit.Years:
+			dateTimeKey = DateTimeUnit.Year;
+			break;
+
+		case DurationUnit.Months:
+			dateTimeKey = DateTimeUnit.Month;
+			break;
+
+		case DurationUnit.Dates:
+			dateTimeKey = DateTimeUnit.Date;
+			break;
+
+		case DurationUnit.Hours:
+			dateTimeKey = DateTimeUnit.Hours;
+			break;
+
+		case DurationUnit.Minutes:
+			dateTimeKey = DateTimeUnit.Minutes;
+			break;
+
+		case DurationUnit.Seconds:
+			dateTimeKey = DateTimeUnit.Seconds;
+			break;
+
+		case DurationUnit.Ms:
+			dateTimeKey = DateTimeUnit.Ms;
+			break;
+	}
+
+	return dateTimeKey as keyof DateTimeParam;
 };

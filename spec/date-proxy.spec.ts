@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { DateTime } from '../src/date-time';
 import { newArray } from '../src/util';
 import { DateTimeParam, InitDataFormat } from '../src/interfaces';
-import { DateTimeSetParamKeys, DateTimeUnit } from '../src/constants';
+import { DateTimeParamKeys, DateTimeUnit } from '../src/constants';
 
 
 describe('DateProxy', () => {
@@ -495,7 +495,7 @@ describe('DateProxy', () => {
 
 			const timezoneOffsetInHours : number = dateTime.timezoneOffset / 60;
 
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeUnit.Hours:
 						expect(dateTime.hours).to.be.eql(initParam.hours - timezoneOffsetInHours);
@@ -525,7 +525,7 @@ describe('DateProxy', () => {
 
 			const dateTime : DateTime = new DateTime(date);
 
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeUnit.Date:
 						expect(dateTime.date).to.be.eql(initParam.date + 1);
@@ -557,7 +557,7 @@ describe('DateProxy', () => {
 
 			const dateTime : DateTime = new DateTime(date);
 
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeUnit.Month:
 						expect(dateTime.date).to.be.eql(1);
@@ -591,7 +591,7 @@ describe('DateProxy', () => {
 
 			const dateTime : DateTime = new DateTime(date);
 
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				switch (key) {
 					// skip of other specs
 					case DateTimeUnit.Month:
@@ -623,7 +623,7 @@ describe('DateProxy', () => {
 
 			const dateTime : DateTime = new DateTime(date);
 
-			DateTimeSetParamKeys.forEach(key => {
+			DateTimeParamKeys.forEach(key => {
 				switch (key) {
 					case DateTimeUnit.Year:
 						expect(dateTime.date).to.be.eql(1);

@@ -1,5 +1,5 @@
 import { DurationParam } from './interfaces';
-import { DurationSetParamKeys, Gregorian1Month } from './constants';
+import { DurationParamKeys, Gregorian1Month } from './constants';
 
 
 export class Duration {
@@ -14,7 +14,7 @@ export class Duration {
 			}
 			else {
 				if (Object.keys(initData).every(key => {
-					return DurationSetParamKeys.includes(key as keyof DurationParam);
+					return DurationParamKeys.includes(key as keyof DurationParam);
 				})) {
 					Object.entries(initData).forEach(([key, value] : [string, number]) => {
 						if (value !== undefined && value !== null) {

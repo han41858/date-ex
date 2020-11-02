@@ -21,7 +21,11 @@ describe('Duration', () => {
 			expect(duration.ms).to.be.undefined;
 		});
 
-		describe('by DurationObject', () => {
+		// TODO: by string
+
+		// TODO: by Duration
+
+		describe('by DurationParam', () => {
 			const DatesError : number = .5;
 
 			describe(DurationUnit.Years, () => {
@@ -43,7 +47,7 @@ describe('Duration', () => {
 				});
 			});
 
-			// Quarters
+			// TODO: Quarters
 
 			describe(DurationUnit.Months, () => {
 				it('> 0', () => {
@@ -115,7 +119,7 @@ describe('Duration', () => {
 				});
 			});
 
-			// Weeks
+			// TODO: Weeks
 
 			describe(DurationUnit.Dates, () => {
 				it('> 0', () => {

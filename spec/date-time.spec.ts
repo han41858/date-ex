@@ -295,7 +295,7 @@ describe('DateTime', () => {
 			});
 		});
 
-		describe('with set param', () => {
+		describe('with DateTimeParam', () => {
 			describe('each field', () => {
 				DateTimeParamKeys.forEach(key => {
 					it(key, () => {

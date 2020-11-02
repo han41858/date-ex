@@ -6,8 +6,11 @@ Date 클래스 확장 패키지
 
 <!-- ## 목록 -->
 
+## 주요 클래스
 
-## 활용방법
+### `DateTime`
+
+일자와 시각을 표현합니다.
 
 `DateTime` 객체는 `new` 생성자로 생성합니다.
 
@@ -16,7 +19,7 @@ const date: DateTime = new DateTime();
 ```
 
 생성자에 인자를 전달하면 원하는 날짜를 지정하며 인스턴스를 생성할 수 있습니다.
-이 때 인자는 `number`, `string`, `Date`, `DateTime`, [`json` 타입(`DateTimeJson`)](#DateTimeJson)을 지원합니다.
+이 때 인자는 `number`, `string`, `Date`, `DateTime`, [`json` 타입(`DateTimeParam`)](#DateTimeParam)을 지원합니다.
 
 ```TypeScript
 const newDateByNumber : DateTime = new DateTime(1603722868252);
@@ -26,12 +29,42 @@ const newDateByString : DateTime = new DateTime('2020-10-26');
 const newDateByDate : DateTime = new DateTime(new Date());
 
 const newDateByDateTime : DateTime = new DateTime(new DateTime());
+
+const newDateByDateTimeParam : DateTime = new DateTime({
+    year : 2020,
+    month : 10,
+    date : 26
+});
 ```
 
 
-### `DateTimeJson`
+### `Duration`
 
-일자와 시각을 표현하는 객체입니다. 이 객체는 다음과 같은 필드로 구성됩니다.
+기간을 표현합니다.
+
+`Duration` 객체는 `new` 생성자로 생성합니다.
+
+```TypeScript
+const duration: Duration = new Duration();
+```
+
+생성자에 인자를 전달하면 원하는 기간을 지정하며 인스턴스를 생성할 수 있습니다.
+이 때 인자는 `string`, `Duration`, [`json` 타입(`DurationParam`)](#DurationParam)을 지원합니다.
+
+```TypeScript
+const newDurationByString : Duration = new Duration('PY2');
+
+const newDurationByDuration : Duration = new Duration(new Duration());
+
+const newDurationByDurationParam : Duration = new Duration({
+    years : 2
+});
+```
+
+
+### `DateTimeParam`
+
+일자와 시각 값을 표현하는 객체입니다. 이 객체는 다음과 같은 필드로 구성됩니다.
 
 | 필드 | 필드 타입 | 값 범위 | 설명 |
 |---|---|---|---|
@@ -124,14 +157,14 @@ const newDateByDateTime : DateTime = new DateTime(new DateTime());
 | `toDate()` | `Date` | `Date` 형식을 반환합니다. |
 | `toISOString()` | `string` | ISO 문자열 형식을 반환합니다. `Date.toISOString()`과 같습니다. |
 | `toUTCString()` | `string` | UTC 문자열 형식을 반환합니다. `Date.toUTCString()`과 같습니다. |
-| `toJson()` | `object` | [`DateTimeJson`](#DateTimeJson) 형식을 반환합니다. |
+| `toJson()` | `object` | [`DateTimeParam`](#DateTimeParam) 형식을 반환합니다. |
 
 
 ## 값 설정하기
 
 ### `set()`
 
-[`DateTimeJson`](#DateTimeJson) 형식으로 일자, 시각을 설정합니다. 각 필드는 생략할 수 있습니다.
+[`DateTimeParam`](#DateTimeParam) 형식으로 일자, 시각을 설정합니다. 각 필드는 생략할 수 있습니다.
 
 ```typescript
 const date: DateTime = new DateTime();
@@ -166,7 +199,9 @@ date.set({
 
 ### `add()`
 
-[`DateTimeJson`](#DateTimeJson) 타입으로 일자, 시각을 이동합니다. 0보다 작은 값을 하면 이전 일자, 시각으로 설정합니다.
+#### `DateTime`을 사용할 때
+
+특정 일자, 시각으로 설정합니다. 0보다 작은 값을 사용하면 이전 일자, 시각으로 설정합니다.
 
 ```typescript
 const date: DateTime = new DateTime();
@@ -175,6 +210,19 @@ const date: DateTime = new DateTime();
 date.add({
 	year : 1,
 	month : -1
+});
+```
+
+#### ``Duration`을 사용할 때
+
+기간만큼 이동한 일자, 시각으로 설정합니다. 0보다 작은 값을 사용하면 이전 일자, 시각으로 설정합니다.
+
+```typescript
+const date: DateTime = new DateTime();
+
+// 11개월 뒤로 일자를 설정합니다.
+date.add({
+	years : 11
 });
 ```
 

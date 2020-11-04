@@ -294,7 +294,10 @@ export class DateProxy {
 	}
 
 	private get hours12UTC () : number {
-		return (this.hours24UTC + 1) % 12 - 1;
+		const hours : number = (this.hours24UTC + 1) % 12 - 1;
+		return hours < 0
+			? hours + 12
+			: hours;
 	}
 
 	private get hours24UTC () : number {

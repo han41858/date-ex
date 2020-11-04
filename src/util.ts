@@ -94,13 +94,6 @@ export const wait = (ms ? : number) : Promise<void> => {
 	}, ms || 0));
 };
 
-// month is real number : 1 ~ 12
-export const getLastDateOfMonth = (year : number, month : number) : number => {
-	const lastDayOfThisMonth : Date = new Date(year, month, 0);
-
-	return lastDayOfThisMonth.getDate();
-};
-
 export const dateFormat = (date : InitDataFormat, format : string) : string => {
 	let dateTime : DateTime;
 

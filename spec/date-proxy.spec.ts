@@ -210,7 +210,54 @@ describe('DateProxy', () => {
 			});
 		});
 
-		describe('daysOfYear', () => {
+		describe('weeksInYear', () => {
+			const targets : { year : number, weeks : number }[] = [
+				{ year : 2016, weeks : 53 },
+				{ year : 2017, weeks : 53 },
+				{ year : 2018, weeks : 53 },
+				{ year : 2019, weeks : 53 },
+				{ year : 2020, weeks : 53 }
+			];
+
+			it('ok', () => {
+				targets.forEach(target => {
+					const date : DateTime = new DateTime({
+						year : target.year
+					});
+
+					expect(date.weeksInYear).to.be.eql(target.weeks);
+				});
+			});
+		});
+
+		describe('weeksInMonth', () => {
+			const targets : { param : DateTimeParam, weeks : number }[] = [
+				{ param : { year : 2015, month : 2 }, weeks : 4 },
+
+				{ param : { year : 2020, month : 1 }, weeks : 5 },
+				{ param : { year : 2020, month : 2 }, weeks : 5 },
+				{ param : { year : 2020, month : 3 }, weeks : 5 },
+				{ param : { year : 2020, month : 4 }, weeks : 5 },
+				{ param : { year : 2020, month : 5 }, weeks : 6 },
+				{ param : { year : 2020, month : 6 }, weeks : 5 },
+				{ param : { year : 2020, month : 7 }, weeks : 5 },
+				{ param : { year : 2020, month : 8 }, weeks : 6 },
+				{ param : { year : 2020, month : 9 }, weeks : 5 },
+				{ param : { year : 2020, month : 10 }, weeks : 5 },
+				{ param : { year : 2020, month : 11 }, weeks : 5 },
+				{ param : { year : 2020, month : 12 }, weeks : 5 }
+			];
+
+			it('ok', () => {
+				targets.forEach(target => {
+					const date : DateTime = new DateTime(target.param);
+
+					expect(date.weeksInMonth).to.be.eql(target.weeks);
+				});
+			});
+		});
+
+		describe('dayOfYear', () => {
 			const targets : {
 				param : DateTimeParam,
 				days : number
@@ -240,32 +287,47 @@ describe('DateProxy', () => {
 			});
 		});
 
-		describe('maxDateOfMonth', () => {
-			const targets : {
-				param : DateTimeParam,
-				days : number
-			}[] = [{
-				param : { year : 2020, month : 1 },
-				days : 31
-			}, {
-				param : { year : 2020, month : 2 },
-				days : 29
-			}, {
-				param : { year : 2020, month : 3 },
-				days : 31
-			}, {
-				param : { year : 2020, month : 12 },
-				days : 31
-			}, {
-				param : { year : 2021, month : 1 },
-				days : 31
-			}];
+		describe('daysInYear', () => {
+			const targets : { year : number, days : number }[] = [
+				{ year : 2016, days : 366 },
+				{ year : 2017, days : 365 },
+				{ year : 2018, days : 365 },
+				{ year : 2019, days : 365 },
+				{ year : 2020, days : 366 }
+			];
+
+			it('ok', () => {
+				targets.forEach(target => {
+					const date : DateTime = new DateTime({
+						year : target.year
+					});
+
+					expect(date.daysInYear).to.be.eql(target.days);
+				});
+			});
+		});
+
+		describe('daysInMonth', () => {
+			const targets : { param : DateTimeParam, days : number }[] = [
+				{ param : { year : 2020, month : 1 }, days : 31 },
+				{ param : { year : 2020, month : 2 }, days : 29 },
+				{ param : { year : 2020, month : 3 }, days : 31 },
+				{ param : { year : 2020, month : 4 }, days : 30 },
+				{ param : { year : 2020, month : 5 }, days : 31 },
+				{ param : { year : 2020, month : 6 }, days : 30 },
+				{ param : { year : 2020, month : 7 }, days : 31 },
+				{ param : { year : 2020, month : 8 }, days : 31 },
+				{ param : { year : 2020, month : 9 }, days : 30 },
+				{ param : { year : 2020, month : 10 }, days : 31 },
+				{ param : { year : 2020, month : 11 }, days : 30 },
+				{ param : { year : 2020, month : 12 }, days : 31 }
+			];
 
 			it('ok', () => {
 				targets.forEach(target => {
 					const date : DateTime = new DateTime(target.param);
 
-					expect(date.lastDateOfMonth).to.be.eql(target.days);
+					expect(date.daysInMonth).to.be.eql(target.days);
 				});
 			});
 		});

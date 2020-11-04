@@ -122,10 +122,13 @@ const newDurationByDurationParam : Duration = new Duration({
 | 게터 | 반환 타입 | 값 범위 | 설명 |
 |---|---|---|---|
 | `quarter` | `number` | `1` ~ `4` | 분기를 반환합니다. |
-| `lastDateOfMonth` | `number` | `1` ~ `31` | 해당 월의 마지막 일자를 반환합니다. |
-| `weekOfYear` | `number` | `1` ~ `52` | 해당 연도를 기준으로 몇주차인지 반환합니다. |
+| `weekOfYear` | `number` | `1` ~ `53` | 해당 연도를 기준으로 몇주차인지 반환합니다. |
 | `weekOfMonth` | `number` | `1` ~ `5` | 해당 월을 기준으로 몇주차인지 반환합니다. |
+| `weeksOfYear` | `number` | `52` ~ `53` | 해당 연도의 최대 주차수를 반환합니다. |
+| `weeksOfMonth` | `number` | `4` ~ `6` | 해당 월의 최대 주차수를 반환합니다. |
 | `dayOfYear` | `number` | `1` ~ `365` | 해당 연도를 기준으로 몇일차인지 반환합니다. |
+| `daysOfYear` | `number` | `1` ~ `366` | 해당 연도의 최대 일자수를 반환합니다. |
+| `daysOfMonth` | `number` | `28` ~ `31` | 해당 월의 최대 일자수를 반환합니다. |
 | `isAm` | `boolean` | `true`/`false` | 오전이면 `true`, 오후이면 `false`를 반환합니다. |
 | `hours24` | `number` | `0` ~ `23` | 24시 기준으로 시각을 반환합니다. `hours`와 같습니다. |
 | `hours12` | `number` | `0` ~ `12` | 12시 기준으로 시각을 반환합니다. |

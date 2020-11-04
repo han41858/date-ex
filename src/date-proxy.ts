@@ -1,6 +1,5 @@
 import { DateTimeParam, InitDataFormat } from './interfaces';
 import { DateTime } from './date-time';
-import { getLastDateOfMonth } from './util';
 
 
 export class DateProxy {
@@ -89,11 +88,6 @@ export class DateProxy {
 		this._date.setMonth(month - 1);
 	}
 
-	// return day count of this month
-	get lastDateOfMonth () : number {
-		return getLastDateOfMonth(this.year, this.month);
-	}
-
 	private isFirstDayOfMonth () : boolean {
 		const nextDay : DateTime = new DateTime(this);
 
@@ -158,6 +152,26 @@ export class DateProxy {
 		return Math.ceil((firstDayOfMonth.day + 1 + numberOfDays) / 7);
 	}
 
+	get weeksInYear () : number {
+		const lastDayOfYear : DateTime = new DateTime({
+			year : this.year + 1,
+			month : 1,
+			date : 0
+		});
+
+		return lastDayOfYear.weekOfYear;
+	}
+
+	get weeksInMonth () : number {
+		const lastDayOfMonth : DateTime = new DateTime({
+			year : this.year,
+			month : this.month + 1,
+			date : 0
+		});
+
+		return lastDayOfMonth.weekOfMonth;
+	}
+
 	get date () : number {
 		return this._date.getDate();
 	}
@@ -205,6 +219,38 @@ export class DateProxy {
 		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / (24 * 60 * 60 * 1000));
 
 		return numberOfDays + 1;
+	}
+
+	get daysInYear () : number {
+		const firstDayOfYear : DateTime = new DateTime({
+			year : this.year,
+			month : 1,
+			date : 1
+		});
+
+		const firstDayOfNextYear : DateTime = new DateTime({
+			year : this.year + 1,
+			month : 1,
+			date : 1
+		});
+
+		return Math.floor((+firstDayOfNextYear - +firstDayOfYear) / (24 * 60 * 60 * 1000));
+	}
+
+	get daysInMonth () : number {
+		const firstDayOfMonth : DateTime = new DateTime({
+			year : this.year,
+			month : this.month,
+			date : 1
+		});
+
+		const firstDayOfNextMonth : DateTime = new DateTime({
+			year : this.year,
+			month : this.month + 1,
+			date : 1
+		});
+
+		return Math.floor((+firstDayOfNextMonth - +firstDayOfMonth) / (24 * 60 * 60 * 1000));
 	}
 
 	get day () : number {

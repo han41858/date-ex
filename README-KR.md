@@ -136,21 +136,16 @@ const newDurationByDurationParam : Duration = new Duration({
 
 ### UTC 필드
 
-일자, 시각을 UTC(협정 세계표준시, UCoordinated Universal Time)로 변환한 객체를 반환합니다.
+일자, 시각을 UTC(협정 세계표준시, UCoordinated Universal Time)로 변환한 `DateTime`를 반환합니다.
 타임존에 따라 연도, 월, 일자, 시각이 변경될 수 있습니다.
 분, 초, 밀리초는 영향을 받지 않습니다.
 
-| 게터 | 반환 타입 | 내부 필드 | 반환 타입 | 설명 |
-|---|---|---|---|---|
-| `utc` | `object` | | | UTC로 변환된 객체를 반환합니다. |
-| | | `year` | `number` | UTC로 변환된 연도를 반환합니다. |
-| | | `month` | `number` | UTC로 변환된 월을 반환합니다. |
-| | | `date` | `number` | UTC로 변환된 일자를 반환합니다. |
-| | | `hours` | `number` | UTC로 변환된 시각을 반환합니다. |
-| | | `minutes` | `number` | 분을 반환합니다. |
-| | | `seconds` | `number` | 초를 반환합니다. |
-| | | `ms` | `number` | 밀리초를 반환합니다. |
+UTC로 받은 객체의 `timezoneOffset`은 기존 `DateTime` 객체의 `timezoneOffset` 값과 같습니다.
 
+```TypeScript
+const date: DateTime = new DateTime();
+const utcDate: DateTime = date.UTC;
+```
 
 ### 변환 함수
 

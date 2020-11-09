@@ -227,6 +227,15 @@ export class DateTime extends DateProxy {
 		}
 	}
 
+	get UTC () : DateTime {
+		const utcAdded : DateTime = new DateTime(this);
+		utcAdded.add({
+			minutes : this.timezoneOffset
+		});
+
+		return utcAdded;
+	}
+
 	format (format : string) : string {
 		let result : string = format;
 

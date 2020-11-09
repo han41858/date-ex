@@ -49,35 +49,9 @@ export class DateProxy {
 		this._date.setFullYear(year);
 	}
 
-	private get yearUTC () : number {
-		let year : number = this.year;
-
-		if (this.isMonthChangingWithUTC() && this.month === 1) {
-			year -= 1;
-		}
-
-		return year;
-	}
-
 	// 1 ~ 4
 	get quarter () : number {
 		return Math.floor((this.month - 1) / 3) + 1;
-	}
-
-	private get quarterUTC () : number {
-		let quarter : number = this.quarter;
-
-		if (this.isMonthChangingWithUTC() && (this.month % 3 === 1)) {
-			if (quarter - 1 > 0) {
-				quarter -= 1;
-			}
-			else {
-				quarter = 4;
-			}
-
-		}
-
-		return quarter;
 	}
 
 	get month () : number {
@@ -106,24 +80,6 @@ export class DateProxy {
 		});
 
 		return this.month !== nextDay.month;
-	}
-
-	private isMonthChangingWithUTC () : boolean {
-		return this.isDateChangingWithUTC() && this.isFirstDayOfMonth();
-	}
-
-	private get monthUTC () : number {
-		let month : number = this.month;
-
-		if (this.isMonthChangingWithUTC()) {
-			month -= 1;
-
-			if (month === 0) {
-				month = 12;
-			}
-		}
-
-		return month;
 	}
 
 	get weekOfYear () : number {
@@ -180,35 +136,6 @@ export class DateProxy {
 		this._date.setDate(date);
 	}
 
-	private isDateChangingWithUTC () : boolean {
-		const hours : number = this.hours24UTC;
-		const timezoneOffsetInHours : number = this.timezoneOffset / 60;
-
-		// TODO: < 0?
-		return hours - timezoneOffsetInHours > 23;
-	}
-
-	private get dateUTC () : number {
-		let date : number = this.date;
-
-		if (this.isDateChangingWithUTC()) {
-			if (date - 1 > 0) {
-				date -= 1;
-			}
-			else {
-				const previousDay : DateTime = new DateTime(this);
-
-				previousDay.add({
-					date : -1
-				});
-
-				date = previousDay.date;
-			}
-		}
-
-		return date;
-	}
-
 	get dayOfYear () : number {
 		const firstDayOfYear : DateTime = new DateTime({
 			year : this.year,
@@ -257,18 +184,6 @@ export class DateProxy {
 		return this._date.getDay();
 	}
 
-	private get dayUTC () : number {
-		const day : number = this.day;
-
-		return !this.isDateChangingWithUTC()
-			? day
-			: (
-				day + 1 > 6
-					? 0
-					: day + 1
-			);
-	}
-
 	get isAm () : boolean {
 		return this.hours < 12;
 	}
@@ -291,21 +206,6 @@ export class DateProxy {
 		const hours : number = this.hours;
 
 		return hours > 12 ? hours % 12 : hours;
-	}
-
-	private get hours12UTC () : number {
-		const hours : number = (this.hours24UTC + 1) % 12 - 1;
-		return hours < 0
-			? hours + 12
-			: hours;
-	}
-
-	private get hours24UTC () : number {
-		let hours : number = this.hours + this.timezoneOffset / 60;
-
-		return hours < 0
-			? hours + 24
-			: hours;
 	}
 
 	get minutes () : number {
@@ -355,23 +255,6 @@ export class DateProxy {
 			date : this.date,
 
 			hours : this.hours,
-			minutes : this.minutes,
-			seconds : this.seconds,
-			ms : this.ms
-		};
-	}
-
-	get UTC () {
-		return {
-			year : this.yearUTC,
-			quarter : this.quarterUTC,
-			month : this.monthUTC,
-			date : this.dateUTC,
-			day : this.dayUTC,
-
-			hours : this.hours24UTC,
-			hours12 : this.hours12UTC,
-
 			minutes : this.minutes,
 			seconds : this.seconds,
 			ms : this.ms

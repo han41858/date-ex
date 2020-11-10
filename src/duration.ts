@@ -11,7 +11,46 @@ export class Duration {
 	constructor (initData? : string | Duration | DurationParam) {
 		if (initData !== undefined && initData !== null) {
 			if (typeof initData === 'string') {
-				// TODO
+				const regExp1 : RegExp = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
+				const regExp2 : RegExp = /^P\d+W$/; // PnW
+
+				// P<date>T<time>
+				const regExp3 : RegExp = /^P\d{8}T\d{4}$/; // PYYYYMMDDThhmmss
+				// const regExp4 : RegExp = /^P\d{8}T\d{4}$/; // P[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss]
+
+
+				if (regExp1.test(initData)) {
+					const execResult : RegExpExecArray | null = regExp1.exec(initData);
+
+					if (!!execResult) {
+						const [dateStr, timeStr] = initData // divide date & time for 'M'
+							.replace('P', '') // remove starting 'P'
+							.split('T');
+
+						[
+							{ key : 'years', value : /\d+Y/.exec(dateStr)?.[0]?.replace('Y', '') },
+							{ key : 'months', value : /\d+M/.exec(dateStr)?.[0]?.replace('M', '') },
+							{ key : 'dates', value : /\d+D/.exec(dateStr)?.[0]?.replace('D', '') },
+
+							{ key : 'hours', value : /\d+H/.exec(timeStr)?.[0]?.replace('H', '') },
+							{ key : 'minutes', value : /\d+M/.exec(timeStr)?.[0]?.replace('M', '') },
+							{ key : 'seconds', value : /\d+S/.exec(timeStr)?.[0]?.replace('S', '') }
+						].forEach((obj) => {
+							const key : keyof Duration = obj.key as keyof Duration;
+							const valueStr : string | undefined = obj.value;
+
+							if (valueStr !== undefined) {
+								this[key] = +valueStr;
+							}
+
+							this.rebalancing();
+						});
+					}
+				}
+				// else if(regExp2.test(initData)){
+				//
+				// }
+
 			}
 			else if (initData instanceof Duration) {
 				this.values = {

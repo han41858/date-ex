@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { Duration } from '../src/duration';
-import { DurationParamKeys, DurationUnit } from '../src/constants';
+import { DurationParamKeys, DurationUnit, Gregorian1Month } from '../src/constants';
 
 
 describe('Duration', () => {
@@ -21,7 +21,205 @@ describe('Duration', () => {
 			expect(duration.ms).to.be.undefined;
 		});
 
-		// TODO: by string
+		describe('by string', () => {
+			describe('PnYnMnDTnHnMnS', () => {
+				describe('all', () => {
+					it('all', () => {
+						const duration : Duration = new Duration('P1Y2M3DT4H5M6S');
+
+						expect(duration.years).to.be.eql(1);
+						expect(duration.months).to.be.eql(2);
+						expect(duration.dates).to.be.eql(3);
+
+						expect(duration.hours).to.be.eql(4);
+						expect(duration.minutes).to.be.eql(5);
+						expect(duration.seconds).to.be.eql(6);
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('dates', () => {
+						const duration : Duration = new Duration('P1Y2M3D');
+
+						expect(duration.years).to.be.eql(1);
+						expect(duration.months).to.be.eql(2);
+						expect(duration.dates).to.be.eql(3);
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('hours', () => {
+						const duration : Duration = new Duration('PT4H5M6S');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.eql(4);
+						expect(duration.minutes).to.be.eql(5);
+						expect(duration.seconds).to.be.eql(6);
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+
+				describe(DurationUnit.Years, () => {
+					it('ok', () => {
+						const duration : Duration = new Duration('P2Y');
+
+						expect(duration.years).to.be.eql(2);
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+
+				describe(DurationUnit.Months, () => {
+					it('ok', () => {
+						const duration : Duration = new Duration('P2M');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.eql(2);
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('round up', () => {
+						const duration : Duration = new Duration('P14M');
+
+						expect(duration.years).to.be.eql(1);
+						expect(duration.months).to.be.eql(2);
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+
+				describe(DurationUnit.Dates, () => {
+					it('ok', () => {
+						const duration : Duration = new Duration('P2D');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.eql(2);
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('round up', () => {
+						const duration : Duration = new Duration('P40D');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.eql(1);
+						expect(duration.dates).to.be.eql(40 - Gregorian1Month);
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+
+				describe(DurationUnit.Hours, () => {
+					it('ok', () => {
+						const duration : Duration = new Duration('PT2H');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.eql(2);
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('round up', () => {
+						const duration : Duration = new Duration('PT26H');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.eql(1);
+
+						expect(duration.hours).to.be.eql(2);
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+
+				describe(DurationUnit.Minutes, () => {
+					it('ok', () => {
+						const duration : Duration = new Duration('PT2M');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.eql(2);
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('round up', () => {
+						const duration : Duration = new Duration('PT66M');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.eql(1);
+						expect(duration.minutes).to.be.eql(6);
+						expect(duration.seconds).to.be.undefined;
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+
+				describe(DurationUnit.Seconds, () => {
+					it('ok', () => {
+						const duration : Duration = new Duration('PT2S');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.undefined;
+						expect(duration.seconds).to.be.eql(2);
+						expect(duration.ms).to.be.undefined;
+					});
+
+					it('round up', () => {
+						const duration : Duration = new Duration('PT68S');
+
+						expect(duration.years).to.be.undefined;
+						expect(duration.months).to.be.undefined;
+						expect(duration.dates).to.be.undefined;
+
+						expect(duration.hours).to.be.undefined;
+						expect(duration.minutes).to.be.eql(1);
+						expect(duration.seconds).to.be.eql(8);
+						expect(duration.ms).to.be.undefined;
+					});
+				});
+			});
+		});
 
 		describe('by Duration', () => {
 			it('ok', () => {

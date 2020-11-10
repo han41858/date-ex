@@ -1365,7 +1365,7 @@ describe('DateTime', () => {
 
 		DateTimeParamKeys.forEach((setKey, setKeyIndex) => {
 			it(setKey, () => {
-				const newDate : DateTime = date.startOf(setKey as DateTimeUnit);
+				const newDate : DateTime = date.startOf(setKey);
 
 				DateTimeParamKeys.forEach((checkKey, checkKeyIndex) => {
 					if (setKeyIndex >= checkKeyIndex) {
@@ -1391,6 +1391,12 @@ describe('DateTime', () => {
 				});
 			});
 		});
+
+		it('string param', () => {
+			const date : DateTime = new DateTime();
+
+			expect(date.startOf('year')).to.be.ok;
+		});
 	});
 
 	// check with UTC because of timezone
@@ -1413,7 +1419,7 @@ describe('DateTime', () => {
 
 		DateTimeParamKeys.forEach((setKey, setKeyIndex) => {
 			it(setKey, () => {
-				const newDate : DateTime = date.endOf(setKey as DateTimeUnit);
+				const newDate : DateTime = date.endOf(setKey);
 
 				DateTimeParamKeys.forEach((checkKey, checkKeyIndex) => {
 					if (setKeyIndex >= checkKeyIndex) {
@@ -1452,6 +1458,12 @@ describe('DateTime', () => {
 					}
 				});
 			});
+		});
+
+		it('string param', () => {
+			const date : DateTime = new DateTime();
+
+			expect(date.endOf('year')).to.be.ok;
 		});
 	});
 
@@ -2074,6 +2086,13 @@ describe('DateTime', () => {
 	});
 
 	describe('diff()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+
+			expect(date1.diff(date2, 'year')).not.to.throw;
+		});
+
 		describe(DateTimeUnit.Year, () => {
 			it('ok', () => {
 				const date1 : DateTime = new DateTime({
@@ -2087,6 +2106,7 @@ describe('DateTime', () => {
 				expect(date1.diff(date2, DateTimeUnit.Year)).to.be.eql(-1);
 			});
 		});
+
 		describe(DateTimeUnit.Quarter, () => {
 			it('same year', () => {
 				const date1 : DateTime = new DateTime({
@@ -2484,6 +2504,13 @@ describe('DateTime', () => {
 	});
 
 	describe('isBefore()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+
+			expect(date1.isBefore(date2, 'year')).not.to.throw;
+		});
+
 		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
@@ -2523,6 +2550,13 @@ describe('DateTime', () => {
 	});
 
 	describe('isBeforeOrEqual()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+
+			expect(date1.isBeforeOrEqual(date2, 'year')).not.to.throw;
+		});
+
 		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22
@@ -2562,6 +2596,13 @@ describe('DateTime', () => {
 	});
 
 	describe('isAfter()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+
+			expect(date1.isAfter(date2, 'year')).not.to.throw;
+		});
+
 		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
@@ -2601,6 +2642,13 @@ describe('DateTime', () => {
 	});
 
 	describe('isAfterOrEqual()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+
+			expect(date1.isAfterOrEqual(date2, 'year')).not.to.throw;
+		});
+
 		it('no unit param', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 22,
@@ -2640,6 +2688,14 @@ describe('DateTime', () => {
 	});
 
 	describe('isBetween()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+			const date3 : DateTime = new DateTime();
+
+			expect(date1.isBetween(date2, date3, 'year')).not.to.throw;
+		});
+
 		it('different days', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 20
@@ -2688,6 +2744,14 @@ describe('DateTime', () => {
 	});
 
 	describe('isBetweenOrEqual()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+			const date3 : DateTime = new DateTime();
+
+			expect(date1.isBetweenOrEqual(date2, date3, 'year')).not.to.throw;
+		});
+
 		it('different days', () => {
 			const date1 : DateTime = new DateTime({
 				year : 2020, month : 10, date : 20

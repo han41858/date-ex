@@ -237,7 +237,7 @@ export class DateTime extends DateProxy {
 		return utcAdded;
 	}
 
-	startOf (unit : DateTimeUnit) : DateTime {
+	startOf (unit : keyof DateTimeParam) : DateTime {
 		let foundFlag : boolean = false;
 
 		const setParam : DateTimeParam = DateTimeParamKeys.reduce((acc : DateTimeParam, _key : string) => {
@@ -257,7 +257,7 @@ export class DateTime extends DateProxy {
 		return new DateTime(setParam);
 	}
 
-	endOf (unit : DateTimeUnit) : DateTime {
+	endOf (unit : keyof DateTimeParam) : DateTime {
 		const setParam : DateTimeParam = {
 			ms : unit === DateTimeUnit.Ms ? 999 : -1
 		};
@@ -488,7 +488,8 @@ export class DateTime extends DateProxy {
 	// TODO: DateTime - DateTime = Duration
 	// TODO: DateTime - Duration = DateTime
 
-	diff (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : number {
+	diff (date : InitDataFormat,
+	      unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : number {
 		let dateWith : DateTime;
 
 		if (date instanceof DateTime) {
@@ -498,7 +499,7 @@ export class DateTime extends DateProxy {
 			dateWith = new DateTime(date);
 		}
 
-		let diffValue : number;
+		let diffValue ! : number;
 
 		switch (unit) {
 			case DateTimeUnit.Year:
@@ -586,23 +587,28 @@ export class DateTime extends DateProxy {
 		return diffValue;
 	}
 
-	isBefore (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isBefore (date : InitDataFormat,
+	          unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) < 0;
 	}
 
-	isBeforeOrEqual (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isBeforeOrEqual (date : InitDataFormat,
+	                 unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) <= 0;
 	}
 
-	isAfter (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isAfter (date : InitDataFormat,
+	         unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) > 0;
 	}
 
-	isAfterOrEqual (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isAfterOrEqual (date : InitDataFormat,
+	                unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) >= 0;
 	}
 
-	isBetween (date1 : InitDataFormat, date2 : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isBetween (date1 : InitDataFormat, date2 : InitDataFormat,
+	           unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
 		let smallerDate : DateTime;
 		let biggerDate : DateTime;
 
@@ -622,7 +628,8 @@ export class DateTime extends DateProxy {
 			&& this.diff(biggerDate, unit) < 0;
 	}
 
-	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : boolean {
+	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat,
+	                  unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
 		let smallerDate : DateTime;
 		let biggerDate : DateTime;
 

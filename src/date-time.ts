@@ -1,6 +1,6 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeParam, InitDataFormat, LocaleSet } from './interfaces';
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
 import {
 	durationUnitToDateTimeUnit,
@@ -13,6 +13,7 @@ import {
 
 // load default locale
 import { locale } from './locale/en';
+import { Duration } from './duration';
 
 
 // internal global storage
@@ -210,7 +211,7 @@ export class DateTime extends DateProxy {
 		);
 	}
 
-	add (param : DateTimeParam | DurationParam) : void {
+	add (param : DateTimeParam | Duration) : void {
 		const setParam : DateTimeParam = {};
 
 		if (isDateTimeParam(param)) {
@@ -226,7 +227,7 @@ export class DateTime extends DateProxy {
 		}
 		else if (isDurationParam(param)) {
 			Object.entries(param).forEach(([key, value]) => {
-				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as keyof DurationParam);
+				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as keyof Duration);
 
 				setParam[datetimeUnit] = this[datetimeUnit] + value;
 			});

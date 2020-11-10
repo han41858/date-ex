@@ -24,6 +24,7 @@ const localeSetCached : {
 };
 
 
+// TODO: DateTimeUnit in param should cover string
 export class DateTime extends DateProxy {
 
 	private ownLocale ! : string;
@@ -236,6 +237,49 @@ export class DateTime extends DateProxy {
 		return utcAdded;
 	}
 
+	startOf (unit : DateTimeUnit) : DateTime {
+		let foundFlag : boolean = false;
+
+		const setParam : DateTimeParam = DateTimeParamKeys.reduce((acc : DateTimeParam, _key : string) => {
+			if (!foundFlag) {
+				const key : keyof DateTimeParam = _key as keyof DateTimeParam;
+
+				acc[key] = this[key];
+
+				if (key === unit) {
+					foundFlag = true;
+				}
+			}
+
+			return acc;
+		}, {} as DateTimeParam);
+
+		return new DateTime(setParam);
+	}
+
+	endOf (unit : DateTimeUnit) : DateTime {
+		const setParam : DateTimeParam = {
+			ms : unit === DateTimeUnit.Ms ? 999 : -1
+		};
+
+		let foundFlag : boolean;
+
+		DateTimeParamKeys.forEach(key => {
+			if (!foundFlag && key !== DateTimeUnit.Ms) {
+				if (unit === key) {
+					setParam[key] = this[key] + 1;
+
+					foundFlag = true;
+				}
+				else {
+					setParam[key] = this[key];
+				}
+			}
+		});
+
+		return new DateTime(setParam);
+	}
+
 	format (format : string) : string {
 		let result : string = format;
 
@@ -440,6 +484,9 @@ export class DateTime extends DateProxy {
 	toLocaleTimeString () : string {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
+
+	// TODO: DateTime - DateTime = Duration
+	// TODO: DateTime - Duration = DateTime
 
 	diff (date : InitDataFormat, unit : DateTimeUnit = DateTimeUnit.Ms) : number {
 		let dateWith : DateTime;

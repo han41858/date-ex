@@ -1345,6 +1345,116 @@ describe('DateTime', () => {
 		});
 	});
 
+	// check with UTC because of timezone
+	describe('startOf()', () => {
+		const initParam : DateTimeParam = {
+			year : 2020,
+			month : 11,
+			date : 5,
+
+			hours : 13,
+			minutes : 32,
+			seconds : 53,
+			ms : 512
+		};
+
+		const date : DateTime = new DateTime(Date.UTC(
+			initParam.year, initParam.month - 1, initParam.date,
+			initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+		));
+
+		DateTimeParamKeys.forEach((setKey, setKeyIndex) => {
+			it(setKey, () => {
+				const newDate : DateTime = date.startOf(setKey as DateTimeUnit);
+
+				DateTimeParamKeys.forEach((checkKey, checkKeyIndex) => {
+					if (setKeyIndex >= checkKeyIndex) {
+						// same value
+						expect(newDate[checkKey]).to.be.eql(date[checkKey]);
+					}
+					else {
+						// initial value
+						switch (checkKey) {
+							case DateTimeUnit.Month:
+							case DateTimeUnit.Date:
+								expect(newDate.UTC[checkKey]).to.be.eql(1);
+								break;
+
+							case DateTimeUnit.Hours:
+								expect(newDate.UTC[checkKey]).to.be.eql(0);
+								break;
+
+							default:
+								expect(newDate[checkKey]).to.be.eql(0);
+						}
+					}
+				});
+			});
+		});
+	});
+
+	// check with UTC because of timezone
+	describe('endOf()', () => {
+		const initParam : DateTimeParam = {
+			year : 2020,
+			month : 11,
+			date : 5,
+
+			hours : 10,
+			minutes : 32,
+			seconds : 53,
+			ms : 512
+		};
+
+		const date : DateTime = new DateTime(Date.UTC(
+			initParam.year, initParam.month - 1, initParam.date,
+			initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
+		));
+
+		DateTimeParamKeys.forEach((setKey, setKeyIndex) => {
+			it(setKey, () => {
+				const newDate : DateTime = date.endOf(setKey as DateTimeUnit);
+
+				DateTimeParamKeys.forEach((checkKey, checkKeyIndex) => {
+					if (setKeyIndex >= checkKeyIndex) {
+						if (checkKey !== DateTimeUnit.Ms) {
+							// same value
+							expect(newDate.UTC[checkKey]).to.be.eql(initParam[checkKey]);
+						}
+						else {
+							expect(newDate[checkKey]).to.be.eql(999);
+						}
+
+					}
+					else {
+						// last value
+						switch (checkKey) {
+							case DateTimeUnit.Month:
+								expect(newDate.UTC[checkKey]).to.be.eql(12);
+								break;
+
+							case DateTimeUnit.Date:
+								expect(newDate.UTC[checkKey]).to.be.eql(newDate.UTC.daysInMonth);
+								break;
+
+							case DateTimeUnit.Hours:
+								expect(newDate.UTC[checkKey]).to.be.eql(23);
+								break;
+
+							case DateTimeUnit.Minutes:
+								expect(newDate[checkKey]).to.be.eql(59);
+								break;
+
+							case DateTimeUnit.Seconds:
+								expect(newDate[checkKey]).to.be.eql(59);
+								break;
+						}
+					}
+				});
+			});
+		});
+	});
+
 	describe('format()', () => {
 		describe('year', () => {
 			it(FormatToken.Year, () => {

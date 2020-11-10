@@ -160,6 +160,22 @@ const utcDate: DateTime = date.UTC;
 
 ## 값 설정하기
 
+### 개별 필드
+
+| 게터 | 인자 타입 | 설명 | `Date` 함수 |
+|---|---|---|---|
+| `year` | `number` | 연도를 설정합니다. | `Date.setFullYear()` |
+| `month` | `number` | 월을 설정합니다. | `Date.setMonth()` |
+| `date` | `number` | 일자를 설정합니다. | `Date.setDate()` |
+| `hours` | `number` | 시각을 설정니다. | `Date.setHours()` |
+| `minutes` | `number` | 분을 설정합니다. | `Date.setMinutes()` |
+| `seconds` | `number` | 초를 설정합니다. | `Date.setSeconds()` |
+| `ms` | `number` | 밀리초를 설정합니다. | `Date.setMilliseconds()` |
+
+* `Date` 객체와 비교해보면 편의성을 위해 `set-` 접두사를 생략했으며 함수 실행 형태가 아니라 setter 타입을 사용합니다. 같은 이유로 `setMilliseconds()`는 `ms`로 제공합니다.
+
+* 연도를 변경하지 않는다면 `month` 세터는 `0` ~ `11` 값이 아니라 실제 월 값 `1` ~ `12`로 지정합니다.
+
 ### `set()`
 
 [`DateTimeParam`](#DateTimeParam) 형식으로 일자, 시각을 설정합니다. 각 필드는 생략할 수 있습니다.
@@ -174,23 +190,6 @@ date.set({
 	date : 27
 });
 ```
-
-* 연도를 변경하지 않는다면 `month` 세터는 `0` ~ `11` 값이 아니라 실제 월 값 `1` ~ `12`로 지정합니다.
-
-
-### 개별 필드
-
-| 게터 | 인자 타입 | 설명 | `Date` 함수 |
-|---|---|---|---|
-| `year` | `number` | 연도를 설정합니다. | `Date.setFullYear()` |
-| `month` | `number` | 월을 설정합니다. | `Date.setMonth()` |
-| `date` | `number` | 일자를 설정합니다. | `Date.setDate()` |
-| `hours` | `number` | 시각을 설정니다. | `Date.setHours()` |
-| `minutes` | `number` | 분을 설정합니다. | `Date.setMinutes()` |
-| `seconds` | `number` | 초를 설정합니다. | `Date.setSeconds()` |
-| `ms` | `number` | 밀리초를 설정합니다. | `Date.setMilliseconds()` |
-
-* `Date` 객체와 비교해보면 편의성을 위해 `set-` 접두사를 생략했으며 함수 실행 형태가 아니라 setter 타입을 사용합니다. 같은 이유로 `setMilliseconds()`는 `ms`로 제공합니다.
 
 * 연도를 변경하지 않는다면 `month` 세터는 `0` ~ `11` 값이 아니라 실제 월 값 `1` ~ `12`로 지정합니다.
 
@@ -211,7 +210,7 @@ date.add({
 });
 ```
 
-#### ``Duration`을 사용할 때
+#### `Duration`을 사용할 때
 
 기간만큼 이동한 일자, 시각으로 설정합니다. 0보다 작은 값을 사용하면 이전 일자, 시각으로 설정합니다.
 
@@ -223,6 +222,20 @@ date.add({
 	years : 11
 });
 ```
+
+
+## `startOf(unit)`, `endOf(unit)`
+
+인자로 전달한 단위 기준으로 처음/끝 시각을 반환합니다.
+
+```typescript
+const date: DateTime = new DateTime();
+
+console.log(date.startOf('year').toISOString()); // 2020-01-01T00:00:00.000Z
+console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
+```
+
+
 
 ## `format()`
 

@@ -13,10 +13,10 @@ export class Duration {
 			if (typeof initData === 'string') {
 				// TODO
 			}
-			else if(initData instanceof Duration){
+			else if (initData instanceof Duration) {
 				this.values = {
 					...initData.values
-				}
+				};
 			}
 			else if (isDurationParam(initData)) {
 				Object.entries(initData).forEach(([key, value] : [string, number]) => {

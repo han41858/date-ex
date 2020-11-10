@@ -154,3 +154,11 @@ export const durationUnitToDateTimeUnit = (unit : keyof DurationParam) : keyof D
 
 	return dateTimeKey as keyof DateTimeParam;
 };
+
+export const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {
+	const dateArr : DateTime[] = dates.map(date => new DateTime(date));
+
+	return dateArr.sort((a, b) => {
+		return +a - +b;
+	});
+};

@@ -2,7 +2,14 @@ import { DateProxy } from './date-proxy';
 
 import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
-import { durationUnitToDateTimeUnit, isDateTimeParam, isDurationParam, loadLocaleFile, padDigit } from './util';
+import {
+	durationUnitToDateTimeUnit,
+	isDateTimeParam,
+	isDurationParam,
+	loadLocaleFile,
+	padDigit,
+	sortDate
+} from './util';
 
 // load default locale
 import { locale } from './locale/en';
@@ -609,20 +616,7 @@ export class DateTime extends DateProxy {
 
 	isBetween (date1 : InitDataFormat, date2 : InitDataFormat,
 	           unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
-		let smallerDate : DateTime;
-		let biggerDate : DateTime;
-
-		const dateTime1 : DateTime = new DateTime(date1);
-		const dateTime2 : DateTime = new DateTime(date2);
-
-		if (+dateTime1 <= +dateTime2) {
-			smallerDate = dateTime1;
-			biggerDate = dateTime2;
-		}
-		else {
-			smallerDate = dateTime2;
-			biggerDate = dateTime1;
-		}
+		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) > 0
 			&& this.diff(biggerDate, unit) < 0;
@@ -630,20 +624,7 @@ export class DateTime extends DateProxy {
 
 	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat,
 	                  unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
-		let smallerDate : DateTime;
-		let biggerDate : DateTime;
-
-		const dateTime1 : DateTime = new DateTime(date1);
-		const dateTime2 : DateTime = new DateTime(date2);
-
-		if (+dateTime1 <= +dateTime2) {
-			smallerDate = dateTime1;
-			biggerDate = dateTime2;
-		}
-		else {
-			smallerDate = dateTime2;
-			biggerDate = dateTime1;
-		}
+		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) >= 0
 			&& this.diff(biggerDate, unit) <= 0;

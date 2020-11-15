@@ -47,9 +47,17 @@ export class Duration {
 						});
 					}
 				}
-				// else if(regExp2.test(initData)){
-				//
-				// }
+				else if (regExp2.test(initData)) {
+					const weeksStr : string = initData
+						.replace(/^P/, '')
+						.replace(/W$/, '');
+
+					if (!isNaN(+weeksStr)) {
+						this.dates = +weeksStr * 7;
+
+						this.rebalancing();
+					}
+				}
 
 			}
 			else if (initData instanceof Duration) {

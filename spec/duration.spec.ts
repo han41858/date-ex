@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { Duration } from '../src/duration';
-import { DurationParamKeys, DurationUnit, Gregorian1Month } from '../src/constants';
+import { DurationParamKeys, DurationUnit, Gregorian1Month, Gregorian1Year } from '../src/constants';
 
 
 describe('Duration', () => {
@@ -217,6 +217,51 @@ describe('Duration', () => {
 						expect(duration.seconds).to.be.eql(8);
 						expect(duration.ms).to.be.undefined;
 					});
+				});
+			});
+
+			describe('PnW', () => {
+				it('ok', () => {
+					const duration : Duration = new Duration('P2W');
+
+					expect(duration.years).to.be.undefined;
+					expect(duration.months).to.be.undefined;
+					expect(duration.dates).to.be.eql(14);
+
+					expect(duration.hours).to.be.undefined;
+					expect(duration.minutes).to.be.undefined;
+					expect(duration.seconds).to.be.undefined;
+					expect(duration.ms).to.be.undefined;
+				});
+
+				it('round up', () => {
+					const week : number = 8; // 56 days
+
+					const duration : Duration = new Duration(`P${ week }W`);
+
+					expect(duration.years).to.be.undefined;
+					expect(duration.months).to.be.eql(1);
+					expect(duration.dates).to.be.eql(week * 7 - Gregorian1Month);
+
+					expect(duration.hours).to.be.undefined;
+					expect(duration.minutes).to.be.undefined;
+					expect(duration.seconds).to.be.undefined;
+					expect(duration.ms).to.be.undefined;
+				});
+
+				it('round up more', () => {
+					const week : number = 53;
+
+					const duration : Duration = new Duration(`P${ week }W`);
+
+					expect(duration.years).to.be.eql(1);
+					expect(duration.months).to.be.undefined;
+					expect(duration.dates).to.be.closeTo(53 * 7 - Gregorian1Year, 1);
+
+					expect(duration.hours).to.be.undefined;
+					expect(duration.minutes).to.be.undefined;
+					expect(duration.seconds).to.be.undefined;
+					expect(duration.ms).to.be.undefined;
 				});
 			});
 		});

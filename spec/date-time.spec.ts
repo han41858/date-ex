@@ -1152,28 +1152,28 @@ describe('DateTime', () => {
 		describe('with Duration', () => {
 			it('ok', () => {
 				DurationParamKeys.forEach(key => {
-					const newDate: DateTime = new DateTime(refDate);
+					const newDate : DateTime = new DateTime(refDate);
 
-					const duration: Duration = new Duration({
-						[key]: 1
-					})
+					const duration : Duration = new Duration({
+						[key] : 1
+					});
 
 					// add
-					newDate.add(duration)
+					newDate.add(duration);
 
 					// check
 					DurationParamKeys.forEach(checkKey => {
-						const datetimeKey: keyof DateTimeParam = durationUnitToDateTimeUnit(checkKey);
+						const datetimeKey : DateTimeUnit = durationUnitToDateTimeUnit(checkKey);
 
-						if(checkKey === key){
+						if (checkKey === key) {
 							expect(newDate[datetimeKey]).to.be.eql(refDate[datetimeKey] + 1);
 						}
 						else {
-							expect(newDate[datetimeKey]).to.be.eql(refDate[datetimeKey])
+							expect(newDate[datetimeKey]).to.be.eql(refDate[datetimeKey]);
 						}
-					})
-				})
-			})
+					});
+				});
+			});
 		});
 
 		describe('with DurationParam', () => {
@@ -1189,7 +1189,7 @@ describe('DateTime', () => {
 					expect(addResult).to.be.instanceOf(DateTime);
 
 					// check
-					const changedKey : keyof DateTimeParam = durationUnitToDateTimeUnit(durationKey);
+					const changedKey : DateTimeUnit = durationUnitToDateTimeUnit(durationKey);
 
 					DateTimeParamKeys.forEach(key => {
 						if (changedKey === key) {

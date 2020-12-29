@@ -1,5 +1,3 @@
-import { DateTimeParam, DurationParam } from './interfaces';
-
 export enum DateTimeUnit {
 	Year = 'year',
 	Quarter = 'quarter',
@@ -13,7 +11,7 @@ export enum DateTimeUnit {
 	Ms = 'ms'
 }
 
-export const DateTimeParamKeys : (keyof DateTimeParam)[] = [
+export const DateTimeParamKeys : DateTimeUnit[] = [
 	DateTimeUnit.Year,
 	DateTimeUnit.Month,
 	DateTimeUnit.Date,
@@ -37,7 +35,7 @@ export enum DurationUnit {
 	Ms = 'ms'
 }
 
-export const DurationParamKeys : (keyof DurationParam)[] = [
+export const DurationParamKeys : DurationUnit[] = [
 	DurationUnit.Years,
 	DurationUnit.Months,
 	DurationUnit.Dates,

@@ -1,7 +1,14 @@
 import { DateProxy } from './date-proxy';
 
 import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
-import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from './constants';
+import {
+	DateTimeParamKeys,
+	DateTimeUnit,
+	DefaultLocale,
+	DurationParamKeys,
+	DurationUnit,
+	FormatToken
+} from './constants';
 import {
 	durationUnitToDateTimeUnit,
 	isDateTimeParam,
@@ -222,8 +229,9 @@ export class DateTime extends DateProxy {
 		const setParam : DateTimeParam = {};
 
 		if (isDateTimeParam(param)) {
-			DateTimeParamKeys.forEach((key : keyof DateTimeParam) => {
-				const value : number = param[key] as number;
+			DateTimeParamKeys.forEach((_key : DateTimeUnit) => {
+				const key : keyof DateTimeParam = _key as keyof DateTimeParam;
+				const value : number | undefined = param[key];
 
 				if (value !== undefined) {
 					setParam[key] = this[key] + value;
@@ -233,12 +241,13 @@ export class DateTime extends DateProxy {
 			this.set(setParam);
 		}
 		else if (param instanceof Duration) {
-			DurationParamKeys.forEach(key => {
+			DurationParamKeys.forEach(_key => {
+				const key : keyof DurationParam = _key as keyof DurationParam;
+				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(_key) as keyof DateTimeParam;
+
 				const value : number | undefined = param[key];
 
 				if (!!value) {
-					const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as keyof Duration);
-
 					setParam[datetimeUnit] = this[datetimeUnit] + value;
 				}
 			});
@@ -247,9 +256,11 @@ export class DateTime extends DateProxy {
 		}
 		else if (isDurationParam(param)) {
 			Object.entries(param).forEach(([key, value]) => {
-				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as keyof Duration);
+				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as DurationUnit) as keyof DateTimeParam;
 
-				setParam[datetimeUnit] = this[datetimeUnit] + value;
+				if (!!value) {
+					setParam[datetimeUnit] = this[datetimeUnit] + value;
+				}
 			});
 
 			this.set(setParam);
@@ -267,7 +278,7 @@ export class DateTime extends DateProxy {
 		return utcAdded;
 	}
 
-	startOf (unit : keyof DateTimeParam) : DateTime {
+	startOf (unit : DateTimeUnit | keyof DateTimeParam) : DateTime {
 		let foundFlag : boolean = false;
 
 		const setParam : DateTimeParam = DateTimeParamKeys.reduce((acc : DateTimeParam, _key : string) => {
@@ -287,7 +298,7 @@ export class DateTime extends DateProxy {
 		return new DateTime(setParam);
 	}
 
-	endOf (unit : keyof DateTimeParam) : DateTime {
+	endOf (unit : DateTimeUnit | keyof DateTimeParam) : DateTime {
 		const setParam : DateTimeParam = {
 			ms : unit === DateTimeUnit.Ms ? 999 : -1
 		};
@@ -296,13 +307,15 @@ export class DateTime extends DateProxy {
 
 		DateTimeParamKeys.forEach(key => {
 			if (!foundFlag && key !== DateTimeUnit.Ms) {
+				const keyAsMember : keyof DateTimeParam = key as keyof DateTimeParam;
+
 				if (unit === key) {
-					setParam[key] = this[key] + 1;
+					setParam[keyAsMember] = this[keyAsMember] + 1;
 
 					foundFlag = true;
 				}
 				else {
-					setParam[key] = this[key];
+					setParam[keyAsMember] = this[keyAsMember];
 				}
 			}
 		});
@@ -515,9 +528,6 @@ export class DateTime extends DateProxy {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
-	// TODO: DateTime - DateTime = Duration
-	// TODO: DateTime - Duration = DateTime
-
 	diff (date : InitDataFormat,
 	      unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : number {
 		let dateWith : DateTime;
@@ -618,27 +628,27 @@ export class DateTime extends DateProxy {
 	}
 
 	isBefore (date : InitDataFormat,
-	          unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
+	          unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) < 0;
 	}
 
 	isBeforeOrEqual (date : InitDataFormat,
-	                 unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
+	                 unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) <= 0;
 	}
 
 	isAfter (date : InitDataFormat,
-	         unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
+	         unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) > 0;
 	}
 
 	isAfterOrEqual (date : InitDataFormat,
-	                unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
+	                unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
 		return this.diff(date, unit) >= 0;
 	}
 
 	isBetween (date1 : InitDataFormat, date2 : InitDataFormat,
-	           unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
+	           unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) > 0
@@ -646,7 +656,7 @@ export class DateTime extends DateProxy {
 	}
 
 	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat,
-	                  unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : boolean {
+	                  unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) >= 0

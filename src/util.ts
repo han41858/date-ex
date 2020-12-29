@@ -109,18 +109,18 @@ export const dateFormat = (date : InitDataFormat, format : string) : string => {
 
 export const isDateTimeParam = (param : any) : param is DateTimeParam => {
 	return Object.keys(param).every(key => {
-		return DateTimeParamKeys.includes(key as keyof DateTimeParam);
+		return DateTimeParamKeys.includes(key as DateTimeUnit);
 	});
 };
 
 export const isDurationParam = (param : any) : param is DurationParam => {
 	return Object.keys(param).every(key => {
-		return DurationParamKeys.includes(key as keyof DurationParam);
+		return DurationParamKeys.includes(key as DurationUnit);
 	});
 };
 
-export const durationUnitToDateTimeUnit = (unit : keyof DurationParam) : keyof DateTimeParam => {
-	let dateTimeKey ! : keyof DateTimeParam;
+export const durationUnitToDateTimeUnit = (unit : DurationUnit) : DateTimeUnit => {
+	let dateTimeKey ! : DateTimeUnit;
 
 	switch (unit) {
 		case DurationUnit.Years:
@@ -152,7 +152,7 @@ export const durationUnitToDateTimeUnit = (unit : keyof DurationParam) : keyof D
 			break;
 	}
 
-	return dateTimeKey as keyof DateTimeParam;
+	return dateTimeKey;
 };
 
 export const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {

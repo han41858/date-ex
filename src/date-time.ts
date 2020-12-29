@@ -75,7 +75,7 @@ export class DateTime extends DateProxy {
 		}
 	}
 
-	private setDefaultLocale (localeFromAnotherDateTime ? : string) : void {
+	private setDefaultLocale (localeFromAnotherDateTime ? : string) : DateTime {
 		const defaultLocale : string = localeFromAnotherDateTime
 			|| this.ownLocale
 			|| globalConfig.locale
@@ -86,6 +86,8 @@ export class DateTime extends DateProxy {
 
 		// load locale
 		this.locale(defaultLocale);
+
+		return this;
 	}
 
 	// TODO
@@ -196,7 +198,7 @@ export class DateTime extends DateProxy {
 	}
 
 	// allow null, no limit number range
-	set (param : DateTimeParam) : void {
+	set (param : DateTimeParam) : DateTime {
 		this._date.setFullYear(
 			param.year !== undefined ? param.year : this.year,
 			param.month !== undefined ? param.month - 1 : this.month - 1,
@@ -209,9 +211,11 @@ export class DateTime extends DateProxy {
 			param.seconds !== undefined ? param.seconds : this.seconds,
 			param.ms !== undefined ? param.ms : this.ms
 		);
+
+		return this;
 	}
 
-	add (param : DateTimeParam | Duration) : void {
+	add (param : DateTimeParam | Duration) : DateTime {
 		const setParam : DateTimeParam = {};
 
 		if (isDateTimeParam(param)) {
@@ -234,6 +238,8 @@ export class DateTime extends DateProxy {
 
 			this.set(setParam);
 		}
+
+		return this;
 	}
 
 	get UTC () : DateTime {

@@ -176,7 +176,7 @@ const utcDate: DateTime = date.UTC;
 
 * 연도를 변경하지 않는다면 `month` 세터는 `0` ~ `11` 값이 아니라 실제 월 값 `1` ~ `12`로 지정합니다.
 
-### `set()`
+### `set(): DateTime`
 
 [`DateTimeParam`](#DateTimeParam) 형식으로 일자, 시각을 설정합니다. 각 필드는 생략할 수 있습니다.
 
@@ -193,8 +193,7 @@ date.set({
 
 * 연도를 변경하지 않는다면 `month` 세터는 `0` ~ `11` 값이 아니라 실제 월 값 `1` ~ `12`로 지정합니다.
 
-
-### `add()`
+### `add(): DateTime`
 
 #### `DateTime`을 사용할 때
 

@@ -1098,9 +1098,11 @@ describe('DateTime', () => {
 				}
 
 				// set
-				newDate.set({
+				const setResult : DateTime = newDate.set({
 					[key] : changingValue
 				});
+
+				expect(setResult).to.be.instanceOf(DateTime);
 
 				// check
 				DateTimeParamKeys.forEach(checkKey => {
@@ -1151,9 +1153,11 @@ describe('DateTime', () => {
 					const newDate : DateTime = new DateTime(refDate);
 
 					// add
-					newDate.add({
+					const addResult : DateTime = newDate.add({
 						[durationKey] : 1
 					});
+
+					expect(addResult).to.be.instanceOf(DateTime);
 
 					// check
 					const changedKey : keyof DateTimeParam = durationUnitToDateTimeUnit(durationKey);

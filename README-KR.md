@@ -193,7 +193,9 @@ date.set({
 
 * 연도를 변경하지 않는다면 `month` 세터는 `0` ~ `11` 값이 아니라 실제 월 값 `1` ~ `12`로 지정합니다.
 
-### `add(): DateTime`
+### `add(param: DateTimeParam | Duration | DurationParam): DateTime`
+
+> `DateTime` 타입은 사용할 수 없습니다.
 
 #### `DateTime`을 사용할 때
 
@@ -215,10 +217,24 @@ date.add({
 
 ```typescript
 const date: DateTime = new DateTime();
+const duration: Duration = new Duration({
+	months: 11
+});
+
+// 11개월 뒤로 일자를 설정합니다.
+date.add(duration);
+```
+
+#### `DurationParam`을 사용할 때
+
+기간만큼 이동한 일자, 시각으로 설정합니다. 0보다 작은 값을 사용하면 이전 일자, 시각으로 설정합니다.
+
+```typescript
+const date: DateTime = new DateTime();
 
 // 11개월 뒤로 일자를 설정합니다.
 date.add({
-	years : 11
+	months : 11
 });
 ```
 

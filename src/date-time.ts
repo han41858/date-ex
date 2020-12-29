@@ -1,7 +1,7 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeParam, InitDataFormat, LocaleSet } from './interfaces';
-import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, FormatToken } from './constants';
+import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from './constants';
 import {
 	durationUnitToDateTimeUnit,
 	isDateTimeParam,
@@ -130,7 +130,8 @@ export class DateTime extends DateProxy {
 						try {
 							localeSetCached[locale] = await loadLocaleFile(locale);
 							globalConfig.locale = locale;
-						} catch (e) {
+						}
+						catch (e) {
 							console.error(`invalid locale : '${ locale }', reverted previous locale : '${ previousLocale }'`);
 
 							globalConfig.locale = previousLocale;
@@ -178,7 +179,8 @@ export class DateTime extends DateProxy {
 					this.setLocaleTimer = setTimeout(async () => {
 						try {
 							localeSetCached[locale] = await loadLocaleFile(locale);
-						} catch (e) {
+						}
+						catch (e) {
 							console.error(`invalid locale : '${ locale }', reverted previous locale : '${ previousLocale }'`);
 
 							this.ownLocale = previousLocale;
@@ -215,7 +217,8 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	add (param : DateTimeParam | Duration) : DateTime {
+	// DateTime + DateTime is not possible
+	add (param : DateTimeParam | Duration | DurationParam) : DateTime {
 		const setParam : DateTimeParam = {};
 
 		if (isDateTimeParam(param)) {
@@ -224,6 +227,19 @@ export class DateTime extends DateProxy {
 
 				if (value !== undefined) {
 					setParam[key] = this[key] + value;
+				}
+			});
+
+			this.set(setParam);
+		}
+		else if (param instanceof Duration) {
+			DurationParamKeys.forEach(key => {
+				const value : number | undefined = param[key];
+
+				if (!!value) {
+					const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as keyof Duration);
+
+					setParam[datetimeUnit] = this[datetimeUnit] + value;
 				}
 			});
 

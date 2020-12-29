@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 
 import { DateTime } from '../src/date-time';
+import { Duration } from '../src/duration';
+
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from '../src/constants';
 import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
 import { DateTimeParam, InitDataFormat, LocaleSet } from '../src/interfaces';
@@ -1145,6 +1147,33 @@ describe('DateTime', () => {
 					});
 				});
 			});
+		});
+
+		describe('with Duration', () => {
+			it('ok', () => {
+				DurationParamKeys.forEach(key => {
+					const newDate: DateTime = new DateTime(refDate);
+
+					const duration: Duration = new Duration({
+						[key]: 1
+					})
+
+					// add
+					newDate.add(duration)
+
+					// check
+					DurationParamKeys.forEach(checkKey => {
+						const datetimeKey: keyof DateTimeParam = durationUnitToDateTimeUnit(checkKey);
+
+						if(checkKey === key){
+							expect(newDate[datetimeKey]).to.be.eql(refDate[datetimeKey] + 1);
+						}
+						else {
+							expect(newDate[datetimeKey]).to.be.eql(refDate[datetimeKey])
+						}
+					})
+				})
+			})
 		});
 
 		describe('with DurationParam', () => {

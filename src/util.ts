@@ -155,6 +155,42 @@ export const durationUnitToDateTimeUnit = (unit : DurationUnit) : DateTimeUnit =
 	return dateTimeKey;
 };
 
+export const datetimeUnitToDurationUnit = (unit : DateTimeUnit) : DurationUnit => {
+	let key! : DurationUnit;
+
+	switch (unit) {
+		case DateTimeUnit.Year:
+			key = DurationUnit.Years;
+			break;
+
+		case DateTimeUnit.Month:
+			key = DurationUnit.Months;
+			break;
+
+		case DateTimeUnit.Date:
+			key = DurationUnit.Dates;
+			break;
+
+		case DateTimeUnit.Hours:
+			key = DurationUnit.Hours;
+			break;
+
+		case DateTimeUnit.Minutes:
+			key = DurationUnit.Minutes;
+			break;
+
+		case DateTimeUnit.Seconds:
+			key = DurationUnit.Seconds;
+			break;
+
+		case DateTimeUnit.Ms:
+			key = DurationUnit.Ms;
+			break;
+	}
+
+	return key;
+};
+
 export const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {
 	const dateArr : DateTime[] = dates.map(date => new DateTime(date));
 

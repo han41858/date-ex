@@ -223,7 +223,7 @@ date.add({
 ```
 
 
-## `startOf(unit)`, `endOf(unit)`
+## `startOf(unit): DateTime`, `endOf(unit): DateTime`
 
 인자로 전달한 단위 기준으로 처음/끝 시각을 반환합니다.
 
@@ -236,7 +236,7 @@ console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 
 
 
-## `format()`
+## `format(): string`
 
 주어진 형식으로 문자열을 구성합니다.
 
@@ -312,12 +312,12 @@ console.log(date3.locale()); // 'en'
 다국어 코드가 유효하지 않거나 1 싸이클 이후에 다국어 파일 로드를 실패하면 이전값으로 원복됩니다.
 
 
-### `DateTime.locale()`
+### `DateTime.locale(): string`
 
 전역 변수로 다국어를 설정합니다.
 
 
-### `locale()`
+### `locale(): string`
 
 객체에 다국어를 설정합니다.
 

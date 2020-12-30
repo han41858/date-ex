@@ -113,9 +113,10 @@ describe('DateProxy', () => {
 			});
 
 			it('ok', () => {
+				const now : Date = new Date();
+
 				months.forEach(month => {
-					const date : Date = new Date();
-					date.setMonth(month);
+					const date : Date = new Date(now.getFullYear(), month, 1);
 
 					const dateTime : DateTime = new DateTime(date);
 

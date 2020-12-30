@@ -282,7 +282,7 @@ describe('Duration', () => {
 			});
 		});
 
-		describe.only('by DurationParam', () => {
+		describe('by DurationParam', () => {
 			describe(DurationUnit.Years, () => {
 				it('ok', () => {
 					const duration : Duration = new Duration({

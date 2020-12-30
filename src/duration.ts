@@ -1,5 +1,5 @@
 import { DurationParam } from './interfaces';
-import { DurationParamKeys, Gregorian1Month } from './constants';
+import { DurationParamKeys, DurationUnit, Gregorian1Month } from './constants';
 import { isDurationParam } from './util';
 
 
@@ -150,120 +150,46 @@ export class Duration {
 	}
 
 	private rebalancing () : void {
-		// DurationSetParamKeys.reverse().forEach((key, i) => {
-		// 	if (this.values[key] !== undefined) {
-		// 		const value : number = this.values[key] as number;
-		//
-		// 		if (value < 0) {
-		// 			const upperDown : number = Math.floor(-value / CalcMatrix[key][key + i]);
-		// 		}
-		// 	}
-		// });
+		const repeatArr : [DurationUnit, number][] = [
+			[DurationUnit.Ms, 1000],
+			[DurationUnit.Seconds, 60],
+			[DurationUnit.Minutes, 60],
+			[DurationUnit.Hours, 24],
 
-		if (this.values.ms !== undefined) {
-			if (this.values.ms < 0) {
-				const secondsDown : number = Math.ceil(-this.values.ms / 1000);
+			[DurationUnit.Dates, Gregorian1Month],
+			[DurationUnit.Months, 12],
+			[DurationUnit.Years, 0] // 0 means nothing
+		];
 
-				this.values.seconds = (this.values.seconds || 0) - secondsDown;
-				this.values.ms += secondsDown * 1000;
+		repeatArr.forEach(([unit, divider] : [DurationUnit, number], i : number, arr) => {
+			const key : keyof DurationParam = unit as keyof DurationParam;
+			const value : number | undefined = this.values[key];
+
+			if (value !== undefined && i < arr.length - 1) {
+				const nextKey : keyof DurationParam = arr[i + 1][0] as keyof DurationParam;
+
+				if (value < 0) {
+					const nextDown : number = Math.ceil(-value / 1000);
+
+					this.values[nextKey] = (this.values[nextKey] || 0) - nextDown;
+					(this.values[key] as number) += nextDown * divider;
+				}
+
+				if (value >= divider) {
+					const nextUp : number = Math.floor(value / divider);
+
+					this.values[nextKey] = (this.values[nextKey] || 0) + nextUp;
+					(this.values[key] as number) -= nextUp * divider;
+				}
 			}
+		});
 
-			if (this.values.ms >= 1000) {
-				const secondsUp : number = Math.floor(this.values.ms / 1000);
-
-				this.values.seconds = (this.values.seconds || 0) + secondsUp;
-				this.values.ms -= secondsUp * 1000;
-			}
-		}
-
-		if (this.values.seconds !== undefined) {
-			if (this.values.seconds < 0) {
-				const minutesDown : number = Math.ceil(-this.values.seconds / 60);
-
-				this.values.minutes = (this.values.minutes || 0) - minutesDown;
-				this.values.seconds += minutesDown * 60;
-			}
-
-			if (this.values.seconds >= 60) {
-				const minutesUp : number = Math.floor(this.values.seconds / 60);
-
-				this.values.minutes = (this.values.minutes || 0) + minutesUp;
-				this.values.seconds -= minutesUp * 60;
-			}
-		}
-
-		if (this.values.minutes !== undefined) {
-			if (this.values.minutes < 0) {
-				const hoursDown : number = Math.ceil(-this.values.minutes / 60);
-
-				this.values.hours = (this.values.hours || 0) - hoursDown;
-				this.values.minutes += hoursDown * 60;
-			}
-
-			if (this.values.minutes >= 60) {
-				const hoursUp : number = Math.floor(this.values.minutes / 60);
-
-				this.values.hours = (this.values.hours || 0) + hoursUp;
-				this.values.minutes -= hoursUp * 60;
-			}
-		}
-
-		if (this.values.hours !== undefined) {
-			if (this.values.hours < 0) {
-				const datesDown : number = Math.ceil(-this.values.hours / 24);
-
-				this.values.dates = (this.values.dates || 0) - datesDown;
-				this.values.hours += datesDown * 24;
-			}
-
-			if (this.values.hours >= 24) {
-				const datesUp : number = Math.floor(this.values.hours / 24);
-
-				this.values.dates = (this.values.dates || 0) + datesUp;
-				this.values.hours -= datesUp * 24;
-			}
-		}
-
-		if (this.values.dates !== undefined) {
-			const datesToMonth : number = Gregorian1Month;
-
-			if (this.values.dates < 0) {
-				const monthsDown : number = Math.ceil(-this.values.dates / datesToMonth);
-
-				this.values.months = (this.values.months || 0) - monthsDown;
-				this.values.dates += monthsDown * datesToMonth;
-			}
-
-			if (this.values.dates >= datesToMonth) {
-				const monthsUp : number = Math.floor(this.values.dates / datesToMonth);
-
-				this.values.months = (this.values.months || 0) + monthsUp;
-				this.values.dates -= monthsUp * datesToMonth;
-			}
-		}
-
-		if (this.values.months !== undefined) {
-			if (this.values.months < 0) {
-				const yearsDown : number = Math.ceil(-this.values.months / 12);
-
-				this.values.years = (this.values.years || 0) - yearsDown;
-				this.values.months += yearsDown * 12;
-			}
-
-			if (this.values.months >= 12) {
-				const yearsUp : number = Math.floor(this.values.months / 12);
-
-				this.values.years = (this.values.years || 0) + yearsUp;
-				this.values.months -= yearsUp * 12;
-			}
-		}
-
+		// remove undefined field
 		Object.entries(this.values).forEach(([key, value] : [string, number]) => {
 			if (value === undefined || value === 0) {
 				delete this.values[key as keyof DurationParam];
 			}
 		});
-
 
 		// check net duration
 		const firstKey : string | undefined = DurationParamKeys.find(key => {

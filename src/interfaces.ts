@@ -50,3 +50,10 @@ export interface TokenMatchResult {
 	token : FormatToken;
 	startIndex : number;
 }
+
+export interface Calendar {
+	year : number;
+	month : number;
+
+	dates : DateTime[];
+}

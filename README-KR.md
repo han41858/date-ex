@@ -381,7 +381,7 @@ console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 console.log(date1.isAfter(date2, 'date')); // false
 console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 
-const date3: DateTime = new DateTime({
+const date3 : DateTime = new DateTime({
 	year : 2020,
 	month : 10,
 	date : 27
@@ -390,3 +390,9 @@ const date3: DateTime = new DateTime({
 console.log(date2.isBetween(date1, date3, 'date')); // true
 console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 ```
+
+## 달력
+
+### `DateTime.getCalendar(): Calendar`
+
+해당 연도, 월에 해당하는 달력을 반환합니다. 시간 필드는 모두 `0`으로 설정됩니다.

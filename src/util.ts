@@ -2,12 +2,12 @@ import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResu
 import { DateTime } from './date-time';
 import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit, FormatToken } from './constants';
 
-export const newArray = <T> (length : number, callback? : (i? : number, arr? : T[]) => T) : (undefined | T)[] => {
+export const newArray = <T> (length : number, callback? : (i : number, arr : T[]) => T) : T[] => {
 	const arr : any[] = new Array(length).fill(undefined);
 
-	return !!callback && callback instanceof Function ?
-		arr.map((nothing, _i : number) : T => callback(_i, arr)) :
-		arr as undefined[];
+	return (!!callback && typeof callback === 'function')
+		? arr.map((nothing, _i : number) : T => callback(_i, arr))
+		: arr;
 };
 
 export const padDigit = (str : string | number, length : number) : string => {

@@ -5,7 +5,7 @@ import { Duration } from '../src/duration';
 
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from '../src/constants';
 import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { DateTimeParam, InitDataFormat, LocaleSet } from '../src/interfaces';
+import { Calendar, DateTimeParam, InitDataFormat, LocaleSet } from '../src/interfaces';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -3398,6 +3398,40 @@ describe('DateTime', () => {
 
 			expect(date3.isBetweenOrEqual(date1, date2)).to.be.true;
 			expect(date3.isBetweenOrEqual(date2, date1)).to.be.true;
+		});
+	});
+
+	describe('getCalendar()', () => {
+		it('ok', () => {
+			const dates : DateTime[] = newArray<DateTime>(12, i => {
+				return new DateTime().set({
+					month : i + 1
+				});
+			});
+
+			dates.forEach(date => {
+				const calendar : Calendar = date.getCalendar();
+
+				expect(calendar).to.be.ok;
+
+				expect(calendar).to.have.property('year', date.year);
+				expect(calendar).to.have.property('month', date.month);
+
+				expect(calendar).to.have.property('dates');
+				expect(calendar.dates).to.be.instanceOf(Array);
+				expect(calendar.dates).to.be.lengthOf(date.daysInMonth);
+
+				calendar.dates.forEach((calendarDate : DateTime, i : number) => {
+					expect(calendarDate.year).to.be.eql(date.year, 'year');
+					expect(calendarDate.month).to.be.eql(date.month, 'month');
+					expect(calendarDate.date).to.be.eql(i + 1, 'date');
+
+					expect(calendarDate.hours).to.be.eql(9, 'hours'); // timezone
+					expect(calendarDate.minutes).to.be.eql(0, 'minutes');
+					expect(calendarDate.seconds).to.be.eql(0, 'seconds');
+					expect(calendarDate.ms).to.be.eql(0, 'ms');
+				});
+			});
 		});
 	});
 });

@@ -1,6 +1,6 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
+import { Calendar, DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
 import {
 	DateTimeParamKeys,
 	DateTimeUnit,
@@ -15,6 +15,7 @@ import {
 	isDateTimeParam,
 	isDurationParam,
 	loadLocaleFile,
+	newArray,
 	padDigit,
 	sortDate
 } from './util';
@@ -799,5 +800,22 @@ export class DateTime extends DateProxy {
 
 	// TODO:
 	// at(countryCode: string, city : string) : DateTime;
+
+	getCalendar () : Calendar {
+		const dates : DateTime[] = newArray<DateTime>(this.daysInMonth, (i) : DateTime => {
+			return new DateTime(this)
+				.set({
+					date : i + 1
+				})
+				.startOf(DateTimeUnit.Date);
+		});
+
+		return {
+			year : this.year,
+			month : this.month,
+
+			dates
+		};
+	}
 
 }

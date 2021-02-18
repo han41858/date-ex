@@ -110,7 +110,7 @@ const newDurationByDurationParam : Duration = new Duration({
 | `minutes` | `number` | `0` ~ `59` | 분을 반환합니다. | `Date.getMinutes()` |
 | `seconds` | `number` | `0` ~ `59` | 초를 반환합니다. | `Date.getSeconds()` |
 | `ms` | `number` | `0` ~ `999` | 밀리초를 반환합니다. | `Date.getMilliseconds()` |
-| `timezoneOffset` | `timezone` | - | 타임존 오프셋을 반환합니다. | `Date.getTimezoneOffset()` |
+| `timezoneOffset` | `timezone` | - | 타임존 오프셋을 분 단위로 반환합니다. | `Date.getTimezoneOffset()` |
 
 * `Date` 객체와 비교해보면 편의성을 위해 `get-` 접두사를 생략했으며 함수 실행 형태가 아니라 getter 타입을 사용합니다. 같은 이유로 `getMilliseconds()`는 `ms`로 제공합니다.
 
@@ -129,6 +129,7 @@ const newDurationByDurationParam : Duration = new Duration({
 | `dayOfYear` | `number` | `1` ~ `365` | 해당 연도를 기준으로 몇일차인지 반환합니다. |
 | `daysOfYear` | `number` | `1` ~ `366` | 해당 연도의 최대 일자수를 반환합니다. |
 | `daysOfMonth` | `number` | `28` ~ `31` | 해당 월의 최대 일자수를 반환합니다. |
+| `timezoneOffsetInHours` | `number` | `-12` ~ `14` | 타임존 오프셋을 시각 단위로 반환합니다. |
 | `isAm` | `boolean` | `true`/`false` | 오전이면 `true`, 오후이면 `false`를 반환합니다. |
 | `hours24` | `number` | `0` ~ `23` | 24시 기준으로 시각을 반환합니다. `hours`와 같습니다. |
 | `hours12` | `number` | `0` ~ `12` | 12시 기준으로 시각을 반환합니다. |

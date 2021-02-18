@@ -44,6 +44,11 @@ export class DateProxy {
 		return this._date.getTimezoneOffset();
 	}
 
+	// UTC-12:00 ~ UTC+14:00 -> -12 ~ 14
+	get timezoneOffsetInHours () : number {
+		return -this.timezoneOffset / 60;
+	}
+
 	get year () : number {
 		return this._date.getFullYear();
 	}

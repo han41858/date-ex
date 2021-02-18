@@ -364,6 +364,27 @@ describe('DateProxy', () => {
 			});
 		});
 
+		describe('timezoneOffset', () => {
+			it('ok', () => {
+				const date : DateTime = new DateTime();
+
+				expect(date.timezoneOffset).to.be.a('number');
+			});
+		});
+
+		describe('timezoneOffsetInHours', () => {
+			it('ok', () => {
+				const date : DateTime = new DateTime();
+				const timezoneOffset : number = date.timezoneOffset;
+
+				expect(date.timezoneOffsetInHours).to.be.a('number');
+				expect(date.timezoneOffsetInHours).to.be.eql(-timezoneOffset / 60);
+
+				// WARN: in seoul
+				expect(date.timezoneOffsetInHours).to.be.eql(9);
+			});
+		});
+
 		describe('hours', () => {
 			it('hours', () => {
 				const hoursArr : number[] = newArray<number>(24, i => {

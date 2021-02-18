@@ -1,6 +1,6 @@
 import { DateProxy } from './date-proxy';
 
-import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
+import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
 import {
 	DateTimeParamKeys,
 	DateTimeUnit,
@@ -11,6 +11,7 @@ import {
 } from './constants';
 import {
 	durationUnitToDateTimeUnit,
+	findFormatTokens,
 	isDateTimeParam,
 	isDurationParam,
 	loadLocaleFile,
@@ -39,7 +40,6 @@ const localeSetCached : {
 };
 
 
-// TODO: DateTimeUnit in param should cover string
 export class DateTime extends DateProxy {
 
 	private ownLocale ! : string;
@@ -48,8 +48,8 @@ export class DateTime extends DateProxy {
 	// private dateFormat : string;
 
 
-	constructor (initData? : InitDataFormat, formatForString? : string) {
-		super(initData);
+	constructor (initData? : InitDataFormat, formatString? : string) {
+		super(initData, formatString);
 
 		if (initData !== null
 			&& !(initData instanceof Date)
@@ -63,6 +63,163 @@ export class DateTime extends DateProxy {
 				this.set(initData);
 			}
 		}
+		// TODO: init by string format
+		/*
+		else if (typeof initData === 'string' && formatString !== undefined) {
+			// find tokens
+			const matchArr : TokenMatchResult[] = findFormatTokens(formatString);
+
+			if (matchArr?.length > 0) {
+				const now : Date = new Date();
+				const tokens : FormatToken[] = matchArr.map(obj => obj.token);
+
+				const setParam : DateTimeParam = {};
+
+				// prevent duplicated tokens in a unit
+				const unitAndTokens : {
+					unit : DateTimeUnit,
+					tokens : FormatToken[]
+				}[] = [{
+					unit : DateTimeUnit.Year,
+					tokens : [FormatToken.Year, FormatToken.YearShort]
+				}, {
+					unit : DateTimeUnit.Month,
+					tokens : [FormatToken.Month, FormatToken.MonthPadded, FormatToken.MonthStringShort, FormatToken.MonthStringLong]
+				}, {
+					unit : DateTimeUnit.Date,
+					tokens : [FormatToken.DayOfMonth, FormatToken.DayOfMonthPadded, FormatToken.DayOfYear, FormatToken.DayOfYearPadded]
+				}, {
+					unit : DateTimeUnit.Hours,
+					tokens : [
+						FormatToken.Hours24, FormatToken.Hours24Padded, FormatToken.Hours12, FormatToken.Hours12Padded,
+						FormatToken.MeridiemCapital, FormatToken.MeridiemLower
+					]
+				}, {
+					unit : DateTimeUnit.Minutes,
+					tokens : [FormatToken.Minutes, FormatToken.MinutesPadded]
+				}, {
+					unit : DateTimeUnit.Seconds,
+					tokens : [FormatToken.Seconds, FormatToken.SecondsPadded]
+				}, {
+					unit : DateTimeUnit.Ms,
+					tokens : [FormatToken.MilliSeconds, FormatToken.MilliSecondsPadded2, FormatToken.MilliSecondsPadded3]
+				}];
+
+				unitAndTokens.forEach(def => {
+					const tokensFiltered : FormatToken[] = def.tokens.filter(token => {
+						return tokens.includes(token);
+					});
+
+					if (tokensFiltered.length >= 2) {
+						throw new Error('duplicated tokens in one unit');
+					}
+
+					const token : FormatToken = tokensFiltered[0];
+
+					const matchResult : TokenMatchResult | undefined = matchArr.find(one => {
+						return one.token === token;
+					});
+
+					let value : number | undefined;
+
+					function lengthGuard (token : FormatToken, valueStr : string) {
+						if (valueStr.length !== token.length) {
+							throw new Error('invalid format string with init data');
+						}
+					}
+
+					if (!!matchResult) {
+						let valueStr : string;
+
+						switch (token) {
+							case FormatToken.Year:
+								valueStr = initData.substr(matchResult.startIndex, token.length);
+
+								lengthGuard(token, valueStr);
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.YearShort:
+								valueStr = initData.substr(matchResult.startIndex, token.length);
+
+								lengthGuard(token, valueStr);
+
+								value = Math.floor(now.getFullYear() / 100) * 100 + parseInt(valueStr);
+								break;
+
+							case FormatToken.Month:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								// try to parse
+								if (isNaN(parseInt(valueStr))) {
+									valueStr = initData.substr(matchResult.startIndex, 1);
+								}
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.MonthPadded:
+								valueStr = initData.substr(matchResult.startIndex, token.length);
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.DayOfMonth:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								// try to parse
+								if (isNaN(parseInt(valueStr))) {
+									valueStr = initData.substr(matchResult.startIndex, 1);
+								}
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.DayOfMonthPadded:
+								valueStr = initData.substr(matchResult.startIndex, token.length);
+
+								value = parseInt(valueStr);
+								break;
+						}
+					}
+
+					// default value
+					if (value === undefined || isNaN(value)) {
+						switch (def.unit) {
+							case DateTimeUnit.Year:
+								value = now.getFullYear();
+								break;
+
+							case DateTimeUnit.Month:
+							case DateTimeUnit.Date:
+								value = 1;
+								break;
+
+							case DateTimeUnit.Hours:
+							case DateTimeUnit.Minutes:
+							case DateTimeUnit.Seconds:
+							case DateTimeUnit.Ms:
+								value = 0;
+								break;
+						}
+					}
+
+					if (value !== undefined) {
+						setParam[def.unit as keyof DateTimeParam] = value;
+					}
+				});
+
+				// from zero date time
+				this._date = new Date(0);
+
+				this.set(setParam);
+			}
+			else {
+				throw new Error('invalid format string');
+			}
+		}
+		*/
 
 
 		let localeFromAnotherDateTime : undefined | string;
@@ -326,35 +483,9 @@ export class DateTime extends DateProxy {
 	format (format : string) : string {
 		let result : string = format;
 
-		// find tokens
-		const regExp : RegExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+		const matchArr : TokenMatchResult[] = findFormatTokens(format);
 
-		const matchArr : {
-			token : FormatToken,
-			startIndex : number
-		}[] = [];
-
-		let formatFrag : string = format;
-		let omitLength : number = 0;
-
-		let execResult : RegExpExecArray | null = regExp.exec(formatFrag);
-
-		if (!!execResult) {
-			do {
-				const strFound : string = execResult[0];
-
-				matchArr.push({
-					token : strFound as FormatToken,
-					startIndex : omitLength + execResult.index
-				});
-
-				formatFrag = formatFrag.substr(execResult.index + strFound.length);
-				omitLength += execResult.index + strFound.length;
-
-				execResult = regExp.exec(formatFrag);
-			}
-			while (!!execResult);
-
+		if (matchArr?.length > 0) {
 			// convert tokens to real value
 			const maxIndex : number = matchArr.length - 1;
 

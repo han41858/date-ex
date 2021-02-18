@@ -251,6 +251,575 @@ describe('DateTime', () => {
 					});
 				});
 			});
+
+			xdescribe('with string format', () => {
+				const now : Date = new Date();
+
+				it('invalid format token', () => {
+					expect(() => new DateTime('1234', 'bc')).to.throws;
+				});
+
+				describe('year', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getFullYear()) + '-' + (now.getFullYear() % 100),
+							FormatToken.Year + FormatToken.YearShort
+						)).to.throws;
+					});
+
+					describe(FormatToken.YearShort, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('1', FormatToken.YearShort)).to.throws;
+						});
+
+						it('simple', () => {
+							const date : DateTime = new DateTime(
+								'' + (now.getFullYear() % 100),
+								FormatToken.YearShort
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('extract', () => {
+							const prefix : string = '123';
+							const suffix : string = '321';
+
+							const date : DateTime = new DateTime(
+								prefix + (now.getFullYear() % 100) + suffix,
+								prefix + FormatToken.YearShort + suffix
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+					});
+
+					describe(FormatToken.Year, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('12', FormatToken.Year)).to.throws;
+						});
+
+						it('simple', () => {
+							const date : DateTime = new DateTime(
+								'' + now.getFullYear(),
+								FormatToken.Year
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('extract', () => {
+							const prefix : string = '123';
+							const suffix : string = '321';
+
+							const date : DateTime = new DateTime(
+								prefix + now.getFullYear() + suffix,
+								prefix + FormatToken.Year + suffix
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+					});
+				});
+
+				describe('month', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + (now.getMonth() + 1)) + '-' + (now.getMonth() + 1),
+							FormatToken.Month + FormatToken.MonthPadded
+						)).to.throws;
+					});
+
+					describe(FormatToken.Month, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.Month)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.Month
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear() - 1);
+							expect(date.month).to.be.eql(12);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+
+						it('simple - 1 digit', () => {
+							const date : DateTime = new DateTime(
+								'' + (now.getMonth() + 1),
+								FormatToken.Month
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(now.getMonth() + 1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : Date = new Date(now.getFullYear(), 11, 1);
+
+							const date : DateTime = new DateTime(
+								'' + (refDate.getMonth() + 1),
+								FormatToken.Month
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.getFullYear());
+							expect(date.month).to.be.eql(refDate.getMonth() + 1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('value === 13', () => {
+							const date : DateTime = new DateTime(
+								'13',
+								FormatToken.Month
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear() + 1);
+							expect(date.month).to.be.eql(1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const date : DateTime = new DateTime(
+								prefix + (now.getMonth() + 1) + suffix,
+								prefix + FormatToken.Month + suffix
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(now.getMonth() + 1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+					});
+
+					describe(FormatToken.MonthPadded, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.MonthPadded)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.MonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear() - 1);
+							expect(date.month).to.be.eql(12);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+
+						it('simple - 1 digit', () => {
+							const date : DateTime = new DateTime(
+								'' + padDigit(now.getMonth() + 1, 2),
+								FormatToken.MonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(now.getMonth() + 1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : Date = new Date(now.getFullYear(), 11, 1);
+
+							const date : DateTime = new DateTime(
+								'' + padDigit(refDate.getMonth() + 1, 2),
+								FormatToken.MonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.getFullYear());
+							expect(date.month).to.be.eql(refDate.getMonth() + 1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('value === 13', () => {
+							const date : DateTime = new DateTime(
+								'13',
+								FormatToken.MonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear() + 1);
+							expect(date.month).to.be.eql(1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const date : DateTime = new DateTime(
+								prefix + padDigit(now.getMonth() + 1, 2) + suffix,
+								prefix + FormatToken.MonthPadded + suffix
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(now.getFullYear());
+							expect(date.month).to.be.eql(now.getMonth() + 1);
+							expect(date.date).to.be.eql(1);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+					});
+				});
+
+				describe('date', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getDate()) + '-' + now.getDate(),
+							FormatToken.DayOfMonth + FormatToken.DayOfMonthPadded
+						)).to.throws;
+					});
+
+					describe(FormatToken.DayOfMonth, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.DayOfMonth)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.DayOfMonth
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + 5,
+								FormatToken.DayOfMonth
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 13
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.date,
+								FormatToken.DayOfMonth
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('value === 50', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 50
+							});
+
+							const date : DateTime = new DateTime(
+								'50',
+								FormatToken.DayOfMonth
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								date : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.date + suffix,
+								prefix + FormatToken.DayOfMonth + suffix
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+					});
+
+					describe(FormatToken.DayOfMonthPadded, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.DayOfMonthPadded)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.DayOfMonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.date,
+								FormatToken.DayOfMonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 13
+							});
+
+							const date : DateTime = new DateTime(
+								'' + padDigit(refDate.date, 2),
+								FormatToken.DayOfMonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('value === 50', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 50
+							});
+
+							const date : DateTime = new DateTime(
+								'50',
+								FormatToken.DayOfMonthPadded
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								date : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.date + suffix,
+								prefix + FormatToken.DayOfMonthPadded + suffix
+							);
+
+							expect(date).to.be.instanceOf(DateTime);
+
+							expect(date.year).to.be.eql(refDate.year);
+							expect(date.month).to.be.eql(refDate.month);
+							expect(date.date).to.be.eql(refDate.date);
+
+							expect(date.hours).to.be.eql(0);
+							expect(date.minutes).to.be.eql(0);
+							expect(date.seconds).to.be.eql(0);
+							expect(date.ms).to.be.eql(0);
+						});
+					});
+				});
+			});
 		});
 
 		describe('with Date', () => {

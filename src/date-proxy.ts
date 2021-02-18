@@ -7,7 +7,7 @@ export class DateProxy {
 	protected _date ! : Date;
 
 
-	constructor (initDate? : InitDataFormat) {
+	constructor (initDate? : InitDataFormat, formatString? : string) {
 		if (initDate === null || initDate === undefined) {
 			this._date = new Date();
 		}
@@ -19,7 +19,10 @@ export class DateProxy {
 				this._date = new Date(initDate);
 			}
 			else if (typeof initDate === 'string') {
-				this._date = new Date(initDate);
+				if (!formatString) {
+					this._date = new Date(initDate);
+				}
+				// else in DateTime
 			}
 			else if (typeof initDate === 'number') {
 				this._date = new Date(initDate);

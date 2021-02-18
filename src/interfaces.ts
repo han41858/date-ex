@@ -1,4 +1,5 @@
 import { DateTime } from './date-time';
+import { FormatToken } from './constants';
 
 export type InitDataFormat = number | string | Date | DateTime | DateTimeParam;
 
@@ -43,4 +44,9 @@ export interface DurationParam {
 	minutes? : number;
 	seconds? : number;
 	ms? : number;
+}
+
+export interface TokenMatchResult {
+	token : FormatToken;
+	startIndex : number;
 }

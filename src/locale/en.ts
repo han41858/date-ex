@@ -1,8 +1,8 @@
 import { LocaleSet } from '../interfaces';
 import { FormatToken } from '../constants';
 
-const localeDateFormat : string = `${ FormatToken.Month }/${ FormatToken.DayOfMonth }/${ FormatToken.Year }`;
-const localeTimeFormat : string = `${ FormatToken.Hours12 }:${ FormatToken.MinutesPadded }:${ FormatToken.SecondsPadded } ${ FormatToken.MeridiemCapital }`;
+const localeDateFormat = `${ FormatToken.Month }/${ FormatToken.DayOfMonth }/${ FormatToken.Year }`;
+const localeTimeFormat = `${ FormatToken.Hours12 }:${ FormatToken.MinutesPadded }:${ FormatToken.SecondsPadded } ${ FormatToken.MeridiemCapital }`;
 
 export const locale : LocaleSet = {
 	MonthShort : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],

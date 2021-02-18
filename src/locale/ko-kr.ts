@@ -5,8 +5,8 @@ const months : String12 = ['1월', '2월', '3월', '4월', '5월', '6월', '7월
 
 const weekDaysShort : String7 = ['일', '월', '화', '수', '목', '금', '토'];
 
-const localeDateFormat : string = `${ FormatToken.Year }. ${ FormatToken.Month }. ${ FormatToken.DayOfMonth }.`;
-const localeTimeFormat : string = `${ FormatToken.MeridiemCapital } ${ FormatToken.Hours12 }:${ FormatToken.MinutesPadded }:${ FormatToken.SecondsPadded }`;
+const localeDateFormat = `${ FormatToken.Year }. ${ FormatToken.Month }. ${ FormatToken.DayOfMonth }.`;
+const localeTimeFormat = `${ FormatToken.MeridiemCapital } ${ FormatToken.Hours12 }:${ FormatToken.MinutesPadded }:${ FormatToken.SecondsPadded }`;
 
 export const locale : LocaleSet = {
 	MonthShort : months,

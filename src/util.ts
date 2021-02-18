@@ -2,8 +2,14 @@ import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResu
 import { DateTime } from './date-time';
 import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit, FormatToken } from './constants';
 
+
+interface AnyObject {
+	[index : string] : unknown;
+}
+
+
 export const newArray = <T> (length : number, callback? : (i : number, arr : T[]) => T) : T[] => {
-	const arr : any[] = new Array(length).fill(undefined);
+	const arr : T[] = new Array(length).fill(undefined);
 
 	return (!!callback && typeof callback === 'function')
 		? arr.map((nothing, _i : number) : T => callback(_i, arr))
@@ -14,66 +20,84 @@ export const padDigit = (str : string | number, length : number) : string => {
 	return ('' + str).padStart(length, '0');
 };
 
+
+enum CloneDataType {
+	Boolean = 'boolean',
+	Number = 'number',
+	Function = 'function',
+	String = 'string',
+	Buffer = 'buffer',
+	Object = 'object',
+	Array = 'array',
+	Date = 'date'
+}
+
 // sanitize removes undefined & null fields from object. default false
-export const clone = <T> (obj : T, sanitize : boolean = false) => {
+export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 	let result ! : T;
 
-	if (!!obj) {
-		let type : string = typeof obj;
+	if (obj) {
+		let type : CloneDataType = typeof obj as CloneDataType;
 
-		if (type === 'object') {
-			const objAsAny : any = obj;
+		if (type === CloneDataType.Object) {
+			const objAsObject : AnyObject = obj as unknown as AnyObject;
 
-			if (objAsAny.push !== undefined
-				&& typeof objAsAny.push === 'function') {
-				type = 'array';
+			if (objAsObject.push
+				&& typeof objAsObject.push === 'function') {
+				type = CloneDataType.Array;
 			}
-			else if (objAsAny.getFullYear !== undefined
-				&& typeof objAsAny.getFullYear === 'function') {
-				type = 'date';
+			else if (objAsObject.getFullYear
+				&& typeof objAsObject.getFullYear === 'function') {
+				type = CloneDataType.Date;
 			}
-			else if (objAsAny.byteLength !== undefined) {
-				type = 'buffer';
+			else if (objAsObject.byteLength
+				&& typeof objAsObject.byteLength === 'function') {
+				type = CloneDataType.Buffer;
 			}
 		}
 
 		switch (type) {
-			case 'boolean':
-			case 'number':
-			case 'function':
-			case 'string':
-			case 'buffer':
+			case CloneDataType.Boolean:
+			case CloneDataType.Number:
+			case CloneDataType.Function:
+			case CloneDataType.String:
+			case CloneDataType.Buffer:
 				// ok with simple copy
 				result = obj;
 				break;
 
-			case 'date':
-				const objAsDate : Date = obj as any as Date;
-				result = new Date(objAsDate) as any as T;
+			case CloneDataType.Date: {
+				const objAsDate : Date = obj as unknown as Date;
+				result = new Date(objAsDate) as unknown as T;
 				break;
+			}
 
-			case 'array':
-				const objAsArray : any[] = obj as any as any[];
+			case  CloneDataType.Array: {
+				const objAsArray : unknown[] = obj as unknown as unknown[];
 				result = objAsArray.map(one => {
 					return clone(one);
-				}) as any as T;
+				}) as unknown as T;
 				break;
+			}
 
-			case 'object':
+			case CloneDataType.Object: {
 				// sanitize default false
-				const objAsObject : object = obj as any as object;
-				result = {} as any as T;
+				result = {} as unknown as T;
 
-				Object.entries(objAsObject).filter(([key, value]) => {
+				const entries : [string, unknown][] = Object.entries(obj)
+					.filter(([, value]) => {
 						return sanitize
 							? value !== undefined && value !== null
 							: true;
-					})
-					.forEach(([key, value]) => {
-						// recursively call
-						(result as any)[key] = clone(value, sanitize);
 					});
+
+
+				for (const [key, value] of entries) {
+					// recursively call
+					(result as unknown as AnyObject)[key] = clone(value, sanitize);
+				}
 				break;
+			}
 		}
 	}
 	else {
@@ -107,16 +131,18 @@ export const dateFormat = (date : InitDataFormat, format : string) : string => {
 	return dateTime.isValid() ? dateTime.format(format) : date as string;
 };
 
-export const isDateTimeParam = (param : any) : param is DateTimeParam => {
-	return Object.keys(param).every(key => {
-		return DateTimeParamKeys.includes(key as DateTimeUnit);
-	});
+export const isDateTimeParam = (param : unknown) : param is DateTimeParam => {
+	return typeof param === 'object'
+		&& Object.keys(param as AnyObject).every(key => {
+			return DateTimeParamKeys.includes(key as DateTimeUnit);
+		});
 };
 
-export const isDurationParam = (param : any) : param is DurationParam => {
-	return Object.keys(param).every(key => {
-		return DurationParamKeys.includes(key as DurationUnit);
-	});
+export const isDurationParam = (param : unknown) : param is DurationParam => {
+	return typeof param === 'object'
+		&& Object.keys(param as AnyObject).every(key => {
+			return DurationParamKeys.includes(key as DurationUnit);
+		});
 };
 
 export const durationUnitToDateTimeUnit = (unit : DurationUnit) : DateTimeUnit => {
@@ -200,16 +226,16 @@ export const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {
 };
 
 export const findFormatTokens = (formatString : string) : TokenMatchResult[] => {
-	const regExp : RegExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+	const regExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
 	const matchArr : TokenMatchResult[] = [];
 
 	let formatFrag : string = formatString;
-	let omitLength : number = 0;
+	let omitLength = 0;
 
 	let execResult : RegExpExecArray | null = regExp.exec(formatFrag);
 
-	if (!!execResult) {
+	if (execResult) {
 		do {
 			const strFound : string = execResult[0];
 
@@ -223,7 +249,7 @@ export const findFormatTokens = (formatString : string) : TokenMatchResult[] => 
 
 			execResult = regExp.exec(formatFrag);
 		}
-		while (!!execResult);
+		while (execResult);
 	}
 
 	return matchArr;

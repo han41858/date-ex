@@ -11,18 +11,18 @@ export class Duration {
 	constructor (initData? : string | Duration | DurationParam) {
 		if (initData !== undefined && initData !== null) {
 			if (typeof initData === 'string') {
-				const regExp1 : RegExp = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
-				const regExp2 : RegExp = /^P\d+W$/; // PnW
+				const regExp1 = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
+				const regExp2 = /^P\d+W$/; // PnW
 
 				// P<date>T<time>
-				const regExp3 : RegExp = /^P\d{8}T\d{4}$/; // PYYYYMMDDThhmmss
+				// const regExp3 = /^P\d{8}T\d{4}$/; // PYYYYMMDDThhmmss
 				// const regExp4 : RegExp = /^P\d{8}T\d{4}$/; // P[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss]
 
 
 				if (regExp1.test(initData)) {
 					const execResult : RegExpExecArray | null = regExp1.exec(initData);
 
-					if (!!execResult) {
+					if (execResult) {
 						const [dateStr, timeStr] = initData // divide date & time for 'M'
 							.replace('P', '') // remove starting 'P'
 							.split('T');
@@ -196,7 +196,7 @@ export class Duration {
 			return !!this.values[key as keyof DurationParam];
 		});
 
-		if (!!firstKey) {
+		if (firstKey) {
 			const value : number | undefined = this.values[firstKey as keyof DurationParam];
 
 			if (value !== undefined && value < 0) {

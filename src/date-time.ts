@@ -229,7 +229,7 @@ export class DateTime extends DateProxy {
 			localeFromAnotherDateTime = initData.locale();
 		}
 
-		if (!!globalConfig.localeTimer) {
+		if (globalConfig.localeTimer) {
 			// wait global set
 			setTimeout(() => {
 				this.setDefaultLocale(localeFromAnotherDateTime);
@@ -273,14 +273,14 @@ export class DateTime extends DateProxy {
 			const previousLocale : undefined | string = globalConfig.locale;
 
 			if (previousLocale !== locale) {
-				if (!!globalConfig.localeTimer) {
+				if (globalConfig.localeTimer) {
 					clearTimeout(globalConfig.localeTimer);
 
 					globalConfig.localeTimer = undefined;
 				}
 
 				// loaded already
-				if (!!localeSetCached[locale]) {
+				if (localeSetCached[locale]) {
 					globalConfig.locale = locale;
 
 					returnValue = globalConfig.locale;
@@ -325,14 +325,14 @@ export class DateTime extends DateProxy {
 			const previousLocale : string = this.ownLocale;
 
 			if (previousLocale !== locale) {
-				if (!!this.setLocaleTimer) {
+				if (this.setLocaleTimer) {
 					clearTimeout(this.setLocaleTimer);
 
 					this.setLocaleTimer = undefined;
 				}
 
 				// loaded already
-				if (!!localeSetCached[locale]) {
+				if (localeSetCached[locale]) {
 					returnValue = this.ownLocale = locale;
 				}
 				// load
@@ -405,7 +405,7 @@ export class DateTime extends DateProxy {
 
 				const value : number | undefined = param[key];
 
-				if (!!value) {
+				if (value) {
 					setParam[datetimeUnit] = this[datetimeUnit] + value;
 				}
 			});
@@ -416,7 +416,7 @@ export class DateTime extends DateProxy {
 			Object.entries(param).forEach(([key, value]) => {
 				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as DurationUnit) as keyof DateTimeParam;
 
-				if (!!value) {
+				if (value) {
 					setParam[datetimeUnit] = this[datetimeUnit] + value;
 				}
 			});
@@ -437,7 +437,7 @@ export class DateTime extends DateProxy {
 	}
 
 	startOf (unit : DateTimeUnit | keyof DateTimeParam) : DateTime {
-		let foundFlag : boolean = false;
+		let foundFlag = false;
 
 		const setParam : DateTimeParam = DateTimeParamKeys.reduce((acc : DateTimeParam, _key : string) => {
 			if (!foundFlag) {
@@ -501,7 +501,7 @@ export class DateTime extends DateProxy {
 	}
 
 	private convertTokenToValue (token : FormatToken) : string {
-		let returnValue : string = '';
+		let returnValue = '';
 
 		switch (token) {
 			case FormatToken.Year:
@@ -660,8 +660,10 @@ export class DateTime extends DateProxy {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
-	diff (date : InitDataFormat,
-	      unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms) : number {
+	diff (
+		date : InitDataFormat,
+		unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms
+	) : number {
 		let dateWith : DateTime;
 
 		if (date instanceof DateTime) {
@@ -713,7 +715,7 @@ export class DateTime extends DateProxy {
 				const diffWeeks : number = Math.ceil(sign * (smallerDate.day + 1 + numberOfDays) / 7);
 
 				// can be -0
-				diffValue = diffWeeks === -0
+				diffValue = Object.is(diffWeeks, -0)
 					? 0
 					: diffWeeks;
 				break;
@@ -759,36 +761,50 @@ export class DateTime extends DateProxy {
 		return diffValue;
 	}
 
-	isBefore (date : InitDataFormat,
-	          unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
+	isBefore (
+		date : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
 		return this.diff(date, unit) < 0;
 	}
 
-	isBeforeOrEqual (date : InitDataFormat,
-	                 unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
+	isBeforeOrEqual (
+		date : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
 		return this.diff(date, unit) <= 0;
 	}
 
-	isAfter (date : InitDataFormat,
-	         unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
+	isAfter (
+		date : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
 		return this.diff(date, unit) > 0;
 	}
 
-	isAfterOrEqual (date : InitDataFormat,
-	                unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
+	isAfterOrEqual (
+		date : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
 		return this.diff(date, unit) >= 0;
 	}
 
-	isBetween (date1 : InitDataFormat, date2 : InitDataFormat,
-	           unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
+	isBetween (
+		date1 : InitDataFormat,
+		date2 : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) > 0
 			&& this.diff(biggerDate, unit) < 0;
 	}
 
-	isBetweenOrEqual (date1 : InitDataFormat, date2 : InitDataFormat,
-	                  unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms) : boolean {
+	isBetweenOrEqual (
+		date1 : InitDataFormat,
+		date2 : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) >= 0

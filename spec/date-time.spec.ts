@@ -891,7 +891,7 @@ describe('DateTime', () => {
 										: ((checkKey === DateTimeUnit.Month || checkKey === DateTimeUnit.Date)
 											? 1
 											: (checkKey === DateTimeUnit.Hours
-												? 9 // timezone
+												? date.timezoneOffsetInHours
 												: 0)
 										)
 								);
@@ -941,7 +941,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(1);
 						expect(newDate.date).to.be.eql(1);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -959,7 +959,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(12);
 						expect(newDate.date).to.be.eql(1);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -977,7 +977,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(7);
 						expect(newDate.date).to.be.eql(1);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -995,7 +995,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(1);
 						expect(newDate.date).to.be.eql(1);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -1016,7 +1016,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(6);
 						expect(newDate.date).to.be.eql(2);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -1035,7 +1035,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(1);
 						expect(newDate.date).to.be.eql(2);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -1054,7 +1054,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(4);
 						expect(newDate.date).to.be.eql(30);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -1073,7 +1073,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(4);
 						expect(newDate.date).to.be.eql(25);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -1092,7 +1092,7 @@ describe('DateTime', () => {
 						expect(newDate.month).to.be.eql(12);
 						expect(newDate.date).to.be.eql(26);
 
-						expect(newDate.hours).to.be.eql(9);
+						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
 						expect(newDate.minutes).to.be.eql(0);
 						expect(newDate.seconds).to.be.eql(0);
 						expect(newDate.ms).to.be.eql(0);
@@ -3426,7 +3426,7 @@ describe('DateTime', () => {
 					expect(calendarDate.month).to.be.eql(date.month, 'month');
 					expect(calendarDate.date).to.be.eql(i + 1, 'date');
 
-					expect(calendarDate.hours).to.be.eql(9, 'hours'); // timezone
+					expect(calendarDate.hours).to.be.eql(calendarDate.timezoneOffsetInHours, 'hours'); // timezone
 					expect(calendarDate.minutes).to.be.eql(0, 'minutes');
 					expect(calendarDate.seconds).to.be.eql(0, 'seconds');
 					expect(calendarDate.ms).to.be.eql(0, 'ms');

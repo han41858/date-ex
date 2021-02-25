@@ -29,7 +29,8 @@ enum CloneDataType {
 	Buffer = 'buffer',
 	Object = 'object',
 	Array = 'array',
-	Date = 'date'
+	Date = 'date',
+	RegExp = 'regexp'
 }
 
 // sanitize removes undefined & null fields from object. default false
@@ -42,13 +43,14 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 		if (type === CloneDataType.Object) {
 			const objAsObject : AnyObject = obj as unknown as AnyObject;
 
-			if (objAsObject.push
-				&& typeof objAsObject.push === 'function') {
+			if (Array.isArray(objAsObject)) {
 				type = CloneDataType.Array;
 			}
-			else if (objAsObject.getFullYear
-				&& typeof objAsObject.getFullYear === 'function') {
+			else if (objAsObject instanceof Date) {
 				type = CloneDataType.Date;
+			}
+			else if (objAsObject instanceof RegExp) {
+				type = CloneDataType.RegExp;
 			}
 			else if (objAsObject.byteLength
 				&& typeof objAsObject.byteLength === 'function') {
@@ -57,15 +59,6 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 		}
 
 		switch (type) {
-			case CloneDataType.Boolean:
-			case CloneDataType.Number:
-			case CloneDataType.Function:
-			case CloneDataType.String:
-			case CloneDataType.Buffer:
-				// ok with simple copy
-				result = obj;
-				break;
-
 			case CloneDataType.Date: {
 				const objAsDate : Date = obj as unknown as Date;
 				result = new Date(objAsDate) as unknown as T;
@@ -98,6 +91,10 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 				}
 				break;
 			}
+
+			default:
+				// simple copy
+				result = obj;
 		}
 	}
 	else {

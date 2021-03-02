@@ -252,6 +252,207 @@ describe('DateTime', () => {
 				});
 			});
 
+			// date string is set to 'YYYY-MM-DD'
+			// Z (not exists: assumes UTC, exists: Local
+			describe('by date & time string', () => {
+				it('YYYY-MM-DDTHH:mm', () => {
+					const refDate : DateTime = new DateTime();
+
+					const initStr : string = [
+						[
+							refDate.UTC.year,
+							padDigit(refDate.UTC.month, 2),
+							padDigit(refDate.UTC.date, 2)
+						].join('-'),
+						'T',
+						[
+							padDigit(refDate.UTC.hours24, 2),
+							padDigit(refDate.UTC.minutes, 2)
+						].join(':')
+					].join('');
+
+					const date : DateTime = new DateTime(initStr);
+
+					expect(date).to.be.instanceOf(DateTime);
+					expect(date.valid).to.be.true;
+
+					expect(date.year).to.be.eql(refDate.UTC.year);
+					expect(date.month).to.be.eql(refDate.UTC.month);
+					expect(date.date).to.be.eql(refDate.UTC.date);
+
+					expect(date.hours).to.be.eql(refDate.UTC.hours);
+					expect(date.minutes).to.be.eql(refDate.UTC.minutes);
+					expect(date.seconds).to.be.eql(0);
+					expect(date.ms).to.be.eql(0);
+				});
+
+				it('YYYY-MM-DDTHH:mmZ', () => {
+					const refDate : DateTime = new DateTime();
+
+					const initStr : string = [
+						[
+							refDate.UTC.year,
+							padDigit(refDate.UTC.month, 2),
+							padDigit(refDate.UTC.date, 2)
+						].join('-'),
+						'T',
+						[
+							padDigit(refDate.UTC.hours24, 2),
+							padDigit(refDate.UTC.minutes, 2)
+						].join(':'),
+						'Z'
+					].join('');
+
+					const date : DateTime = new DateTime(initStr);
+
+					expect(date).to.be.instanceOf(DateTime);
+					expect(date.valid).to.be.true;
+
+					expect(date.year).to.be.eql(refDate.year);
+					expect(date.month).to.be.eql(refDate.month);
+					expect(date.date).to.be.eql(refDate.date);
+
+					expect(date.hours).to.be.eql(refDate.hours);
+					expect(date.minutes).to.be.eql(refDate.minutes);
+					expect(date.seconds).to.be.eql(0);
+					expect(date.ms).to.be.eql(0);
+				});
+
+				it('YYYY-MM-DDTHH:mm:ss', () => {
+					const refDate : DateTime = new DateTime();
+
+					const initStr : string = [
+						[
+							refDate.UTC.year,
+							padDigit(refDate.UTC.month, 2),
+							padDigit(refDate.UTC.date, 2)
+						].join('-'),
+						'T',
+						[
+							padDigit(refDate.UTC.hours24, 2),
+							padDigit(refDate.UTC.minutes, 2),
+							padDigit(refDate.UTC.seconds, 2)
+						].join(':')
+					].join('');
+
+					const date : DateTime = new DateTime(initStr);
+
+					expect(date).to.be.instanceOf(DateTime);
+					expect(date.valid).to.be.true;
+
+					expect(date.year).to.be.eql(refDate.UTC.year);
+					expect(date.month).to.be.eql(refDate.UTC.month);
+					expect(date.date).to.be.eql(refDate.UTC.date);
+
+					expect(date.hours).to.be.eql(refDate.UTC.hours);
+					expect(date.minutes).to.be.eql(refDate.UTC.minutes);
+					expect(date.seconds).to.be.eql(refDate.UTC.seconds);
+					expect(date.ms).to.be.eql(0);
+				});
+
+				it('YYYY-MM-DDTHH:mm:ssZ', () => {
+					const refDate : DateTime = new DateTime();
+
+					const initStr : string = [
+						[
+							refDate.UTC.year,
+							padDigit(refDate.UTC.month, 2),
+							padDigit(refDate.UTC.date, 2)
+						].join('-'),
+						'T',
+						[
+							padDigit(refDate.UTC.hours24, 2),
+							padDigit(refDate.UTC.minutes, 2),
+							padDigit(refDate.UTC.seconds, 2)
+						].join(':'),
+						'Z'
+					].join('');
+
+					const date : DateTime = new DateTime(initStr);
+
+					expect(date).to.be.instanceOf(DateTime);
+					expect(date.valid).to.be.true;
+
+					expect(date.year).to.be.eql(refDate.year);
+					expect(date.month).to.be.eql(refDate.month);
+					expect(date.date).to.be.eql(refDate.date);
+
+					expect(date.hours).to.be.eql(refDate.hours);
+					expect(date.minutes).to.be.eql(refDate.minutes);
+					expect(date.seconds).to.be.eql(refDate.seconds);
+					expect(date.ms).to.be.eql(0);
+				});
+
+				it('YYYY-MM-DDTHH:mm:ss.SSS', () => {
+					const refDate : DateTime = new DateTime();
+
+					const initStr : string = [
+						[
+							refDate.UTC.year,
+							padDigit(refDate.UTC.month, 2),
+							padDigit(refDate.UTC.date, 2)
+						].join('-'),
+						'T',
+						[
+							padDigit(refDate.UTC.hours24, 2),
+							padDigit(refDate.UTC.minutes, 2),
+							padDigit(refDate.UTC.seconds, 2)
+						].join(':'),
+						'.',
+						padDigit(refDate.UTC.ms, 3)
+					].join('');
+
+					const date : DateTime = new DateTime(initStr);
+
+					expect(date).to.be.instanceOf(DateTime);
+					expect(date.valid).to.be.true;
+
+					expect(date.year).to.be.eql(refDate.UTC.year);
+					expect(date.month).to.be.eql(refDate.UTC.month);
+					expect(date.date).to.be.eql(refDate.UTC.date);
+
+					expect(date.hours).to.be.eql(refDate.UTC.hours);
+					expect(date.minutes).to.be.eql(refDate.UTC.minutes);
+					expect(date.seconds).to.be.eql(refDate.UTC.seconds);
+					expect(date.ms).to.be.eql(refDate.UTC.ms);
+				});
+
+				it('YYYY-MM-DDTHH:mm:ss.SSSZ', () => {
+					const refDate : DateTime = new DateTime();
+
+					const initStr : string = [
+						[
+							refDate.UTC.year,
+							padDigit(refDate.UTC.month, 2),
+							padDigit(refDate.UTC.date, 2)
+						].join('-'),
+						'T',
+						[
+							padDigit(refDate.UTC.hours, 2),
+							padDigit(refDate.UTC.minutes, 2),
+							padDigit(refDate.UTC.seconds, 2)
+						].join(':'),
+						'.',
+						padDigit(refDate.UTC.ms, 3),
+						'Z'
+					].join('');
+
+					const date : DateTime = new DateTime(initStr);
+
+					expect(date).to.be.instanceOf(DateTime);
+					expect(date.valid).to.be.true;
+
+					expect(date.year).to.be.eql(refDate.year);
+					expect(date.month).to.be.eql(refDate.month);
+					expect(date.date).to.be.eql(refDate.date);
+
+					expect(date.hours).to.be.eql(refDate.hours);
+					expect(date.minutes).to.be.eql(refDate.minutes);
+					expect(date.seconds).to.be.eql(refDate.seconds);
+					expect(date.ms).to.be.eql(refDate.ms);
+				});
+			});
+
 			xdescribe('with string format', () => {
 				const now : Date = new Date();
 

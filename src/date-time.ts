@@ -4,6 +4,7 @@ import { Calendar, DateTimeParam, DurationParam, InitDataFormat, LocaleSet, Toke
 import {
 	DateTimeParamKeys,
 	DateTimeUnit,
+	DaysToMs,
 	DefaultLocale,
 	DurationParamKeys,
 	DurationUnit,
@@ -709,7 +710,7 @@ export class DateTime extends DateProxy {
 					biggerDate = this;
 				}
 
-				const numberOfDays : number = Math.floor((+biggerDate - +smallerDate) / (24 * 60 * 60 * 1000));
+				const numberOfDays : number = Math.floor((+biggerDate - +smallerDate) / DaysToMs);
 
 				// add 1 for day starting from 0
 				const diffWeeks : number = Math.ceil(sign * (smallerDate.day + 1 + numberOfDays) / 7);

@@ -1,5 +1,6 @@
 import { DateTimeParam, InitDataFormat } from './interfaces';
 import { DateTime } from './date-time';
+import { DaysToMs } from './constants';
 
 
 export class DateProxy {
@@ -97,7 +98,7 @@ export class DateProxy {
 			date : 1
 		});
 
-		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / (24 * 60 * 60 * 1000));
+		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / DaysToMs);
 
 		// add 1 for day starting from 0
 		return Math.ceil((firstDayOfYear.day + 1 + numberOfDays) / 7);
@@ -110,7 +111,7 @@ export class DateProxy {
 			date : 1
 		});
 
-		const numberOfDays : number = Math.floor((+this._date - +firstDayOfMonth) / (24 * 60 * 60 * 1000));
+		const numberOfDays : number = Math.floor((+this._date - +firstDayOfMonth) / DaysToMs);
 
 		// add 1 for day starting from 0
 		return Math.ceil((firstDayOfMonth.day + 1 + numberOfDays) / 7);
@@ -151,7 +152,7 @@ export class DateProxy {
 			date : 1
 		});
 
-		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / (24 * 60 * 60 * 1000));
+		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / DaysToMs);
 
 		return numberOfDays + 1;
 	}
@@ -169,7 +170,7 @@ export class DateProxy {
 			date : 1
 		});
 
-		return Math.floor((+firstDayOfNextYear - +firstDayOfYear) / (24 * 60 * 60 * 1000));
+		return Math.floor((+firstDayOfNextYear - +firstDayOfYear) / DaysToMs);
 	}
 
 	get daysInMonth () : number {
@@ -185,7 +186,7 @@ export class DateProxy {
 			date : 1
 		});
 
-		return Math.floor((+firstDayOfNextMonth - +firstDayOfMonth) / (24 * 60 * 60 * 1000));
+		return Math.floor((+firstDayOfNextMonth - +firstDayOfMonth) / DaysToMs);
 	}
 
 	get day () : number {

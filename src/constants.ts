@@ -107,3 +107,5 @@ export const DefaultLocale = 'en';
 
 export const Gregorian1Year : number = 146097 / 400; // 365.2425
 export const Gregorian1Month : number = Gregorian1Year / 12; // 30.436875
+
+export const DaysToMs = 24 * 60 * 60 * 1000;

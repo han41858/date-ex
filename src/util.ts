@@ -125,7 +125,9 @@ export const dateFormat = (date : InitDataFormat, format : string) : string => {
 		dateTime = new DateTime(date);
 	}
 
-	return dateTime.isValid() ? dateTime.format(format) : date as string;
+	return dateTime.valid
+		? dateTime.format(format)
+		: date as string;
 };
 
 export const isDateTimeParam = (param : unknown) : param is DateTimeParam => {

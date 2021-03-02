@@ -6,25 +6,25 @@ import { DateTimeParam } from '../src/interfaces';
 
 
 describe('DateProxy', () => {
-	describe('isValid()', () => {
+	describe('valid', () => {
 		it('ok', () => {
-			expect(new DateTime().isValid()).to.be.true;
+			expect(new DateTime().valid).to.be.true;
 		});
 
 		it('invalid case - with invalid Date', () => {
 			const date : Date = new Date(1000000, 1);
 
-			expect(new DateTime(date).isValid()).to.be.false;
+			expect(new DateTime(date).valid).to.be.false;
 		});
 
 		it('invalid case - with invalid years', () => {
 			expect(new DateTime({
 				year : -20000010
-			}).isValid()).to.be.false;
+			}).valid).to.be.false;
 		});
 
 		it('invalid case - with invalid string', () => {
-			expect(new DateTime('abc' as unknown).isValid()).to.be.false;
+			expect(new DateTime('abc' as unknown).valid).to.be.false;
 		});
 	});
 

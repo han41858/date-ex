@@ -130,7 +130,7 @@ describe('DateTime', () => {
 							padDigit(now.getDate(), 2)
 						].join('');
 
-						expect(new DateTime(dateStr).isValid()).to.be.false;
+						expect(new DateTime(dateStr).valid).to.be.false;
 					});
 				});
 			});
@@ -153,7 +153,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 
 						it('Thh:mm:ss.SSS', () => {
@@ -172,7 +172,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 
 						it('hh:mm:ss', () => {
@@ -188,7 +188,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 
 						// hhmmss : not error, but invalid parsed with Date
@@ -205,7 +205,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 
 						it('hh:mm', () => {
@@ -219,7 +219,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 
 						it('Thhmm', () => {
@@ -233,7 +233,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 
 						it('Thh', () => {
@@ -246,7 +246,7 @@ describe('DateTime', () => {
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
-							expect(dateTime.isValid()).to.be.false;
+							expect(dateTime.valid).to.be.false;
 						});
 					});
 				});

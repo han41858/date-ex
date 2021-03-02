@@ -33,7 +33,7 @@ export class DateProxy {
 		}
 	}
 
-	isValid () : boolean {
+	get valid () : boolean {
 		return !!this._date
 			&& this._date.getFullYear !== undefined
 			&& typeof this._date.getFullYear === 'function'

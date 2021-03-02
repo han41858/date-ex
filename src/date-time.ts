@@ -454,6 +454,10 @@ export class DateTime extends DateProxy {
 			return acc;
 		}, {} as DateTimeParam);
 
+		if (setParam.hours === undefined) {
+			setParam.hours = 0; // for timezone
+		}
+
 		return new DateTime(setParam);
 	}
 
@@ -478,6 +482,10 @@ export class DateTime extends DateProxy {
 				}
 			}
 		});
+
+		if (setParam.hours === undefined) {
+			setParam.hours = 0; // for timezone
+		}
 
 		return new DateTime(setParam);
 	}

@@ -5,7 +5,7 @@ import { Duration } from '../src/duration';
 
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from '../src/constants';
 import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { Calendar, DateTimeParam, InitDataFormat, LocaleSet } from '../src/interfaces';
+import { Calendar, InitDataFormat, LocaleSet } from '../src/interfaces';
 
 
 const MilliSecondsCloseTo : number = 10;
@@ -44,7 +44,6 @@ describe('DateTime', () => {
 						].join('-');
 
 						const newDate : Date = new Date(dateStr);
-						const timezoneOffsetInHours : number = now.getTimezoneOffset() / 60;
 
 						const newDateTime : DateTime = new DateTime(dateStr);
 
@@ -56,7 +55,7 @@ describe('DateTime', () => {
 						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
 						expect(newDateTime.date).to.be.eql(newDate.getDate());
 
-						expect(newDateTime.hours).to.be.eql(-timezoneOffsetInHours);
+						expect(newDateTime.hours).to.be.eql(newDateTime.timezoneOffsetInHours);
 						expect(newDateTime.minutes).to.be.eql(0);
 						expect(newDateTime.seconds).to.be.eql(0);
 						expect(newDateTime.ms).to.be.eql(0);
@@ -71,7 +70,6 @@ describe('DateTime', () => {
 						].join('-');
 
 						const newDate : Date = new Date(dateStr);
-						const timezoneOffsetInHours : number = now.getTimezoneOffset() / 60;
 
 						const newDateTime : DateTime = new DateTime(dateStr);
 
@@ -83,7 +81,7 @@ describe('DateTime', () => {
 						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
 						expect(newDateTime.date).to.be.eql(1);
 
-						expect(newDateTime.hours).to.be.eql(-timezoneOffsetInHours);
+						expect(newDateTime.hours).to.be.eql(newDateTime.timezoneOffsetInHours);
 						expect(newDateTime.minutes).to.be.eql(0);
 						expect(newDateTime.seconds).to.be.eql(0);
 						expect(newDateTime.ms).to.be.eql(0);
@@ -2148,23 +2146,8 @@ describe('DateTime', () => {
 		});
 	});
 
-	// check with UTC because of timezone
 	describe('startOf()', () => {
-		const initParam : DateTimeParam = {
-			year : 2020,
-			month : 11,
-			date : 5,
-
-			hours : 13,
-			minutes : 32,
-			seconds : 53,
-			ms : 512
-		};
-
-		const date : DateTime = new DateTime(Date.UTC(
-			initParam.year, initParam.month - 1, initParam.date,
-			initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
-		));
+		const date : DateTime = new DateTime();
 
 		DateTimeParamKeys.forEach((setKey, setKeyIndex) => {
 			it(setKey, () => {
@@ -2180,11 +2163,11 @@ describe('DateTime', () => {
 						switch (checkKey) {
 							case DateTimeUnit.Month:
 							case DateTimeUnit.Date:
-								expect(newDate.UTC[checkKey]).to.be.eql(1);
+								expect(newDate[checkKey]).to.be.eql(1);
 								break;
 
 							case DateTimeUnit.Hours:
-								expect(newDate.UTC[checkKey]).to.be.eql(0);
+								expect(newDate[checkKey]).to.be.eql(0);
 								break;
 
 							default:
@@ -2204,21 +2187,7 @@ describe('DateTime', () => {
 
 	// check with UTC because of timezone
 	describe('endOf()', () => {
-		const initParam : DateTimeParam = {
-			year : 2020,
-			month : 11,
-			date : 5,
-
-			hours : 10,
-			minutes : 32,
-			seconds : 53,
-			ms : 512
-		};
-
-		const date : DateTime = new DateTime(Date.UTC(
-			initParam.year, initParam.month - 1, initParam.date,
-			initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
-		));
+		const date : DateTime = new DateTime();
 
 		DateTimeParamKeys.forEach((setKey, setKeyIndex) => {
 			it(setKey, () => {
@@ -2228,7 +2197,7 @@ describe('DateTime', () => {
 					if (setKeyIndex >= checkKeyIndex) {
 						if (checkKey !== DateTimeUnit.Ms) {
 							// same value
-							expect(newDate.UTC[checkKey]).to.be.eql(initParam[checkKey]);
+							expect(newDate[checkKey]).to.be.eql(date[checkKey]);
 						}
 						else {
 							expect(newDate[checkKey]).to.be.eql(999);
@@ -2239,15 +2208,15 @@ describe('DateTime', () => {
 						// last value
 						switch (checkKey) {
 							case DateTimeUnit.Month:
-								expect(newDate.UTC[checkKey]).to.be.eql(12);
+								expect(newDate[checkKey]).to.be.eql(12);
 								break;
 
 							case DateTimeUnit.Date:
-								expect(newDate.UTC[checkKey]).to.be.eql(newDate.UTC.daysInMonth);
+								expect(newDate[checkKey]).to.be.eql(newDate.daysInMonth);
 								break;
 
 							case DateTimeUnit.Hours:
-								expect(newDate.UTC[checkKey]).to.be.eql(23);
+								expect(newDate[checkKey]).to.be.eql(23);
 								break;
 
 							case DateTimeUnit.Minutes:
@@ -3627,7 +3596,7 @@ describe('DateTime', () => {
 					expect(calendarDate.month).to.be.eql(date.month, 'month');
 					expect(calendarDate.date).to.be.eql(i + 1, 'date');
 
-					expect(calendarDate.hours).to.be.eql(calendarDate.timezoneOffsetInHours, 'hours'); // timezone
+					expect(calendarDate.hours).to.be.eql(0, 'hours');
 					expect(calendarDate.minutes).to.be.eql(0, 'minutes');
 					expect(calendarDate.seconds).to.be.eql(0, 'seconds');
 					expect(calendarDate.ms).to.be.eql(0, 'ms');

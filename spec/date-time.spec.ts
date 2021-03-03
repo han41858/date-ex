@@ -140,11 +140,11 @@ describe('DateTime', () => {
 							const now : Date = new Date();
 
 							const timeStr : string = [
-								padDigit(now.getHours(), 2),
-								':',
-								padDigit(now.getMinutes(), 2),
-								':',
-								padDigit(now.getSeconds(), 2),
+								[
+									padDigit(now.getHours(), 2),
+									padDigit(now.getMinutes(), 2),
+									padDigit(now.getSeconds(), 2)
+								].join(':'),
 								'.',
 								padDigit(now.getMilliseconds(), 3)
 							].join('');
@@ -159,11 +159,11 @@ describe('DateTime', () => {
 
 							const timeStr : string = [
 								'T',
-								padDigit(now.getHours(), 2),
-								':',
-								padDigit(now.getMinutes(), 2),
-								':',
-								padDigit(now.getSeconds(), 2),
+								[
+									padDigit(now.getHours(), 2),
+									padDigit(now.getMinutes(), 2),
+									padDigit(now.getSeconds(), 2)
+								].join(':'),
 								'.',
 								padDigit(now.getMilliseconds(), 3)
 							].join('');
@@ -178,11 +178,9 @@ describe('DateTime', () => {
 
 							const timeStr : string = [
 								padDigit(now.getHours(), 2),
-								':',
 								padDigit(now.getMinutes(), 2),
-								':',
 								padDigit(now.getSeconds(), 2)
-							].join('');
+							].join(':');
 
 							const dateTime : DateTime = new DateTime(timeStr);
 
@@ -211,9 +209,8 @@ describe('DateTime', () => {
 
 							const timeStr : string = [
 								padDigit(now.getHours(), 2),
-								':',
 								padDigit(now.getMinutes(), 2)
-							].join('');
+							].join(':');
 
 							const dateTime : DateTime = new DateTime(timeStr);
 

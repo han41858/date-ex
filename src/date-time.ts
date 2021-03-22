@@ -770,6 +770,13 @@ export class DateTime extends DateProxy {
 		return diffValue;
 	}
 
+	isEqual (
+		date : InitDataFormat,
+		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	) : boolean {
+		return this.diff(date, unit) === 0;
+	}
+
 	isBefore (
 		date : InitDataFormat,
 		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms

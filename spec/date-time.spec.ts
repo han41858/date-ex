@@ -3272,6 +3272,52 @@ describe('DateTime', () => {
 		});
 	});
 
+	describe('isEqual()', () => {
+		it('string param', () => {
+			const date1 : DateTime = new DateTime();
+			const date2 : DateTime = new DateTime();
+
+			expect(date1.isEqual(date2, 'year')).not.to.throw;
+		});
+
+		it('no unit param', () => {
+			const date1 : DateTime = new DateTime({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateTime = new DateTime({
+				year : 2020, month : 10, date : 22,
+				ms : 1
+			});
+
+			expect(date1.isEqual(date2)).to.be.false;
+		});
+
+		it('same date', () => {
+			const date1 : DateTime = new DateTime({
+				year : 2020, month : 10, date : 22
+			});
+
+			const date2 : DateTime = new DateTime({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isEqual(date2, DateTimeUnit.Date)).to.be.true;
+		});
+
+		it('is before, but same with unit', () => {
+			const date1 : DateTime = new DateTime({
+				year : 2020, month : 10, date : 21
+			});
+
+			const date2 : DateTime = new DateTime({
+				year : 2020, month : 10, date : 22
+			});
+
+			expect(date1.isEqual(date2, DateTimeUnit.Month)).to.be.true;
+		});
+	});
+
 	describe('isBefore()', () => {
 		it('string param', () => {
 			const date1 : DateTime = new DateTime();

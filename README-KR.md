@@ -354,6 +354,7 @@ console.log(date3.locale()); // 'en'
 | 함수 | 반환값 | 설명 |
 |---|---|---|
 | `diff()` | `number` | 차이값을 반환합니다. |
+| `isEqual()` | `boolean` | 인자로 전달한 일자와 같으면 `true`를 반환합니다. |
 | `isBefore()` | `boolean` | 인자로 전달한 일자 이전이면 `true`를 반환합니다. |
 | `isBeforeOrEqual()` | `boolean` | 인자로 전달한 일자 이전이거나 같으면 `true`를 반환합니다. |
 | `isAfter()` | `boolean` | 인자로 전달한 일자 이후이면 `true`를 반환합니다. |
@@ -368,13 +369,15 @@ const date1: DateTime = new DateTime({
 	date : 20
 });
 
-const date2: DateTime = new DateTime({
+const date2 : DateTime = new DateTime({
 	year : 2020,
 	month : 10,
 	date : 27
 });
 
 console.log(date1.diff(date2, 'date')); // -7
+
+console.log(date1.isEqual(date2, 'month')); // true
 
 console.log(date1.isBefore(date2, 'date')); // true
 console.log(date1.isBeforeOrEqual(date2, 'month')); // true

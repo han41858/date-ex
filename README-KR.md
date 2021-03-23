@@ -1,8 +1,13 @@
+![npm](https://img.shields.io/npm/v/@han41858/date-ex?logo=npm)
+
 # DateEx
 
 Date 클래스 확장 패키지
 
 이 라이브러리는 `JavaScript` `Date` 객체를 확장한 것입니다. 이 라이브러리를 활용하면 날짜 객체를 원하는 형식으로 표현할 수 있으며, `Date` 객체를 보다 쉽고 자유롭게 사용할 수 있습니다.
+
+> `date-ex` 는 TypeScript로 작성되었으며 JavaScript 코드로 컴파일되어 배포됩니다. 따라서 TypeScript 문법으로 사용할 수도 있고 JavaScript 문법으로 사용할 수도 있습니다.
+
 
 <!-- ## 목록 -->
 
@@ -31,12 +36,11 @@ const newDateByDate : DateTime = new DateTime(new Date());
 const newDateByDateTime : DateTime = new DateTime(new DateTime());
 
 const newDateByDateTimeParam : DateTime = new DateTime({
-    year : 2020,
-    month : 10,
-    date : 26
+	year : 2020,
+	month : 10,
+	date : 26
 });
 ```
-
 
 ### `Duration`
 
@@ -57,10 +61,9 @@ const newDurationByString : Duration = new Duration('PY2');
 const newDurationByDuration : Duration = new Duration(new Duration());
 
 const newDurationByDurationParam : Duration = new Duration({
-    years : 2
+	years : 2
 });
 ```
-
 
 ### `DateTimeParam`
 
@@ -68,16 +71,15 @@ const newDurationByDurationParam : Duration = new Duration({
 
 | 필드 | 필드 타입 | 값 범위 | 설명 |
 |---|---|---|---|
-| `year` | `number` | - | 연도를 반환합니다. |
-| `month` | `number` | `1` ~ `12` | 월을 반환합니다. |
-| `date` | `number` | `1` ~ `31` | 일자를 반환합니다. |
-| `hours` | `number` | `0` ~ `59` | 시각을 반환합니다. |
-| `minutes` | `number` | `0` ~ `59` | 분을 반환합니다. |
-| `seconds` | `number` | `0` ~ `59` | 초를 반환합니다. |
-| `ms` | `number` | `0` ~ `999` | 밀리초를 반환합니다. |
+| `year` | `number` | - | 연도를 표현합니다. |
+| `month` | `number` | `1` ~ `12` | 월을 표현합니다. |
+| `date` | `number` | `1` ~ `31` | 일자를 표현합니다. |
+| `hours` | `number` | `0` ~ `23` | 시각을 표현합니다. |
+| `minutes` | `number` | `0` ~ `59` | 분을 표현합니다. |
+| `seconds` | `number` | `0` ~ `59` | 초를 표현합니다. |
+| `ms` | `number` | `0` ~ `999` | 밀리초를 표현합니다. |
 
-* `month` 필드는 `0` ~ `11` 값을 반환하지 않습니다. 이 필드는 실제 월 값 `1` ~ `12`를 반환합니다.
-
+* `month` 필드의 값은 `0` ~ `11` 범위가 아닙니다. 이 필드는 실제 월 값 `1` ~ `12`을 표현합니다.
 
 ### `DateTimeUnit`
 
@@ -95,7 +97,6 @@ const newDurationByDurationParam : Duration = new Duration({
 | `DateTimeUnit.Seconds` | `seconds` | `number` | 초 |
 | `DateTimeUnit.Ms` | `ms` | `number` | 밀리초 |
 
-
 ## 값 가져오기
 
 ### 기본 필드
@@ -112,10 +113,9 @@ const newDurationByDurationParam : Duration = new Duration({
 | `ms` | `number` | `0` ~ `999` | 밀리초를 반환합니다. | `Date.getMilliseconds()` |
 | `timezoneOffset` | `timezone` | - | 타임존 오프셋을 분 단위로 반환합니다. | `Date.getTimezoneOffset()` |
 
-* `Date` 객체와 비교해보면 편의성을 위해 `get-` 접두사를 생략했으며 함수 실행 형태가 아니라 getter 타입을 사용합니다. 같은 이유로 `getMilliseconds()`는 `ms`로 제공합니다.
+* `Date` 객체와 비교해보면 편의성을 위해 `get-` 접두사를 생략했으며 함수 실행 형태가 아니라 getter 방식을 사용합니다. 같은 이유로 `getMilliseconds()`는 `ms`로 제공합니다.
 
 * `month` 게터는 `0` ~ `11` 값을 반환하지 않습니다. 이 필드는 실제 월 값 `1` ~ `12`를 반환합니다.
-
 
 ### 확장 필드
 
@@ -134,12 +134,10 @@ const newDurationByDurationParam : Duration = new Duration({
 | `hours24` | `number` | `0` ~ `23` | 24시 기준으로 시각을 반환합니다. `hours`와 같습니다. |
 | `hours12` | `number` | `0` ~ `12` | 12시 기준으로 시각을 반환합니다. |
 
-
 ### UTC 필드
 
-일자, 시각을 UTC(협정 세계표준시, UCoordinated Universal Time)로 변환한 `DateTime`를 반환합니다.
-타임존에 따라 연도, 월, 일자, 시각이 변경될 수 있습니다.
-분, 초, 밀리초는 영향을 받지 않습니다.
+일자, 시각을 UTC(협정 세계표준시, Coordinated Universal Time)로 변환한 `DateTime`를 반환합니다. 타임존에 따라 연도, 월, 일자, 시각이 변경될 수 있습니다. 분, 초, 밀리초는
+영향을 받지 않습니다.
 
 UTC로 받은 객체의 `timezoneOffset`은 기존 `DateTime` 객체의 `timezoneOffset` 값과 같습니다.
 
@@ -158,12 +156,11 @@ const utcDate: DateTime = date.UTC;
 | `toUTCString()` | `string` | UTC 문자열 형식을 반환합니다. `Date.toUTCString()`과 같습니다. |
 | `toJson()` | `object` | [`DateTimeParam`](#DateTimeParam) 형식을 반환합니다. |
 
-
 ## 값 설정하기
 
 ### 개별 필드
 
-| 게터 | 인자 타입 | 설명 | `Date` 함수 |
+| 세터 | 인자 타입 | 설명 | `Date` 함수 |
 |---|---|---|---|
 | `year` | `number` | 연도를 설정합니다. | `Date.setFullYear()` |
 | `month` | `number` | 월을 설정합니다. | `Date.setMonth()` |
@@ -198,7 +195,7 @@ date.set({
 
 > `DateTime` 타입은 사용할 수 없습니다.
 
-#### `DateTime`을 사용할 때
+#### `DateTimeParam`을 사용할 때
 
 특정 일자, 시각으로 설정합니다. 0보다 작은 값을 사용하면 이전 일자, 시각으로 설정합니다.
 
@@ -239,7 +236,6 @@ date.add({
 });
 ```
 
-
 ## `startOf(unit): DateTime`, `endOf(unit): DateTime`
 
 인자로 전달한 단위 기준으로 처음/끝 시각을 반환합니다.
@@ -250,8 +246,6 @@ const date: DateTime = new DateTime();
 console.log(date.startOf('year').toISOString()); // 2020-01-01T00:00:00.000Z
 console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 ```
-
-
 
 ## `format(): string`
 
@@ -266,9 +260,9 @@ console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 | `FormatToken.MonthPadded` | `MM` | - | 2자리를 채운 월로 변환합니다. | `01` ~ `12` |
 | `FormatToken.MonthStringShort` | `MMM` | - | 짧은 이름 월로 변환합니다. | `Jan` ~ `Dec` |
 | `FormatToken.MonthStringLong` | `MMMM` | - | 긴 이름 월로 변환합니다. | `January` ~ `December` |
-| `FormatToken.Week` | `W` | `weekOfYear` | 연기준 주차를 반환합니다. | `1` ~ `52` |
-| `FormatToken.WeekPadded` | `WW` | - | 2자리를 채운 연기준 주차를 반환합니다. | `01` ~ `52` |
-| `FormatToken.WeekPaddedWithPrefix` | `Www` | - | 2자리를 채운 연기준 주차를 반환합니다. | `W01` ~ `W52` |
+| `FormatToken.Week` | `W` | `weekOfYear` | 연기준 주차를 반환합니다. | `1` ~ `53` |
+| `FormatToken.WeekPadded` | `WW` | - | 2자리를 채운 연기준 주차를 반환합니다. | `01` ~ `53` |
+| `FormatToken.WeekPaddedWithPrefix` | `Www` | - | 2자리를 채운 연기준 주차에 접두사 `W`를 붙여서 반환합니다. | `W01` ~ `W53` |
 | `FormatToken.DayOfYear` | `DDD` | `dayOfYear` | 연기준 일차수로 변환합니다. | `1` ~ `365` |
 | `FormatToken.DayOfYearPadded` | `DDDD` | - | 3자리를 채운 연기준 일차수로 변환합니다. | `001` ~ `365` |
 | `FormatToken.DayOfMonth` | `D` | `dayOfMonth` | 월기준 일차수로 변환합니다. | `1` ~ `31` |
@@ -290,7 +284,6 @@ console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 | `FormatToken.MilliSeconds` | `S` | `ms` | 밀리초로 변환합니다. | `0` ~ `999` |
 | `FormatToken.MilliSecondsPadded2` | `SS` | - | 2자리를 채운 밀리초로 변환합니다. | `00` ~ `99` |
 | `FormatToken.MilliSecondsPadded3` | `SSS` | - | 3자리를 채운 밀리초로 변환합니다. | `000` ~ `999`  |
-
 
 ## 다국어
 
@@ -321,23 +314,19 @@ console.log(date3.locale()); // 'en'
 
 기본 설정은 `en` 입니다.
 
-
 ### 주의
 
 `locale()` 함수는 ES6 `import` 함수를 사용합니다. 이 함수는 `Promise` 방식으로 동작하기 때문에 `locale()`을 실행한 후에는 JavaScript 1 싸이클을 기다려야 다국어 파일이 로드됩니다.
 
 다국어 코드가 유효하지 않거나 1 싸이클 이후에 다국어 파일 로드를 실패하면 이전값으로 원복됩니다.
 
-
 ### `DateTime.locale(): string`
 
 전역 변수로 다국어를 설정합니다.
 
-
 ### `locale(): string`
 
 객체에 다국어를 설정합니다.
-
 
 ### 다국어 지원 목록
 
@@ -346,12 +335,11 @@ console.log(date3.locale()); // 'en'
 | `en` | English |
 | `ko-kr` | Korean (Korea) |
 
-
 ## 비교 함수
 
-모든 비교 함수는 `DateTimeUnit` 단위를 인자로 받습니다. 계산의 정확도는 이 단위를 기준으로 하며, 단위를 생략하면 밀리초 단위로 계산합니다.
+모든 비교 함수는 `DateTimeUnit` 단위를 인자로 받을 수 있습니다. 계산의 정확도는 이 단위를 기준으로 하며, 단위를 생략하면 밀리초 단위로 계산합니다.
 
-| 함수 | 반환값 | 설명 |
+| 함수 | 반환 타입 | 설명 |
 |---|---|---|
 | `diff()` | `number` | 차이값을 반환합니다. |
 | `isEqual()` | `boolean` | 인자로 전달한 일자와 같으면 `true`를 반환합니다. |

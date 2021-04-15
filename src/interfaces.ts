@@ -64,3 +64,7 @@ export interface MonthCalendar {
 
 	dates : DateTime[];
 }
+
+export interface AnyObject<T> {
+	[index : string] : T;
+}

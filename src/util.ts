@@ -1,11 +1,6 @@
-import { DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
+import { AnyObject, DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
 import { DateTime } from './date-time';
 import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit, FormatToken } from './constants';
-
-
-interface AnyObject {
-	[index : string] : unknown;
-}
 
 
 export const newArray = <T> (length : number, callback? : (i : number, arr : T[]) => T) : T[] => {
@@ -41,7 +36,7 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 		let type : CloneDataType = typeof obj as CloneDataType;
 
 		if (type === CloneDataType.Object) {
-			const objAsObject : AnyObject = obj as unknown as AnyObject;
+			const objAsObject : AnyObject<unknown> = obj as unknown as AnyObject<unknown>;
 
 			if (Array.isArray(objAsObject)) {
 				type = CloneDataType.Array;
@@ -87,7 +82,7 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 
 				for (const [key, value] of entries) {
 					// recursively call
-					(result as unknown as AnyObject)[key] = clone(value, sanitize);
+					(result as unknown as AnyObject<unknown>)[key] = clone(value, sanitize);
 				}
 				break;
 			}
@@ -132,14 +127,14 @@ export const dateFormat = (date : InitDataFormat, format : string) : string => {
 
 export const isDateTimeParam = (param : unknown) : param is DateTimeParam => {
 	return typeof param === 'object'
-		&& Object.keys(param as AnyObject).every(key => {
+		&& Object.keys(param as AnyObject<unknown>).every(key => {
 			return DateTimeParamKeys.includes(key as DateTimeUnit);
 		});
 };
 
 export const isDurationParam = (param : unknown) : param is DurationParam => {
 	return typeof param === 'object'
-		&& Object.keys(param as AnyObject).every(key => {
+		&& Object.keys(param as AnyObject<unknown>).every(key => {
 			return DurationParamKeys.includes(key as DurationUnit);
 		});
 };

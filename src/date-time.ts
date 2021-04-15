@@ -1,6 +1,7 @@
 import { DateProxy } from './date-proxy';
 
 import {
+	AnyObject,
 	DateTimeParam,
 	DurationParam,
 	InitDataFormat,
@@ -43,9 +44,7 @@ const globalConfig : {
 	localeTimer : undefined
 };
 
-const localeSetCached : {
-	[key : string] : LocaleSet;
-} = {
+const localeSetCached : AnyObject<LocaleSet> = {
 	[DefaultLocale] : locale
 };
 
@@ -838,14 +837,17 @@ export class DateTime extends DateProxy {
 	// at(countryCode: string, city : string) : DateTime;
 
 	getYearCalendar () : YearCalendar {
-		const dates : DateTime[] = newArray<DateTime>(this.daysInYear, (i) : DateTime => {
-			return new DateTime(this)
-				.set({
-					month : 1,
-					date : i + 1
-				})
-				.startOf(DateTimeUnit.Date);
-		});
+		const dates : DateTime[] = newArray<DateTime>(
+			this.daysInYear,
+			(i) : DateTime => {
+				return new DateTime(this)
+					.set({
+						month : 1,
+						date : i + 1
+					})
+					.startOf(DateTimeUnit.Date);
+			}
+		);
 
 		return {
 			year : this.year,
@@ -855,13 +857,16 @@ export class DateTime extends DateProxy {
 	}
 
 	getMonthCalendar () : MonthCalendar {
-		const dates : DateTime[] = newArray<DateTime>(this.daysInMonth, (i) : DateTime => {
-			return new DateTime(this)
-				.set({
-					date : i + 1
-				})
-				.startOf(DateTimeUnit.Date);
-		});
+		const dates : DateTime[] = newArray<DateTime>(
+			this.daysInMonth,
+			(i) : DateTime => {
+				return new DateTime(this)
+					.set({
+						date : i + 1
+					})
+					.startOf(DateTimeUnit.Date);
+			}
+		);
 
 		return {
 			year : this.year,

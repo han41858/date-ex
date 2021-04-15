@@ -5,10 +5,22 @@ import { Duration } from '../src/duration';
 
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from '../src/constants';
 import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { InitDataFormat, LocaleSet, MonthCalendar, YearCalendar } from '../src/interfaces';
+import { DateTimeParam, InitDataFormat, LocaleSet, MonthCalendar, YearCalendar } from '../src/interfaces';
 
 
 const MilliSecondsCloseTo : number = 10;
+
+const checkDateTime = (date : DateTime, param : DateTimeParam) : void => {
+	expect(date).to.be.ok;
+	expect(date).to.be.instanceOf(DateTime);
+	expect(date.valid).to.be.true;
+
+	DateTimeParamKeys.forEach(key => {
+		if (param[key] !== undefined) {
+			expect(date[key]).to.be.eql(param[key]);
+		}
+	});
+};
 
 describe('DateTime', () => {
 	describe('constructor()', () => {
@@ -16,17 +28,18 @@ describe('DateTime', () => {
 			const now : Date = new Date();
 			const newDate : DateTime = new DateTime();
 
-			expect(newDate).to.be.ok;
+			checkDateTime(newDate, {
+				year : now.getFullYear(),
+				month : now.getMonth() + 1,
+				date : now.getDate(),
+
+				hours : now.getHours(),
+				minutes : now.getMinutes(),
+				seconds : now.getSeconds()
+				// no ms
+			});
 
 			expect(+now).to.be.closeTo(+newDate, MilliSecondsCloseTo);
-
-			expect(newDate.year).to.be.eql(now.getFullYear());
-			expect(newDate.month).to.be.eql(now.getMonth() + 1);
-			expect(newDate.date).to.be.eql(now.getDate());
-
-			expect(newDate.hours).to.be.eql(now.getHours());
-			expect(newDate.minutes).to.be.eql(now.getMinutes());
-			expect(newDate.seconds).to.be.eql(now.getSeconds());
 			expect(newDate.ms).to.be.closeTo(now.getMilliseconds(), MilliSecondsCloseTo);
 		});
 
@@ -44,21 +57,18 @@ describe('DateTime', () => {
 						].join('-');
 
 						const newDate : Date = new Date(dateStr);
-
 						const newDateTime : DateTime = new DateTime(dateStr);
 
-						expect(newDateTime).to.be.ok;
+						checkDateTime(newDateTime, {
+							year : newDate.getFullYear(),
+							month : newDate.getMonth() + 1,
+							date : newDate.getDate(),
 
-						expect(+newDateTime).to.be.eql(+newDate);
-
-						expect(newDateTime.year).to.be.eql(newDate.getFullYear());
-						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
-						expect(newDateTime.date).to.be.eql(newDate.getDate());
-
-						expect(newDateTime.hours).to.be.eql(newDateTime.timezoneOffsetInHours);
-						expect(newDateTime.minutes).to.be.eql(0);
-						expect(newDateTime.seconds).to.be.eql(0);
-						expect(newDateTime.ms).to.be.eql(0);
+							hours : newDateTime.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('YYYY-MM', () => {
@@ -70,21 +80,18 @@ describe('DateTime', () => {
 						].join('-');
 
 						const newDate : Date = new Date(dateStr);
-
 						const newDateTime : DateTime = new DateTime(dateStr);
 
-						expect(newDateTime).to.be.ok;
+						checkDateTime(newDateTime, {
+							year : newDate.getFullYear(),
+							month : newDate.getMonth() + 1,
+							date : 1,
 
-						expect(+newDateTime).to.be.eql(+newDate);
-
-						expect(newDateTime.year).to.be.eql(newDate.getFullYear());
-						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
-						expect(newDateTime.date).to.be.eql(1);
-
-						expect(newDateTime.hours).to.be.eql(newDateTime.timezoneOffsetInHours);
-						expect(newDateTime.minutes).to.be.eql(0);
-						expect(newDateTime.seconds).to.be.eql(0);
-						expect(newDateTime.ms).to.be.eql(0);
+							hours : newDateTime.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('--MM-DD', () => {
@@ -98,21 +105,18 @@ describe('DateTime', () => {
 						].join('');
 
 						const newDate : Date = new Date(dateStr);
-
 						const newDateTime : DateTime = new DateTime(dateStr);
 
-						expect(newDateTime).to.be.ok;
+						checkDateTime(newDateTime, {
+							year : newDate.getFullYear(),
+							month : newDate.getMonth() + 1,
+							date : newDate.getDate(),
 
-						expect(+newDateTime).to.be.eql(+newDate);
-
-						expect(newDateTime.year).to.be.eql(newDate.getFullYear());
-						expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
-						expect(newDateTime.date).to.be.eql(newDate.getDate());
-
-						expect(newDateTime.hours).to.be.eql(0);
-						expect(newDateTime.minutes).to.be.eql(0);
-						expect(newDateTime.seconds).to.be.eql(0);
-						expect(newDateTime.ms).to.be.eql(0);
+							hours : 0,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 				});
 
@@ -268,17 +272,16 @@ describe('DateTime', () => {
 
 					const date : DateTime = new DateTime(initStr);
 
-					expect(date).to.be.instanceOf(DateTime);
-					expect(date.valid).to.be.true;
+					checkDateTime(date, {
+						year : refDate.UTC.year,
+						month : refDate.UTC.month,
+						date : refDate.UTC.date,
 
-					expect(date.year).to.be.eql(refDate.UTC.year);
-					expect(date.month).to.be.eql(refDate.UTC.month);
-					expect(date.date).to.be.eql(refDate.UTC.date);
-
-					expect(date.hours).to.be.eql(refDate.UTC.hours);
-					expect(date.minutes).to.be.eql(refDate.UTC.minutes);
-					expect(date.seconds).to.be.eql(0);
-					expect(date.ms).to.be.eql(0);
+						hours : refDate.UTC.hours,
+						minutes : refDate.UTC.minutes,
+						seconds : 0,
+						ms : 0
+					});
 				});
 
 				it('YYYY-MM-DDTHH:mmZ', () => {
@@ -300,17 +303,16 @@ describe('DateTime', () => {
 
 					const date : DateTime = new DateTime(initStr);
 
-					expect(date).to.be.instanceOf(DateTime);
-					expect(date.valid).to.be.true;
+					checkDateTime(date, {
+						year : refDate.year,
+						month : refDate.month,
+						date : refDate.date,
 
-					expect(date.year).to.be.eql(refDate.year);
-					expect(date.month).to.be.eql(refDate.month);
-					expect(date.date).to.be.eql(refDate.date);
-
-					expect(date.hours).to.be.eql(refDate.hours);
-					expect(date.minutes).to.be.eql(refDate.minutes);
-					expect(date.seconds).to.be.eql(0);
-					expect(date.ms).to.be.eql(0);
+						hours : refDate.hours,
+						minutes : refDate.minutes,
+						seconds : 0,
+						ms : 0
+					});
 				});
 
 				it('YYYY-MM-DDTHH:mm:ss', () => {
@@ -332,17 +334,16 @@ describe('DateTime', () => {
 
 					const date : DateTime = new DateTime(initStr);
 
-					expect(date).to.be.instanceOf(DateTime);
-					expect(date.valid).to.be.true;
+					checkDateTime(date, {
+						year : refDate.UTC.year,
+						month : refDate.UTC.month,
+						date : refDate.UTC.date,
 
-					expect(date.year).to.be.eql(refDate.UTC.year);
-					expect(date.month).to.be.eql(refDate.UTC.month);
-					expect(date.date).to.be.eql(refDate.UTC.date);
-
-					expect(date.hours).to.be.eql(refDate.UTC.hours);
-					expect(date.minutes).to.be.eql(refDate.UTC.minutes);
-					expect(date.seconds).to.be.eql(refDate.UTC.seconds);
-					expect(date.ms).to.be.eql(0);
+						hours : refDate.UTC.hours,
+						minutes : refDate.UTC.minutes,
+						seconds : refDate.UTC.seconds,
+						ms : 0
+					});
 				});
 
 				it('YYYY-MM-DDTHH:mm:ssZ', () => {
@@ -365,17 +366,16 @@ describe('DateTime', () => {
 
 					const date : DateTime = new DateTime(initStr);
 
-					expect(date).to.be.instanceOf(DateTime);
-					expect(date.valid).to.be.true;
+					checkDateTime(date, {
+						year : refDate.year,
+						month : refDate.month,
+						date : refDate.date,
 
-					expect(date.year).to.be.eql(refDate.year);
-					expect(date.month).to.be.eql(refDate.month);
-					expect(date.date).to.be.eql(refDate.date);
-
-					expect(date.hours).to.be.eql(refDate.hours);
-					expect(date.minutes).to.be.eql(refDate.minutes);
-					expect(date.seconds).to.be.eql(refDate.seconds);
-					expect(date.ms).to.be.eql(0);
+						hours : refDate.hours,
+						minutes : refDate.minutes,
+						seconds : refDate.seconds,
+						ms : 0
+					});
 				});
 
 				it('YYYY-MM-DDTHH:mm:ss.SSS', () => {
@@ -399,17 +399,16 @@ describe('DateTime', () => {
 
 					const date : DateTime = new DateTime(initStr);
 
-					expect(date).to.be.instanceOf(DateTime);
-					expect(date.valid).to.be.true;
+					checkDateTime(date, {
+						year : refDate.UTC.year,
+						month : refDate.UTC.month,
+						date : refDate.UTC.date,
 
-					expect(date.year).to.be.eql(refDate.UTC.year);
-					expect(date.month).to.be.eql(refDate.UTC.month);
-					expect(date.date).to.be.eql(refDate.UTC.date);
-
-					expect(date.hours).to.be.eql(refDate.UTC.hours);
-					expect(date.minutes).to.be.eql(refDate.UTC.minutes);
-					expect(date.seconds).to.be.eql(refDate.UTC.seconds);
-					expect(date.ms).to.be.eql(refDate.UTC.ms);
+						hours : refDate.UTC.hours,
+						minutes : refDate.UTC.minutes,
+						seconds : refDate.UTC.seconds,
+						ms : refDate.UTC.ms
+					});
 				});
 
 				it('YYYY-MM-DDTHH:mm:ss.SSSZ', () => {
@@ -434,17 +433,16 @@ describe('DateTime', () => {
 
 					const date : DateTime = new DateTime(initStr);
 
-					expect(date).to.be.instanceOf(DateTime);
-					expect(date.valid).to.be.true;
+					checkDateTime(date, {
+						year : refDate.year,
+						month : refDate.month,
+						date : refDate.date,
 
-					expect(date.year).to.be.eql(refDate.year);
-					expect(date.month).to.be.eql(refDate.month);
-					expect(date.date).to.be.eql(refDate.date);
-
-					expect(date.hours).to.be.eql(refDate.hours);
-					expect(date.minutes).to.be.eql(refDate.minutes);
-					expect(date.seconds).to.be.eql(refDate.seconds);
-					expect(date.ms).to.be.eql(refDate.ms);
+						hours : refDate.hours,
+						minutes : refDate.minutes,
+						seconds : refDate.seconds,
+						ms : refDate.ms
+					});
 				});
 			});
 
@@ -474,16 +472,16 @@ describe('DateTime', () => {
 								FormatToken.YearShort
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('extract', () => {
@@ -495,16 +493,16 @@ describe('DateTime', () => {
 								prefix + FormatToken.YearShort + suffix
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 					});
 
@@ -519,16 +517,16 @@ describe('DateTime', () => {
 								FormatToken.Year
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('extract', () => {
@@ -540,16 +538,16 @@ describe('DateTime', () => {
 								prefix + FormatToken.Year + suffix
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 					});
 				});
@@ -573,16 +571,16 @@ describe('DateTime', () => {
 								FormatToken.Month
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear() - 1,
+								month : 12,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear() - 1);
-							expect(date.month).to.be.eql(12);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 
@@ -592,16 +590,16 @@ describe('DateTime', () => {
 								FormatToken.Month
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : now.getMonth() + 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(now.getMonth() + 1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('simple - 2 digit', () => {
@@ -612,16 +610,16 @@ describe('DateTime', () => {
 								FormatToken.Month
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : now.getMonth() + 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(refDate.getFullYear());
-							expect(date.month).to.be.eql(refDate.getMonth() + 1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('value === 13', () => {
@@ -630,16 +628,16 @@ describe('DateTime', () => {
 								FormatToken.Month
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear() + 1,
+								month : 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear() + 1);
-							expect(date.month).to.be.eql(1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('extract', () => {
@@ -651,16 +649,16 @@ describe('DateTime', () => {
 								prefix + FormatToken.Month + suffix
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : now.getMonth() + 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(now.getMonth() + 1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 					});
 
@@ -675,16 +673,16 @@ describe('DateTime', () => {
 								FormatToken.MonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear() - 1,
+								month : 12,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear() - 1);
-							expect(date.month).to.be.eql(12);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 
@@ -694,16 +692,16 @@ describe('DateTime', () => {
 								FormatToken.MonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : now.getMonth() + 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(now.getMonth() + 1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('simple - 2 digit', () => {
@@ -714,16 +712,16 @@ describe('DateTime', () => {
 								FormatToken.MonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.getFullYear(),
+								month : refDate.getMonth() + 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(refDate.getFullYear());
-							expect(date.month).to.be.eql(refDate.getMonth() + 1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('value === 13', () => {
@@ -732,16 +730,16 @@ describe('DateTime', () => {
 								FormatToken.MonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear() + 1,
+								month : 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear() + 1);
-							expect(date.month).to.be.eql(1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('extract', () => {
@@ -753,16 +751,16 @@ describe('DateTime', () => {
 								prefix + FormatToken.MonthPadded + suffix
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : now.getMonth() + 1,
+								date : 1,
 
-							expect(date.year).to.be.eql(now.getFullYear());
-							expect(date.month).to.be.eql(now.getMonth() + 1);
-							expect(date.date).to.be.eql(1);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 					});
 				});
@@ -790,16 +788,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonth
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 
@@ -813,16 +811,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonth
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('simple - 2 digit', () => {
@@ -835,16 +833,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonth
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('value === 50', () => {
@@ -857,16 +855,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonth
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('extract', () => {
@@ -882,16 +880,16 @@ describe('DateTime', () => {
 								prefix + FormatToken.DayOfMonth + suffix
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 					});
 
@@ -910,16 +908,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 
@@ -933,16 +931,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('simple - 2 digit', () => {
@@ -955,16 +953,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('value === 50', () => {
@@ -977,16 +975,16 @@ describe('DateTime', () => {
 								FormatToken.DayOfMonthPadded
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('extract', () => {
@@ -1002,16 +1000,16 @@ describe('DateTime', () => {
 								prefix + FormatToken.DayOfMonthPadded + suffix
 							);
 
-							expect(date).to.be.instanceOf(DateTime);
+							checkDateTime(date, {
+								year : refDate.year,
+								month : refDate.month,
+								date : refDate.date,
 
-							expect(date.year).to.be.eql(refDate.year);
-							expect(date.month).to.be.eql(refDate.month);
-							expect(date.date).to.be.eql(refDate.date);
-
-							expect(date.hours).to.be.eql(0);
-							expect(date.minutes).to.be.eql(0);
-							expect(date.seconds).to.be.eql(0);
-							expect(date.ms).to.be.eql(0);
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 					});
 				});
@@ -1025,18 +1023,16 @@ describe('DateTime', () => {
 				const newDate : Date = new Date(now);
 				const newDateTime : DateTime = new DateTime(now);
 
-				expect(newDateTime).to.be.ok;
+				checkDateTime(newDateTime, {
+					year : newDate.getFullYear(),
+					month : newDate.getMonth() + 1,
+					date : newDate.getDate(),
 
-				expect(+newDate).to.be.eql(+newDateTime);
-
-				expect(newDateTime.year).to.be.eql(newDate.getFullYear());
-				expect(newDateTime.month).to.be.eql(newDate.getMonth() + 1);
-				expect(newDateTime.date).to.be.eql(newDate.getDate());
-
-				expect(newDateTime.hours).to.be.eql(newDate.getHours());
-				expect(newDateTime.minutes).to.be.eql(newDate.getMinutes());
-				expect(newDateTime.seconds).to.be.eql(newDate.getSeconds());
-				expect(newDateTime.ms).to.be.eql(newDate.getMilliseconds());
+					hours : newDate.getHours(),
+					minutes : newDate.getMinutes(),
+					seconds : newDate.getSeconds(),
+					ms : newDate.getMilliseconds()
+				});
 			});
 		});
 
@@ -1047,18 +1043,16 @@ describe('DateTime', () => {
 				const newDateTime1 : DateTime = new DateTime(now);
 				const newDateTime2 : DateTime = new DateTime(newDateTime1);
 
-				expect(newDateTime2).to.be.ok;
+				checkDateTime(newDateTime2, {
+					year : newDateTime1.year,
+					month : newDateTime1.month,
+					date : newDateTime1.date,
 
-				expect(+newDateTime1).to.be.eql(+newDateTime2);
-
-				expect(newDateTime2.year).to.be.eql(newDateTime1.year);
-				expect(newDateTime2.month).to.be.eql(newDateTime1.month);
-				expect(newDateTime2.date).to.be.eql(newDateTime1.date);
-
-				expect(newDateTime2.hours).to.be.eql(newDateTime1.hours);
-				expect(newDateTime2.minutes).to.be.eql(newDateTime1.minutes);
-				expect(newDateTime2.seconds).to.be.eql(newDateTime1.seconds);
-				expect(newDateTime2.ms).to.be.eql(newDateTime1.ms);
+					hours : newDateTime1.hours,
+					minutes : newDateTime1.minutes,
+					seconds : newDateTime1.seconds,
+					ms : newDateTime1.ms
+				});
 			});
 		});
 
@@ -1111,16 +1105,16 @@ describe('DateTime', () => {
 					ms : now.getMilliseconds()
 				});
 
-				expect(+newDate).to.be.eql(+now);
+				checkDateTime(newDate, {
+					year : now.getFullYear(),
+					month : now.getMonth() + 1,
+					date : now.getDate(),
 
-				expect(newDate.year).to.be.eql(now.getFullYear());
-				expect(newDate.month).to.be.eql(now.getMonth() + 1);
-				expect(newDate.date).to.be.eql(now.getDate());
-
-				expect(newDate.hours).to.be.eql(now.getHours());
-				expect(newDate.minutes).to.be.eql(now.getMinutes());
-				expect(newDate.seconds).to.be.eql(now.getSeconds());
-				expect(newDate.ms).to.be.eql(now.getMilliseconds());
+					hours : now.getHours(),
+					minutes : now.getMinutes(),
+					seconds : now.getSeconds(),
+					ms : now.getMilliseconds()
+				});
 			});
 
 			describe('affect other field', () => {
@@ -1131,16 +1125,16 @@ describe('DateTime', () => {
 							month : 13
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2021,
+							month : 1,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2021);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('=== 0, round down', () => {
@@ -1149,16 +1143,16 @@ describe('DateTime', () => {
 							month : 0 // 1 step
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 12,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(12);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1167,16 +1161,16 @@ describe('DateTime', () => {
 							month : -5 // 6 steps
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 7,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(7);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1185,16 +1179,16 @@ describe('DateTime', () => {
 							month : -11 // 12 steps
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 1,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 				});
 
@@ -1206,16 +1200,16 @@ describe('DateTime', () => {
 							date : 33
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 6,
+							date : 2,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(6);
-						expect(newDate.date).to.be.eql(2);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('> 0, round up more', () => {
@@ -1225,16 +1219,16 @@ describe('DateTime', () => {
 							date : 33 // +2 steps
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2021,
+							month : 1,
+							date : 2,
 
-						expect(newDate.year).to.be.eql(2021);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(2);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('=== 0, round down', () => {
@@ -1244,16 +1238,16 @@ describe('DateTime', () => {
 							date : 0 // 1 step
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 4,
+							date : 30,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(4);
-						expect(newDate.date).to.be.eql(30);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1263,16 +1257,16 @@ describe('DateTime', () => {
 							date : -5 // 1, 30, 29, 28, 27, 26, 25
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 4,
+							date : 25,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(4);
-						expect(newDate.date).to.be.eql(25);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down more', () => {
@@ -1282,16 +1276,16 @@ describe('DateTime', () => {
 							date : -5 // 1, 31, 30, 29, 28, 27, 26
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 12,
+							date : 26,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(12);
-						expect(newDate.date).to.be.eql(26);
-
-						expect(newDate.hours).to.be.eql(newDate.timezoneOffsetInHours);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : newDate.timezoneOffsetInHours,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 				});
 
@@ -1305,16 +1299,16 @@ describe('DateTime', () => {
 							hours : 25
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 4,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(4);
-
-						expect(newDate.hours).to.be.eql(1);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 1,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('> 0, round up more', () => {
@@ -1326,16 +1320,16 @@ describe('DateTime', () => {
 							hours : 36
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2021,
+							month : 1,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2021);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(12);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 12,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1347,16 +1341,16 @@ describe('DateTime', () => {
 							hours : -1
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(23);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 23,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down more', () => {
@@ -1368,16 +1362,16 @@ describe('DateTime', () => {
 							hours : -1
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 12,
+							date : 31,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(12);
-						expect(newDate.date).to.be.eql(31);
-
-						expect(newDate.hours).to.be.eql(23);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 23,
+							minutes : 0,
+							seconds : 0,
+							ms : 0
+						});
 					});
 				});
 
@@ -1392,16 +1386,16 @@ describe('DateTime', () => {
 							minutes : 80
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 3,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(3);
-
-						expect(newDate.hours).to.be.eql(14);
-						expect(newDate.minutes).to.be.eql(20);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 14,
+							minutes : 20,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('> 0, round up more', () => {
@@ -1414,16 +1408,16 @@ describe('DateTime', () => {
 							minutes : 61
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2021,
+							month : 1,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2021);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(0);
-						expect(newDate.minutes).to.be.eql(1);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 0,
+							minutes : 1,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1436,16 +1430,16 @@ describe('DateTime', () => {
 							minutes : -10
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 2,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(2);
-
-						expect(newDate.hours).to.be.eql(2);
-						expect(newDate.minutes).to.be.eql(50);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 2,
+							minutes : 50,
+							seconds : 0,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down more', () => {
@@ -1458,16 +1452,16 @@ describe('DateTime', () => {
 							minutes : -10
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 12,
+							date : 31,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(12);
-						expect(newDate.date).to.be.eql(31);
-
-						expect(newDate.hours).to.be.eql(23);
-						expect(newDate.minutes).to.be.eql(50);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 23,
+							minutes : 50,
+							seconds : 0,
+							ms : 0
+						});
 					});
 				});
 
@@ -1483,16 +1477,16 @@ describe('DateTime', () => {
 							seconds : 70
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 3,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(3);
-
-						expect(newDate.hours).to.be.eql(13);
-						expect(newDate.minutes).to.be.eql(31);
-						expect(newDate.seconds).to.be.eql(10);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 13,
+							minutes : 31,
+							seconds : 10,
+							ms : 0
+						});
 					});
 
 					it('> 0, round up more', () => {
@@ -1506,16 +1500,16 @@ describe('DateTime', () => {
 							seconds : 90
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2021,
+							month : 1,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2021);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(0);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(30);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 0,
+							minutes : 0,
+							seconds : 30,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1529,16 +1523,16 @@ describe('DateTime', () => {
 							seconds : -10
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 2,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(2);
-
-						expect(newDate.hours).to.be.eql(3);
-						expect(newDate.minutes).to.be.eql(2);
-						expect(newDate.seconds).to.be.eql(50);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 3,
+							minutes : 2,
+							seconds : 50,
+							ms : 0
+						});
 					});
 
 					it('< 0, round down more', () => {
@@ -1552,16 +1546,16 @@ describe('DateTime', () => {
 							seconds : -10
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 12,
+							date : 31,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(12);
-						expect(newDate.date).to.be.eql(31);
-
-						expect(newDate.hours).to.be.eql(23);
-						expect(newDate.minutes).to.be.eql(59);
-						expect(newDate.seconds).to.be.eql(50);
-						expect(newDate.ms).to.be.eql(0);
+							hours : 23,
+							minutes : 59,
+							seconds : 50,
+							ms : 0
+						});
 					});
 				});
 
@@ -1578,16 +1572,16 @@ describe('DateTime', () => {
 							ms : 1001
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 3,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(3);
-
-						expect(newDate.hours).to.be.eql(13);
-						expect(newDate.minutes).to.be.eql(30);
-						expect(newDate.seconds).to.be.eql(31);
-						expect(newDate.ms).to.be.eql(1);
+							hours : 13,
+							minutes : 30,
+							seconds : 31,
+							ms : 1
+						});
 					});
 
 					it('> 0, round up more', () => {
@@ -1602,16 +1596,16 @@ describe('DateTime', () => {
 							ms : 1010
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2021,
+							month : 1,
+							date : 1,
 
-						expect(newDate.year).to.be.eql(2021);
-						expect(newDate.month).to.be.eql(1);
-						expect(newDate.date).to.be.eql(1);
-
-						expect(newDate.hours).to.be.eql(0);
-						expect(newDate.minutes).to.be.eql(0);
-						expect(newDate.seconds).to.be.eql(0);
-						expect(newDate.ms).to.be.eql(10);
+							hours : 0,
+							minutes : 0,
+							seconds : 0,
+							ms : 10
+						});
 					});
 
 					it('< 0, round down', () => {
@@ -1626,16 +1620,16 @@ describe('DateTime', () => {
 							ms : -50
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2020,
+							month : 5,
+							date : 2,
 
-						expect(newDate.year).to.be.eql(2020);
-						expect(newDate.month).to.be.eql(5);
-						expect(newDate.date).to.be.eql(2);
-
-						expect(newDate.hours).to.be.eql(3);
-						expect(newDate.minutes).to.be.eql(3);
-						expect(newDate.seconds).to.be.eql(2);
-						expect(newDate.ms).to.be.eql(950);
+							hours : 3,
+							minutes : 3,
+							seconds : 2,
+							ms : 950
+						});
 					});
 
 					it('< 0, round down more', () => {
@@ -1650,16 +1644,16 @@ describe('DateTime', () => {
 							ms : -50
 						});
 
-						expect(newDate).to.be.instanceOf(DateTime);
+						checkDateTime(newDate, {
+							year : 2019,
+							month : 12,
+							date : 31,
 
-						expect(newDate.year).to.be.eql(2019);
-						expect(newDate.month).to.be.eql(12);
-						expect(newDate.date).to.be.eql(31);
-
-						expect(newDate.hours).to.be.eql(23);
-						expect(newDate.minutes).to.be.eql(59);
-						expect(newDate.seconds).to.be.eql(59);
-						expect(newDate.ms).to.be.eql(950);
+							hours : 23,
+							minutes : 59,
+							seconds : 59,
+							ms : 950
+						});
 					});
 				});
 			});

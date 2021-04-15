@@ -1690,6 +1690,14 @@ describe('DateTime', () => {
 		});
 	});
 
+	describe('toString()', () => {
+		it('ok', () => {
+			const date : DateTime = new DateTime();
+
+			expect(date.toString()).to.be.eql(date.toISOString());
+		});
+	});
+
 	describe('locale', () => {
 		const anotherLocale : string = 'ko-kr';
 

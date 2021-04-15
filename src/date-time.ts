@@ -55,8 +55,6 @@ export class DateTime extends DateProxy {
 	private ownLocale ! : string;
 	private setLocaleTimer : undefined | number;
 
-	// private dateFormat : string;
-
 
 	constructor (initData? : InitDataFormat, formatString? : string) {
 		super(initData, formatString);
@@ -264,10 +262,8 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	// TODO
 	toString () : string {
-		// return this.format(this.dateFormat || ISO8601Format.DateTimeUTC);
-		return '';
+		return this.toISOString();
 	}
 
 	// global locale setter

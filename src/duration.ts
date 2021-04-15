@@ -1,6 +1,7 @@
-import { DurationParam } from './interfaces';
+import { DateTimeParam, DurationParam } from './interfaces';
 import { DurationParamKeys, DurationUnit, Gregorian1Month } from './constants';
-import { isDurationParam } from './util';
+import { isDateTimeParam, isDurationParam } from './util';
+import { DateTime } from './date-time';
 
 
 export class Duration {
@@ -203,6 +204,45 @@ export class Duration {
 				throw new Error('net duration should be positive value');
 			}
 		}
+	}
+
+	add (param : Duration | DurationParam) : Duration;
+	add (param : DateTime | DateTimeParam) : DateTime;
+	add (param : Duration | DurationParam | DateTime | DateTimeParam) : Duration | DateTime {
+		let result ! : Duration | DateTime;
+
+		if (param instanceof Duration
+			|| isDurationParam(param)) {
+			const initDurationParam : DurationParam = {
+				years : (this.years || 0) + (param.years || 0),
+				months : (this.months || 0) + (param.months || 0),
+				dates : (this.dates || 0) + (param.dates || 0),
+
+				hours : (this.hours || 0) + (param.hours || 0),
+				minutes : (this.minutes || 0) + (param.minutes || 0),
+				seconds : (this.seconds || 0) + (param.seconds || 0),
+				ms : (this.ms || 0) + (param.ms || 0)
+			};
+
+			result = new Duration(initDurationParam);
+		}
+		else if (param instanceof DateTime
+			|| isDateTimeParam(param)) {
+			const initDateTimeParam : DateTimeParam = {
+				year : (param.year || 0) + (this.years || 0),
+				month : (param.month || 0) + (this.months || 0),
+				date : (param.date || 0) + (this.dates || 0),
+
+				hours : (param.hours || 0) + (this.hours || 0),
+				minutes : (param.minutes || 0) + (this.minutes || 0),
+				seconds : (param.seconds || 0) + (this.seconds || 0),
+				ms : (param.ms || 0) + (this.ms || 0)
+			};
+
+			result = new DateTime(initDateTimeParam);
+		}
+
+		return result;
 	}
 
 }

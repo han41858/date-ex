@@ -2,6 +2,9 @@ import { expect } from 'chai';
 
 import { Duration } from '../src/duration';
 import { DurationParamKeys, DurationUnit, Gregorian1Month, Gregorian1Year } from '../src/constants';
+import { DurationParam } from '../src/interfaces';
+import { DateTime } from '../src/date-time';
+import { checkDateTime } from '../spec/test';
 
 
 describe('Duration', () => {
@@ -813,6 +816,202 @@ describe('Duration', () => {
 					expect(duration.minutes).to.be.undefined;
 					expect(duration.seconds).to.be.eql(1);
 					expect(duration.ms).to.be.eql(1);
+				});
+			});
+		});
+	});
+
+	describe('add()', () => {
+		describe('with Duration', () => {
+			it('ok - simple', () => {
+				const initData1 : DurationParam = {
+					minutes : 1
+				};
+
+				const duration1 : Duration = new Duration(initData1);
+
+
+				const initData2 : DurationParam = {
+					minutes : 3
+				};
+
+				const duration2 : Duration = new Duration(initData2);
+
+				const result : Duration = duration1.add(duration2);
+
+				expect(result).to.be.instanceOf(Duration);
+
+				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
+			});
+
+			// no round up
+			it('ok - full', () => {
+				const initData1 : DurationParam = {
+					years : 5,
+					months : 1,
+					dates : 10,
+
+					hours : 3,
+					minutes : 1,
+					seconds : 14,
+					ms : 123
+				};
+
+				const duration1 : Duration = new Duration(initData1);
+
+				const initData2 : DurationParam = {
+					years : 1,
+					months : 5,
+					dates : 10,
+
+					hours : 6,
+					minutes : 40,
+					seconds : 2,
+					ms : 52
+				};
+
+				const duration2 : Duration = new Duration(initData2);
+
+				const result : Duration = duration1.add(duration2);
+
+				expect(result).to.be.instanceOf(Duration);
+
+				expect(result.years).to.be.eql(initData1.years + initData2.years);
+				expect(result.months).to.be.eql(initData1.months + initData2.months);
+				expect(result.dates).to.be.eql(initData1.dates + initData2.dates);
+
+				expect(result.hours).to.be.eql(initData1.hours + initData2.hours);
+				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
+				expect(result.seconds).to.be.eql(initData1.seconds + initData2.seconds);
+				expect(result.ms).to.be.eql(initData1.ms + initData2.ms);
+			});
+		});
+
+		describe('with DurationParam', () => {
+			it('ok - simple', () => {
+				const initData1 : DurationParam = {
+					minutes : 1
+				};
+
+				const duration1 : Duration = new Duration(initData1);
+
+
+				const initData2 : DurationParam = {
+					minutes : 3
+				};
+
+				const result : Duration = duration1.add(initData2);
+
+				expect(result).to.be.instanceOf(Duration);
+
+				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
+			});
+
+			// no round up
+			it('ok - full', () => {
+				const initData1 : DurationParam = {
+					years : 5,
+					months : 1,
+					dates : 10,
+
+					hours : 3,
+					minutes : 1,
+					seconds : 14,
+					ms : 123
+				};
+
+				const duration1 : Duration = new Duration(initData1);
+
+				const initData2 : DurationParam = {
+					years : 1,
+					months : 5,
+					dates : 10,
+
+					hours : 6,
+					minutes : 40,
+					seconds : 2,
+					ms : 52
+				};
+
+				const result : Duration = duration1.add(initData2);
+
+				expect(result).to.be.instanceOf(Duration);
+
+				expect(result.years).to.be.eql(initData1.years + initData2.years);
+				expect(result.months).to.be.eql(initData1.months + initData2.months);
+				expect(result.dates).to.be.eql(initData1.dates + initData2.dates);
+
+				expect(result.hours).to.be.eql(initData1.hours + initData2.hours);
+				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
+				expect(result.seconds).to.be.eql(initData1.seconds + initData2.seconds);
+				expect(result.ms).to.be.eql(initData1.ms + initData2.ms);
+			});
+		});
+
+		describe('with DateTime', () => {
+			it('ok - simple', () => {
+				const durationData : DurationParam = {
+					minutes : 1
+				};
+
+				const duration : Duration = new Duration(durationData);
+
+
+				const date : DateTime = new DateTime({
+					year : 2021,
+					month : 4,
+					date : 15,
+
+					hours : 1,
+					minutes : 2,
+					seconds : 3,
+					ms : 4
+				});
+
+				const result : DateTime = duration.add(date);
+
+				expect(result).to.be.instanceOf(DateTime);
+
+				expect(result.minutes).to.be.eql(durationData.minutes + date.minutes);
+			});
+
+			// no round up
+			it('ok - full', () => {
+				const durationData : DurationParam = {
+					years : 5,
+					months : 1,
+					dates : 10,
+
+					hours : 3,
+					minutes : 1,
+					seconds : 14,
+					ms : 123
+				};
+
+				const duration : Duration = new Duration(durationData);
+
+				const date : DateTime = new DateTime({
+					year : 2021,
+					month : 4,
+					date : 15,
+
+					hours : 20,
+					minutes : 10,
+					seconds : 5,
+					ms : 20
+				});
+
+				const result : DateTime = duration.add(date);
+
+				checkDateTime(result, {
+					year : date.year + durationData.years,
+					month : date.month + durationData.months,
+					date : date.date + durationData.dates,
+
+					hours : date.hours + durationData.hours,
+					minutes : date.minutes + durationData.minutes,
+					seconds : date.seconds + durationData.seconds,
+					ms : date.ms + durationData.ms
 				});
 			});
 		});

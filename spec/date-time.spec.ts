@@ -5,22 +5,12 @@ import { Duration } from '../src/duration';
 
 import { DateTimeParamKeys, DateTimeUnit, DefaultLocale, DurationParamKeys, FormatToken } from '../src/constants';
 import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { DateTimeParam, InitDataFormat, LocaleSet, MonthCalendar, YearCalendar } from '../src/interfaces';
+import { InitDataFormat, LocaleSet, MonthCalendar, YearCalendar } from '../src/interfaces';
+import { checkDateTime } from '../spec/test';
 
 
 const MilliSecondsCloseTo : number = 10;
 
-const checkDateTime = (date : DateTime, param : DateTimeParam) : void => {
-	expect(date).to.be.ok;
-	expect(date).to.be.instanceOf(DateTime);
-	expect(date.valid).to.be.true;
-
-	DateTimeParamKeys.forEach(key => {
-		if (param[key] !== undefined) {
-			expect(date[key]).to.be.eql(param[key]);
-		}
-	});
-};
 
 describe('DateTime', () => {
 	describe('constructor()', () => {

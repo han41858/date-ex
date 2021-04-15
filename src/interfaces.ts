@@ -52,7 +52,13 @@ export interface TokenMatchResult {
 	startIndex : number;
 }
 
-export interface Calendar {
+export interface YearCalendar {
+	year : number;
+
+	dates : DateTime[];
+}
+
+export interface MonthCalendar {
 	year : number;
 	month : number;
 

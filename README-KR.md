@@ -97,6 +97,7 @@ const newDurationByDurationParam : Duration = new Duration({
 | `DateTimeUnit.Seconds` | `seconds` | `number` | 초 |
 | `DateTimeUnit.Ms` | `ms` | `number` | 밀리초 |
 
+
 ## 값 가져오기
 
 ### 기본 필드
@@ -385,6 +386,14 @@ console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 
 ## 달력
 
-### `DateTime.getCalendar(): Calendar`
+### `DateTime.getYearCalendar(): YearCalendar`
+
+해당 연도에 해당하는 달력을 반환합니다. 시간 필드는 모두 `0`으로 설정됩니다.
+
+`dates` 배열의 길이는 해당 연도에 있는 일자 개수와 같습니다.
+
+### `DateTime.getMonthCalendar(): MonthCalendar`
 
 해당 연도, 월에 해당하는 달력을 반환합니다. 시간 필드는 모두 `0`으로 설정됩니다.
+
+`dates` 배열의 길이는 해당 월에 있는 일자 개수와 같습니다.

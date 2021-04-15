@@ -390,6 +390,14 @@ console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 
 ## Calendar
 
-### `DateTime.getCalendar(): Calendar`
+### `DateTime.getYearCalendar(): YearCalendar`
 
-Returns the calendar for the year and month. Time fields are set to `0`.
+Returns the year calendar for that year value of the instance. Time fields are set to `0`.
+
+Length of `dates` array field is same with the number of date in that year.
+
+### `DateTime.getMonthCalendar(): MonthCalendar`
+
+Returns the month calendar for that month value of the instance. Time fields are set to `0`.
+
+Length of `dates` array field is same with the number of date in that month.

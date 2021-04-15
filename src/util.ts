@@ -248,3 +248,10 @@ export const findFormatTokens = (formatString : string) : TokenMatchResult[] => 
 
 	return matchArr;
 };
+
+
+type SafeAddDataType = number | undefined | null;
+
+export const safeAdd = (a : SafeAddDataType, b : SafeAddDataType) : number => {
+	return (a || 0) + (b || 0);
+};

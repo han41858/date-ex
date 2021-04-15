@@ -1,6 +1,6 @@
 import { DateTimeParam, DurationParam } from './interfaces';
 import { DurationParamKeys, DurationUnit, Gregorian1Month } from './constants';
-import { isDateTimeParam, isDurationParam } from './util';
+import { isDateTimeParam, isDurationParam, safeAdd } from './util';
 import { DateTime } from './date-time';
 
 
@@ -172,14 +172,14 @@ export class Duration {
 				if (value < 0) {
 					const nextDown : number = Math.ceil(-value / 1000);
 
-					this.values[nextKey] = (this.values[nextKey] || 0) - nextDown;
+					this.values[nextKey] = safeAdd(this.values[nextKey], -nextDown);
 					(this.values[key] as number) += nextDown * divider;
 				}
 
 				if (value >= divider) {
 					const nextUp : number = Math.floor(value / divider);
 
-					this.values[nextKey] = (this.values[nextKey] || 0) + nextUp;
+					this.values[nextKey] = safeAdd(this.values[nextKey], nextUp);
 					(this.values[key] as number) -= nextUp * divider;
 				}
 			}
@@ -214,14 +214,14 @@ export class Duration {
 		if (param instanceof Duration
 			|| isDurationParam(param)) {
 			const initDurationParam : DurationParam = {
-				years : (this.years || 0) + (param.years || 0),
-				months : (this.months || 0) + (param.months || 0),
-				dates : (this.dates || 0) + (param.dates || 0),
+				years : safeAdd(this.years, param.years),
+				months : safeAdd(this.months, param.months),
+				dates : safeAdd(this.dates, param.dates),
 
-				hours : (this.hours || 0) + (param.hours || 0),
-				minutes : (this.minutes || 0) + (param.minutes || 0),
-				seconds : (this.seconds || 0) + (param.seconds || 0),
-				ms : (this.ms || 0) + (param.ms || 0)
+				hours : safeAdd(this.hours, param.hours),
+				minutes : safeAdd(this.minutes, param.minutes),
+				seconds : safeAdd(this.seconds, param.seconds),
+				ms : safeAdd(this.ms, param.ms)
 			};
 
 			result = new Duration(initDurationParam);
@@ -229,14 +229,14 @@ export class Duration {
 		else if (param instanceof DateTime
 			|| isDateTimeParam(param)) {
 			const initDateTimeParam : DateTimeParam = {
-				year : (param.year || 0) + (this.years || 0),
-				month : (param.month || 0) + (this.months || 0),
-				date : (param.date || 0) + (this.dates || 0),
+				year : safeAdd(param.year, this.years),
+				month : safeAdd(param.month, this.months),
+				date : safeAdd(param.date, this.dates),
 
-				hours : (param.hours || 0) + (this.hours || 0),
-				minutes : (param.minutes || 0) + (this.minutes || 0),
-				seconds : (param.seconds || 0) + (this.seconds || 0),
-				ms : (param.ms || 0) + (this.ms || 0)
+				hours : safeAdd(param.hours, this.hours),
+				minutes : safeAdd(param.minutes, this.minutes),
+				seconds : safeAdd(param.seconds, this.seconds),
+				ms : safeAdd(param.ms, this.ms)
 			};
 
 			result = new DateTime(initDateTimeParam);

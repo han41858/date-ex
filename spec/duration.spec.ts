@@ -4,7 +4,7 @@ import { Duration } from '../src/duration';
 import { DurationParamKeys, DurationUnit, Gregorian1Month, Gregorian1Year } from '../src/constants';
 import { DurationParam } from '../src/interfaces';
 import { DateTime } from '../src/date-time';
-import { checkDateTime } from '../spec/test';
+import { checkDateTime, checkDuration } from '../spec/test';
 
 
 describe('Duration', () => {
@@ -12,16 +12,7 @@ describe('Duration', () => {
 		it('no init data', () => {
 			const duration : Duration = new Duration();
 
-			expect(duration).to.be.instanceOf(Duration);
-
-			expect(duration.years).to.be.undefined;
-			expect(duration.months).to.be.undefined;
-			expect(duration.dates).to.be.undefined;
-
-			expect(duration.hours).to.be.undefined;
-			expect(duration.minutes).to.be.undefined;
-			expect(duration.seconds).to.be.undefined;
-			expect(duration.ms).to.be.undefined;
+			checkDuration(duration);
 		});
 
 		describe('by string', () => {
@@ -30,40 +21,35 @@ describe('Duration', () => {
 					it('all', () => {
 						const duration : Duration = new Duration('P1Y2M3DT4H5M6S');
 
-						expect(duration.years).to.be.eql(1);
-						expect(duration.months).to.be.eql(2);
-						expect(duration.dates).to.be.eql(3);
+						checkDuration(duration, {
+							years : 1,
+							months : 2,
+							dates : 3,
 
-						expect(duration.hours).to.be.eql(4);
-						expect(duration.minutes).to.be.eql(5);
-						expect(duration.seconds).to.be.eql(6);
-						expect(duration.ms).to.be.undefined;
+							hours : 4,
+							minutes : 5,
+							seconds : 6
+						});
 					});
 
 					it('dates', () => {
 						const duration : Duration = new Duration('P1Y2M3D');
 
-						expect(duration.years).to.be.eql(1);
-						expect(duration.months).to.be.eql(2);
-						expect(duration.dates).to.be.eql(3);
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							years : 1,
+							months : 2,
+							dates : 3
+						});
 					});
 
 					it('hours', () => {
 						const duration : Duration = new Duration('PT4H5M6S');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.eql(4);
-						expect(duration.minutes).to.be.eql(5);
-						expect(duration.seconds).to.be.eql(6);
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							hours : 4,
+							minutes : 5,
+							seconds : 6
+						});
 					});
 				});
 
@@ -71,14 +57,9 @@ describe('Duration', () => {
 					it('ok', () => {
 						const duration : Duration = new Duration('P2Y');
 
-						expect(duration.years).to.be.eql(2);
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							years : 2
+						});
 					});
 				});
 
@@ -86,27 +67,18 @@ describe('Duration', () => {
 					it('ok', () => {
 						const duration : Duration = new Duration('P2M');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.eql(2);
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							months : 2
+						});
 					});
 
 					it('round up', () => {
 						const duration : Duration = new Duration('P14M');
 
-						expect(duration.years).to.be.eql(1);
-						expect(duration.months).to.be.eql(2);
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							years : 1,
+							months : 2
+						});
 					});
 				});
 
@@ -114,27 +86,18 @@ describe('Duration', () => {
 					it('ok', () => {
 						const duration : Duration = new Duration('P2D');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.eql(2);
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							dates : 2
+						});
 					});
 
 					it('round up', () => {
 						const duration : Duration = new Duration('P40D');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.eql(1);
-						expect(duration.dates).to.be.eql(40 - Gregorian1Month);
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							months : 1,
+							dates : 40 - Gregorian1Month
+						});
 					});
 				});
 
@@ -142,27 +105,19 @@ describe('Duration', () => {
 					it('ok', () => {
 						const duration : Duration = new Duration('PT2H');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.eql(2);
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							hours : 2
+						});
 					});
 
 					it('round up', () => {
 						const duration : Duration = new Duration('PT26H');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.eql(1);
+						checkDuration(duration, {
+							dates : 1,
 
-						expect(duration.hours).to.be.eql(2);
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+							hours : 2
+						});
 					});
 				});
 
@@ -170,27 +125,18 @@ describe('Duration', () => {
 					it('ok', () => {
 						const duration : Duration = new Duration('PT2M');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.eql(2);
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							minutes : 2
+						});
 					});
 
 					it('round up', () => {
 						const duration : Duration = new Duration('PT66M');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.eql(1);
-						expect(duration.minutes).to.be.eql(6);
-						expect(duration.seconds).to.be.undefined;
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							hours : 1,
+							minutes : 6
+						});
 					});
 				});
 
@@ -198,27 +144,18 @@ describe('Duration', () => {
 					it('ok', () => {
 						const duration : Duration = new Duration('PT2S');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.undefined;
-						expect(duration.seconds).to.be.eql(2);
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							seconds : 2
+						});
 					});
 
 					it('round up', () => {
 						const duration : Duration = new Duration('PT68S');
 
-						expect(duration.years).to.be.undefined;
-						expect(duration.months).to.be.undefined;
-						expect(duration.dates).to.be.undefined;
-
-						expect(duration.hours).to.be.undefined;
-						expect(duration.minutes).to.be.eql(1);
-						expect(duration.seconds).to.be.eql(8);
-						expect(duration.ms).to.be.undefined;
+						checkDuration(duration, {
+							minutes : 1,
+							seconds : 8
+						});
 					});
 				});
 			});
@@ -227,14 +164,9 @@ describe('Duration', () => {
 				it('ok', () => {
 					const duration : Duration = new Duration('P2W');
 
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.eql(14);
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						dates : 14
+					});
 				});
 
 				it('round up', () => {
@@ -242,14 +174,10 @@ describe('Duration', () => {
 
 					const duration : Duration = new Duration(`P${ week }W`);
 
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.eql(1);
-					expect(duration.dates).to.be.eql(week * 7 - Gregorian1Month);
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						months : 1,
+						dates : week * 7 - Gregorian1Month
+					});
 				});
 
 				it('round up more', () => {
@@ -257,14 +185,13 @@ describe('Duration', () => {
 
 					const duration : Duration = new Duration(`P${ week }W`);
 
-					expect(duration.years).to.be.eql(1);
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.closeTo(53 * 7 - Gregorian1Year, 1);
+					checkDuration(duration, {
+						years : 1,
 
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+						dates : null // skip
+					});
+
+					expect(duration.dates).to.be.closeTo(53 * 7 - Gregorian1Year, 1);
 				});
 			});
 		});
@@ -292,16 +219,9 @@ describe('Duration', () => {
 						years : 100
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.eql(100);
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						years : 100
+					});
 				});
 
 				it('< 0', () => {
@@ -319,16 +239,9 @@ describe('Duration', () => {
 						months : 7
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.eql(7);
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						months : 7
+					});
 				});
 
 				it('< 0', () => {
@@ -342,16 +255,10 @@ describe('Duration', () => {
 						months : 38
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.eql(3);
-					expect(duration.months).to.be.eql(2);
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						years : 3,
+						months : 2
+					});
 				});
 
 				it('< 0, rebalancing', () => {
@@ -366,16 +273,9 @@ describe('Duration', () => {
 						months : -1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.eql(11);
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						months : 11
+					});
 				});
 
 				it('not fall', () => {
@@ -384,16 +284,10 @@ describe('Duration', () => {
 						months : 1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.eql(1);
-					expect(duration.months).to.be.eql(1);
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						years : 1,
+						months : 1
+					});
 				});
 			});
 
@@ -405,16 +299,9 @@ describe('Duration', () => {
 						dates : 13
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.eql(13);
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						dates : 13
+					});
 				});
 
 				it('< 0', () => {
@@ -428,16 +315,10 @@ describe('Duration', () => {
 						dates : 38
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.eql(1);
-					expect(duration.dates).to.be.eql(38 - Gregorian1Month);
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						months : 1,
+						dates : 38 - Gregorian1Month
+					});
 				});
 
 				it('< 0, rebalancing', () => {
@@ -452,16 +333,9 @@ describe('Duration', () => {
 						dates : -1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.eql(Gregorian1Month - 1);
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						dates : Gregorian1Month - 1
+					});
 				});
 
 				it('not fall', () => {
@@ -470,16 +344,10 @@ describe('Duration', () => {
 						dates : 1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.eql(1);
-					expect(duration.dates).to.be.eql(1);
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						months : 1,
+						dates : 1
+					});
 				});
 			});
 
@@ -489,16 +357,9 @@ describe('Duration', () => {
 						hours : 13
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.eql(13);
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						hours : 13
+					});
 				});
 
 				it('< 0', () => {
@@ -512,16 +373,11 @@ describe('Duration', () => {
 						hours : 27
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
+					checkDuration(duration, {
+						dates : 1,
 
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.eql(1);
-
-					expect(duration.hours).to.be.eql(3);
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+						hours : 3
+					});
 				});
 
 				it('< 0, rebalancing', () => {
@@ -536,16 +392,11 @@ describe('Duration', () => {
 						hours : -1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
+					checkDuration(duration, {
+						dates : 1,
 
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.eql(1);
-
-					expect(duration.hours).to.be.eql(23);
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+						hours : 23
+					});
 				});
 
 				it('not fall', () => {
@@ -554,16 +405,11 @@ describe('Duration', () => {
 						hours : 1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
+					checkDuration(duration, {
+						dates : 1,
 
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.eql(1);
-
-					expect(duration.hours).to.be.eql(1);
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+						hours : 1
+					});
 				});
 			});
 
@@ -573,16 +419,9 @@ describe('Duration', () => {
 						minutes : 40
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.eql(40);
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						minutes : 40
+					});
 				});
 
 				it('< 0', () => {
@@ -596,16 +435,10 @@ describe('Duration', () => {
 						minutes : 80
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.eql(1);
-					expect(duration.minutes).to.be.eql(20);
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						hours : 1,
+						minutes : 20
+					});
 				});
 
 				it('< 0, rebalancing', () => {
@@ -620,16 +453,9 @@ describe('Duration', () => {
 						minutes : -1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.eql(59);
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						minutes : 59
+					});
 				});
 
 				it('not fall', () => {
@@ -638,16 +464,10 @@ describe('Duration', () => {
 						minutes : 1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.eql(1);
-					expect(duration.minutes).to.be.eql(1);
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						hours : 1,
+						minutes : 1
+					});
 				});
 			});
 
@@ -657,16 +477,9 @@ describe('Duration', () => {
 						seconds : 30
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.eql(30);
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						seconds : 30
+					});
 				});
 
 				it('< 0', () => {
@@ -680,16 +493,10 @@ describe('Duration', () => {
 						seconds : 80
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.eql(1);
-					expect(duration.seconds).to.be.eql(20);
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						minutes : 1,
+						seconds : 20
+					});
 				});
 
 				it('< 0, rebalancing', () => {
@@ -704,16 +511,9 @@ describe('Duration', () => {
 						seconds : -1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.eql(59);
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						seconds : 59
+					});
 				});
 
 				it('not fall', () => {
@@ -722,16 +522,10 @@ describe('Duration', () => {
 						seconds : 1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.eql(1);
-					expect(duration.seconds).to.be.eql(1);
-					expect(duration.ms).to.be.undefined;
+					checkDuration(duration, {
+						minutes : 1,
+						seconds : 1
+					});
 				});
 			});
 
@@ -741,16 +535,9 @@ describe('Duration', () => {
 						ms : 100
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.eql(100);
+					checkDuration(duration, {
+						ms : 100
+					});
 				});
 
 				it('< 0', () => {
@@ -764,16 +551,10 @@ describe('Duration', () => {
 						ms : 1002
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.eql(1);
-					expect(duration.ms).to.be.eql(2);
+					checkDuration(duration, {
+						seconds : 1,
+						ms : 2
+					});
 				});
 
 				it('< 0, rebalancing', () => {
@@ -788,16 +569,9 @@ describe('Duration', () => {
 						ms : -1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.undefined;
-					expect(duration.ms).to.be.eql(999);
+					checkDuration(duration, {
+						ms : 999
+					});
 				});
 
 				it('not fall', () => {
@@ -806,16 +580,10 @@ describe('Duration', () => {
 						ms : 1
 					});
 
-					expect(duration).to.be.instanceOf(Duration);
-
-					expect(duration.years).to.be.undefined;
-					expect(duration.months).to.be.undefined;
-					expect(duration.dates).to.be.undefined;
-
-					expect(duration.hours).to.be.undefined;
-					expect(duration.minutes).to.be.undefined;
-					expect(duration.seconds).to.be.eql(1);
-					expect(duration.ms).to.be.eql(1);
+					checkDuration(duration, {
+						seconds : 1,
+						ms : 1
+					});
 				});
 			});
 		});
@@ -839,9 +607,10 @@ describe('Duration', () => {
 
 				const result : Duration = duration1.add(duration2);
 
-				expect(result).to.be.instanceOf(Duration);
 
-				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
+				checkDuration(result, {
+					minutes : initData1.minutes + initData2.minutes
+				});
 			});
 
 			// no round up
@@ -874,16 +643,16 @@ describe('Duration', () => {
 
 				const result : Duration = duration1.add(duration2);
 
-				expect(result).to.be.instanceOf(Duration);
+				checkDuration(result, {
+					years : initData1.years + initData2.years,
+					months : initData1.months + initData2.months,
+					dates : initData1.dates + initData2.dates,
 
-				expect(result.years).to.be.eql(initData1.years + initData2.years);
-				expect(result.months).to.be.eql(initData1.months + initData2.months);
-				expect(result.dates).to.be.eql(initData1.dates + initData2.dates);
-
-				expect(result.hours).to.be.eql(initData1.hours + initData2.hours);
-				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
-				expect(result.seconds).to.be.eql(initData1.seconds + initData2.seconds);
-				expect(result.ms).to.be.eql(initData1.ms + initData2.ms);
+					hours : initData1.hours + initData2.hours,
+					minutes : initData1.minutes + initData2.minutes,
+					seconds : initData1.seconds + initData2.seconds,
+					ms : initData1.ms + initData2.ms
+				});
 			});
 		});
 
@@ -902,9 +671,9 @@ describe('Duration', () => {
 
 				const result : Duration = duration1.add(initData2);
 
-				expect(result).to.be.instanceOf(Duration);
-
-				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
+				checkDuration(result, {
+					minutes : initData1.minutes + initData2.minutes
+				});
 			});
 
 			// no round up
@@ -935,48 +704,22 @@ describe('Duration', () => {
 
 				const result : Duration = duration1.add(initData2);
 
-				expect(result).to.be.instanceOf(Duration);
+				checkDuration(result, {
+					years : initData1.years + initData2.years,
+					months : initData1.months + initData2.months,
+					dates : initData1.dates + initData2.dates,
 
-				expect(result.years).to.be.eql(initData1.years + initData2.years);
-				expect(result.months).to.be.eql(initData1.months + initData2.months);
-				expect(result.dates).to.be.eql(initData1.dates + initData2.dates);
-
-				expect(result.hours).to.be.eql(initData1.hours + initData2.hours);
-				expect(result.minutes).to.be.eql(initData1.minutes + initData2.minutes);
-				expect(result.seconds).to.be.eql(initData1.seconds + initData2.seconds);
-				expect(result.ms).to.be.eql(initData1.ms + initData2.ms);
+					hours : initData1.hours + initData2.hours,
+					minutes : initData1.minutes + initData2.minutes,
+					seconds : initData1.seconds + initData2.seconds,
+					ms : initData1.ms + initData2.ms
+				});
 			});
 		});
 
 		describe('with DateTime', () => {
-			it('ok - simple', () => {
-				const durationData : DurationParam = {
-					minutes : 1
-				};
-
-				const duration : Duration = new Duration(durationData);
-
-
-				const date : DateTime = new DateTime({
-					year : 2021,
-					month : 4,
-					date : 15,
-
-					hours : 1,
-					minutes : 2,
-					seconds : 3,
-					ms : 4
-				});
-
-				const result : DateTime = duration.add(date);
-
-				expect(result).to.be.instanceOf(DateTime);
-
-				expect(result.minutes).to.be.eql(durationData.minutes + date.minutes);
-			});
-
 			// no round up
-			it('ok - full', () => {
+			it('ok', () => {
 				const durationData : DurationParam = {
 					years : 5,
 					months : 1,

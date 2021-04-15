@@ -25,8 +25,8 @@ describe('DateTime', () => {
 
 				hours : now.getHours(),
 				minutes : now.getMinutes(),
-				seconds : now.getSeconds()
-				// no ms
+				seconds : now.getSeconds(),
+				ms : null // no ms
 			});
 
 			expect(+now).to.be.closeTo(+newDate, MilliSecondsCloseTo);

@@ -436,7 +436,7 @@ describe('DateTime', () => {
 				});
 			});
 
-			xdescribe('with string format', () => {
+			describe.only('with string format', () => {
 				const now : Date = new Date();
 
 				it('invalid format token', () => {
@@ -601,8 +601,8 @@ describe('DateTime', () => {
 							);
 
 							checkDateTime(date, {
-								year : now.getFullYear(),
-								month : now.getMonth() + 1,
+								year : refDate.getFullYear(),
+								month : refDate.getMonth() + 1,
 								date : 1,
 
 								hours : 0,
@@ -753,6 +753,9 @@ describe('DateTime', () => {
 							});
 						});
 					});
+
+					// TODO: FormatToken.MonthStringShort
+					// TODO: FormatToken.MonthStringLong
 				});
 
 				describe('date', () => {
@@ -993,6 +996,252 @@ describe('DateTime', () => {
 							checkDateTime(date, {
 								year : refDate.year,
 								month : refDate.month,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+					});
+
+					describe(FormatToken.DayOfYear, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.DayOfYear)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.DayOfYear
+							);
+
+							console.log({ refDate, date });
+
+							checkDateTime(date, {
+								year : refDate.year - 1,
+								month : 12,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.date,
+								FormatToken.DayOfYear
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 13
+							});
+
+							const date : DateTime = new DateTime(
+								'' + padDigit(refDate.date, 2),
+								FormatToken.DayOfYear
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('value === 50', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								month : 1,
+								date : 50
+							});
+
+							const date : DateTime = new DateTime(
+								'50',
+								FormatToken.DayOfYear
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 2,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								date : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.date + suffix,
+								prefix + FormatToken.DayOfYear + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+					});
+
+					describe(FormatToken.DayOfYearPadded, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.DayOfYearPadded)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.DayOfYearPadded
+							);
+
+							console.log({ refDate, date });
+
+							checkDateTime(date, {
+								year : refDate.year - 1,
+								month : 12,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.date,
+								FormatToken.DayOfYearPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								date : 13
+							});
+
+							const date : DateTime = new DateTime(
+								'' + padDigit(refDate.date, 2),
+								FormatToken.DayOfYearPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('value === 50', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								month : 1,
+								date : 50
+							});
+
+							const date : DateTime = new DateTime(
+								'50',
+								FormatToken.DayOfYearPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 2,
+								date : refDate.date,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								date : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.date + suffix,
+								prefix + FormatToken.DayOfYearPadded + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
 								date : refDate.date,
 
 								hours : 0,

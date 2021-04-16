@@ -70,17 +70,40 @@ export class DateTime extends DateProxy {
 				this.set(initData);
 			}
 		}
-		// TODO: init by string format
-		/*
+		// init by string format
 		else if (typeof initData === 'string' && formatString !== undefined) {
 			// find tokens
 			const matchArr : TokenMatchResult[] = findFormatTokens(formatString);
 
 			if (matchArr?.length > 0) {
+				const lengthGuard = (token : FormatToken, valueStr : string) : void => {
+					if (valueStr.length !== token.length) {
+						throw new Error('invalid format string with init data');
+					}
+				};
+
 				const now : Date = new Date();
 				const tokens : FormatToken[] = matchArr.map(obj => obj.token);
 
 				const setParam : DateTimeParam = {};
+
+
+				const setWithCurrentMonth = (value : number) : void => {
+					if (value !== undefined && !isNaN(value)) {
+						const monthTokens : FormatToken[] = unitAndTokens.find(_def => {
+							return _def.unit === DateTimeUnit.Month;
+						})!.tokens;
+
+						const monthIncludes : boolean = monthTokens.some(token => {
+							return formatString.includes(token);
+						});
+
+						if (!monthIncludes) {
+							setParam.month = now.getMonth() + 1; // current month
+						}
+					}
+				};
+
 
 				// prevent duplicated tokens in a unit
 				const unitAndTokens : {
@@ -129,12 +152,6 @@ export class DateTime extends DateProxy {
 
 					let value : number | undefined;
 
-					function lengthGuard (token : FormatToken, valueStr : string) {
-						if (valueStr.length !== token.length) {
-							throw new Error('invalid format string with init data');
-						}
-					}
-
 					if (!!matchResult) {
 						let valueStr : string;
 
@@ -181,9 +198,36 @@ export class DateTime extends DateProxy {
 								}
 
 								value = parseInt(valueStr);
+
+								// adjust month
+								setWithCurrentMonth(value);
 								break;
 
 							case FormatToken.DayOfMonthPadded:
+								valueStr = initData.substr(matchResult.startIndex, token.length);
+
+								value = parseInt(valueStr);
+
+								// adjust month
+								setWithCurrentMonth(value);
+								break;
+
+							case FormatToken.DayOfYear:
+								valueStr = initData.substr(matchResult.startIndex, 3);
+
+								// try to parse
+								if (isNaN(parseInt(valueStr))) {
+									valueStr = initData.substr(matchResult.startIndex, 2);
+
+									if (isNaN(parseInt(valueStr))) {
+										valueStr = initData.substr(matchResult.startIndex, 1);
+									}
+								}
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.DayOfYearPadded:
 								valueStr = initData.substr(matchResult.startIndex, token.length);
 
 								value = parseInt(valueStr);
@@ -226,7 +270,6 @@ export class DateTime extends DateProxy {
 				throw new Error('invalid format string');
 			}
 		}
-		*/
 
 
 		let localeFromAnotherDateTime : undefined | string;

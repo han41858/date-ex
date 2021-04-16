@@ -831,9 +831,6 @@ export class DateTime extends DateProxy {
 	}
 
 	// TODO:
-	// relativeTo(datetime : DateTime, unit : DateTimeUnit)
-
-	// TODO:
 	// at(countryCode: string, city : string) : DateTime;
 
 	getYearCalendar () : YearCalendar {

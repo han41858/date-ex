@@ -27,7 +27,6 @@ import {
 	loadLocaleFile,
 	newArray,
 	padDigit,
-	parseNumberWithDecreaseLength,
 	sortDate
 } from './util';
 
@@ -47,6 +46,29 @@ const globalConfig : {
 
 const localeSetCached : AnyObject<LocaleSet> = {
 	[DefaultLocale] : locale
+};
+
+const parseNumberWithDecreaseLength = (
+	str : string,
+	length : number
+) : number => {
+	let result : number;
+
+	const numberParsed : number = parseInt(str);
+
+	if (isNaN(numberParsed)) {
+		if (length > 0) {
+			result = parseNumberWithDecreaseLength(str, length - 1);
+		}
+		else {
+			throw new Error('invalid format string with init data');
+		}
+	}
+	else {
+		result = numberParsed;
+	}
+
+	return result;
 };
 
 
@@ -168,10 +190,7 @@ export class DateTime extends DateProxy {
 							case FormatToken.YearShort:
 								valueStr = initData.substr(matchResult.startIndex, 2);
 
-								// TODO
-								// lengthGuard(token, valueStr);
-
-								value = Math.floor(now.getFullYear() / 100) * 100 + parseInt(valueStr);
+								value = 1900 + parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
 							// length : 1 ~ 2

@@ -456,14 +456,32 @@ describe('DateTime', () => {
 							expect(() => new DateTime('1', FormatToken.YearShort)).to.throws;
 						});
 
-						it('simple', () => {
+						it('simple - 1 digit', () => {
 							const date : DateTime = new DateTime(
-								'' + (now.getFullYear() % 100),
+								'' + 5,
 								FormatToken.YearShort
 							);
 
 							checkDateTime(date, {
-								year : now.getFullYear(),
+								year : 1905,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const date : DateTime = new DateTime(
+								'21',
+								FormatToken.YearShort
+							);
+
+							checkDateTime(date, {
+								year : 1921,
 								month : 1,
 								date : 1,
 
@@ -479,12 +497,12 @@ describe('DateTime', () => {
 							const suffix : string = '-321';
 
 							const date : DateTime = new DateTime(
-								prefix + (now.getFullYear() % 100) + suffix,
+								prefix + '21' + suffix,
 								prefix + FormatToken.YearShort + suffix
 							);
 
 							checkDateTime(date, {
-								year : now.getFullYear(),
+								year : 1921,
 								month : 1,
 								date : 1,
 
@@ -512,7 +530,7 @@ describe('DateTime', () => {
 							});
 						});
 
-						xit('very after value', () => {
+						it('very after value', () => {
 							const date : DateTime = new DateTime('123456', FormatToken.Year);
 
 							checkDateTime(date, {

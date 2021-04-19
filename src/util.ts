@@ -255,3 +255,26 @@ type SafeAddDataType = number | undefined | null;
 export const safeAdd = (a : SafeAddDataType, b : SafeAddDataType) : number => {
 	return (a || 0) + (b || 0);
 };
+
+export const parseNumberWithDecreaseLength = (
+	str : string,
+	length : number
+) : number => {
+	let result : number;
+
+	const numberParsed : number = parseInt(str);
+
+	if (isNaN(numberParsed)) {
+		if (length > 0) {
+			result = parseNumberWithDecreaseLength(str, length - 1);
+		}
+		else {
+			throw new Error('invalid format string with init data');
+		}
+	}
+	else {
+		result = numberParsed;
+	}
+
+	return result;
+};

@@ -27,6 +27,7 @@ import {
 	loadLocaleFile,
 	newArray,
 	padDigit,
+	parseNumberWithDecreaseLength,
 	sortDate
 } from './util';
 
@@ -76,8 +77,8 @@ export class DateTime extends DateProxy {
 			const matchArr : TokenMatchResult[] = findFormatTokens(formatString);
 
 			if (matchArr?.length > 0) {
-				const lengthGuard = (token : FormatToken, valueStr : string) : void => {
-					if (valueStr.length !== token.length) {
+				const lengthGuard = (valueStr : string, length : number) : void => {
+					if (valueStr.trim().length !== length) {
 						throw new Error('invalid format string with init data');
 					}
 				};
@@ -156,55 +157,54 @@ export class DateTime extends DateProxy {
 						let valueStr : string;
 
 						switch (token) {
+							// length : 3 ~ 6 (max: 275760)
 							case FormatToken.Year:
-								valueStr = initData.substr(matchResult.startIndex, token.length);
-
-								lengthGuard(token, valueStr);
+								valueStr = initData.substr(matchResult.startIndex, 6);
 
 								value = parseInt(valueStr);
 								break;
 
+							// length : 1 ~ 2
 							case FormatToken.YearShort:
-								valueStr = initData.substr(matchResult.startIndex, token.length);
+								valueStr = initData.substr(matchResult.startIndex, 2);
 
-								lengthGuard(token, valueStr);
+								// TODO
+								// lengthGuard(token, valueStr);
 
 								value = Math.floor(now.getFullYear() / 100) * 100 + parseInt(valueStr);
 								break;
 
+							// length : 1 ~ 2
 							case FormatToken.Month:
 								valueStr = initData.substr(matchResult.startIndex, 2);
 
-								// try to parse
-								if (isNaN(parseInt(valueStr))) {
-									valueStr = initData.substr(matchResult.startIndex, 1);
-								}
-
-								value = parseInt(valueStr);
+								value = parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
+							// length : 2
 							case FormatToken.MonthPadded:
-								valueStr = initData.substr(matchResult.startIndex, token.length);
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								lengthGuard(valueStr, 2);
 
 								value = parseInt(valueStr);
 								break;
 
+							// length : 1 ~ 2 & set current month
 							case FormatToken.DayOfMonth:
 								valueStr = initData.substr(matchResult.startIndex, 2);
 
-								// try to parse
-								if (isNaN(parseInt(valueStr))) {
-									valueStr = initData.substr(matchResult.startIndex, 1);
-								}
-
-								value = parseInt(valueStr);
+								value = parseNumberWithDecreaseLength(valueStr, 2);
 
 								// adjust month
 								setWithCurrentMonth(value);
 								break;
 
+							// length : 2 & set current month
 							case FormatToken.DayOfMonthPadded:
-								valueStr = initData.substr(matchResult.startIndex, token.length);
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								lengthGuard(valueStr, 2);
 
 								value = parseInt(valueStr);
 
@@ -212,23 +212,91 @@ export class DateTime extends DateProxy {
 								setWithCurrentMonth(value);
 								break;
 
+							// length : 1 ~ 3
 							case FormatToken.DayOfYear:
 								valueStr = initData.substr(matchResult.startIndex, 3);
 
-								// try to parse
-								if (isNaN(parseInt(valueStr))) {
-									valueStr = initData.substr(matchResult.startIndex, 2);
+								value = parseNumberWithDecreaseLength(valueStr, 3);
+								break;
 
-									if (isNaN(parseInt(valueStr))) {
-										valueStr = initData.substr(matchResult.startIndex, 1);
-									}
-								}
+							// length : 3
+							case FormatToken.DayOfYearPadded:
+								valueStr = initData.substr(matchResult.startIndex, 3);
+
+								lengthGuard(valueStr, 3);
 
 								value = parseInt(valueStr);
 								break;
 
-							case FormatToken.DayOfYearPadded:
-								valueStr = initData.substr(matchResult.startIndex, token.length);
+							// length : 1 ~ 2
+							case FormatToken.Hours24:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								value = parseNumberWithDecreaseLength(valueStr, 2);
+								break;
+
+							// length : 2
+							case FormatToken.Hours24Padded:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								lengthGuard(valueStr, 2);
+
+								value = parseInt(valueStr);
+								break;
+
+							// length : 1 ~ 2
+							case FormatToken.Minutes:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								value = parseNumberWithDecreaseLength(valueStr, 2);
+								break;
+
+							// length : 2
+							case FormatToken.MinutesPadded:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								lengthGuard(valueStr, 2);
+
+								value = parseInt(valueStr);
+								break;
+
+							// length : 1 ~ 2
+							case FormatToken.Seconds:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								value = parseNumberWithDecreaseLength(valueStr, 2);
+								break;
+
+							// length : 2
+							case FormatToken.SecondsPadded:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								lengthGuard(valueStr, 2);
+
+								value = parseInt(valueStr);
+								break;
+
+							// length : 1 ~ 3
+							case FormatToken.MilliSeconds:
+								valueStr = initData.substr(matchResult.startIndex, 3);
+
+								value = parseNumberWithDecreaseLength(valueStr, 3);
+								break;
+
+							// length : 2
+							case FormatToken.MilliSecondsPadded2:
+								valueStr = initData.substr(matchResult.startIndex, 2);
+
+								lengthGuard(valueStr, 2);
+
+								value = parseInt(valueStr);
+								break;
+
+							// length : 3
+							case FormatToken.MilliSecondsPadded3:
+								valueStr = initData.substr(matchResult.startIndex, 3);
+
+								lengthGuard(valueStr, 3);
 
 								value = parseInt(valueStr);
 								break;

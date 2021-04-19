@@ -475,8 +475,8 @@ describe('DateTime', () => {
 						});
 
 						it('extract', () => {
-							const prefix : string = '123';
-							const suffix : string = '321';
+							const prefix : string = '123-';
+							const suffix : string = '-321';
 
 							const date : DateTime = new DateTime(
 								prefix + (now.getFullYear() % 100) + suffix,
@@ -497,8 +497,34 @@ describe('DateTime', () => {
 					});
 
 					describe(FormatToken.Year, () => {
-						it('invalid value', () => {
-							expect(() => new DateTime('12', FormatToken.Year)).to.throws;
+						it('very before value', () => {
+							const date : DateTime = new DateTime('100', FormatToken.Year);
+
+							checkDateTime(date, {
+								year : 100,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						xit('very after value', () => {
+							const date : DateTime = new DateTime('123456', FormatToken.Year);
+
+							checkDateTime(date, {
+								year : 123456,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
 						});
 
 						it('simple', () => {
@@ -520,8 +546,8 @@ describe('DateTime', () => {
 						});
 
 						it('extract', () => {
-							const prefix : string = '123';
-							const suffix : string = '321';
+							const prefix : string = '123-';
+							const suffix : string = '-321';
 
 							const date : DateTime = new DateTime(
 								prefix + now.getFullYear() + suffix,
@@ -612,7 +638,7 @@ describe('DateTime', () => {
 							});
 						});
 
-						it('value === 13', () => {
+						it('value - round up', () => {
 							const date : DateTime = new DateTime(
 								'13',
 								FormatToken.Month
@@ -657,9 +683,16 @@ describe('DateTime', () => {
 							expect(() => new DateTime('', FormatToken.MonthPadded)).to.throws;
 						});
 
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.MonthPadded
+							)).to.throws;
+						});
+
 						it('value === 0', () => {
 							const date : DateTime = new DateTime(
-								'0',
+								'00',
 								FormatToken.MonthPadded
 							);
 
@@ -678,7 +711,7 @@ describe('DateTime', () => {
 
 						it('simple - 1 digit', () => {
 							const date : DateTime = new DateTime(
-								'' + padDigit(now.getMonth() + 1, 2),
+								padDigit(now.getMonth() + 1, 2),
 								FormatToken.MonthPadded
 							);
 
@@ -698,7 +731,7 @@ describe('DateTime', () => {
 							const refDate : Date = new Date(now.getFullYear(), 11, 1);
 
 							const date : DateTime = new DateTime(
-								'' + padDigit(refDate.getMonth() + 1, 2),
+								padDigit(refDate.getMonth() + 1, 2),
 								FormatToken.MonthPadded
 							);
 
@@ -714,7 +747,7 @@ describe('DateTime', () => {
 							});
 						});
 
-						it('value === 13', () => {
+						it('value - round up', () => {
 							const date : DateTime = new DateTime(
 								'13',
 								FormatToken.MonthPadded
@@ -838,7 +871,7 @@ describe('DateTime', () => {
 							});
 						});
 
-						it('value === 50', () => {
+						it('value - round up', () => {
 							const refDate : DateTime = new DateTime(now).set({
 								date : 50
 							});
@@ -891,13 +924,20 @@ describe('DateTime', () => {
 							expect(() => new DateTime('', FormatToken.DayOfMonthPadded)).to.throws;
 						});
 
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.DayOfMonthPadded
+							)).to.throws;
+						});
+
 						it('value === 0', () => {
 							const refDate : DateTime = new DateTime(now).set({
 								date : 0
 							});
 
 							const date : DateTime = new DateTime(
-								'0',
+								'00',
 								FormatToken.DayOfMonthPadded
 							);
 
@@ -920,7 +960,7 @@ describe('DateTime', () => {
 							});
 
 							const date : DateTime = new DateTime(
-								'' + refDate.date,
+								padDigit(refDate.date, 2),
 								FormatToken.DayOfMonthPadded
 							);
 
@@ -942,7 +982,7 @@ describe('DateTime', () => {
 							});
 
 							const date : DateTime = new DateTime(
-								'' + padDigit(refDate.date, 2),
+								padDigit(refDate.date, 2),
 								FormatToken.DayOfMonthPadded
 							);
 
@@ -958,7 +998,7 @@ describe('DateTime', () => {
 							});
 						});
 
-						it('value === 50', () => {
+						it('value - round up', () => {
 							const refDate : DateTime = new DateTime(now).set({
 								date : 50
 							});
@@ -1021,8 +1061,6 @@ describe('DateTime', () => {
 								FormatToken.DayOfYear
 							);
 
-							console.log({ refDate, date });
-
 							checkDateTime(date, {
 								year : refDate.year - 1,
 								month : 12,
@@ -1064,7 +1102,7 @@ describe('DateTime', () => {
 							});
 
 							const date : DateTime = new DateTime(
-								'' + padDigit(refDate.date, 2),
+								padDigit(refDate.date, 2),
 								FormatToken.DayOfYear
 							);
 
@@ -1080,7 +1118,7 @@ describe('DateTime', () => {
 							});
 						});
 
-						it('value === 50', () => {
+						it('value - round up', () => {
 							const refDate : DateTime = new DateTime(now).set({
 								month : 1,
 								date : 50
@@ -1134,17 +1172,29 @@ describe('DateTime', () => {
 							expect(() => new DateTime('', FormatToken.DayOfYearPadded)).to.throws;
 						});
 
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.DayOfYearPadded
+							)).to.throws;
+						});
+
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'00',
+								FormatToken.DayOfYearPadded
+							)).to.throws;
+						});
+
 						it('value === 0', () => {
 							const refDate : DateTime = new DateTime(now).set({
 								date : 0
 							});
 
 							const date : DateTime = new DateTime(
-								'0',
+								padDigit('0', 3),
 								FormatToken.DayOfYearPadded
 							);
-
-							console.log({ refDate, date });
 
 							checkDateTime(date, {
 								year : refDate.year - 1,
@@ -1165,7 +1215,7 @@ describe('DateTime', () => {
 							});
 
 							const date : DateTime = new DateTime(
-								'' + refDate.date,
+								padDigit(refDate.date, 3),
 								FormatToken.DayOfYearPadded
 							);
 
@@ -1187,7 +1237,7 @@ describe('DateTime', () => {
 							});
 
 							const date : DateTime = new DateTime(
-								'' + padDigit(refDate.date, 2),
+								padDigit(refDate.date, 3),
 								FormatToken.DayOfYearPadded
 							);
 
@@ -1203,14 +1253,14 @@ describe('DateTime', () => {
 							});
 						});
 
-						it('value === 50', () => {
+						it('value - round up', () => {
 							const refDate : DateTime = new DateTime(now).set({
 								month : 1,
 								date : 50
 							});
 
 							const date : DateTime = new DateTime(
-								'50',
+								padDigit('50', 3),
 								FormatToken.DayOfYearPadded
 							);
 
@@ -1235,7 +1285,7 @@ describe('DateTime', () => {
 							});
 
 							const date : DateTime = new DateTime(
-								prefix + refDate.date + suffix,
+								prefix + padDigit(refDate.date, 3) + suffix,
 								prefix + FormatToken.DayOfYearPadded + suffix
 							);
 
@@ -1248,6 +1298,1368 @@ describe('DateTime', () => {
 								minutes : 0,
 								seconds : 0,
 								ms : 0
+							});
+						});
+					});
+				});
+
+				// TODO: meridiem
+
+				describe('hours', () => {
+					describe('24-hours', () => {
+						describe(FormatToken.Hours24, () => {
+							it('invalid value', () => {
+								expect(() => new DateTime('', FormatToken.Hours24)).to.throws;
+							});
+
+							it('value === 0', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 0
+								});
+
+								const date : DateTime = new DateTime(
+									'0',
+									FormatToken.Hours24
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 0,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+
+							it('simple - 1 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 5
+								});
+
+								const date : DateTime = new DateTime(
+									'' + refDate.hours,
+									FormatToken.Hours24
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 5,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('simple - 2 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 13
+								});
+
+								const date : DateTime = new DateTime(
+									padDigit(refDate.hours, 2),
+									FormatToken.Hours24
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('value - round up', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 26
+								});
+
+								const date : DateTime = new DateTime(
+									'26',
+									FormatToken.Hours24
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 2,
+
+									hours : 2,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('extract', () => {
+								const prefix : string = '123-';
+								const suffix : string = '-321';
+
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 15
+								});
+
+								const date : DateTime = new DateTime(
+									prefix + refDate.hours + suffix,
+									prefix + FormatToken.Hours24 + suffix
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 15,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+						});
+
+						describe(FormatToken.Hours24Padded, () => {
+							it('invalid value', () => {
+								expect(() => new DateTime('', FormatToken.Hours24Padded)).to.throws;
+							});
+
+							it('invalid length', () => {
+								expect(() => new DateTime(
+									'0',
+									FormatToken.Hours24Padded
+								)).to.throws;
+							});
+
+							it('value === 0', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 0
+								});
+
+								const date : DateTime = new DateTime(
+									'00',
+									FormatToken.Hours24Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 0,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+
+							it('simple - 1 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 5
+								});
+
+								const date : DateTime = new DateTime(
+									padDigit(refDate.hours, 2),
+									FormatToken.Hours24Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 5,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('simple - 2 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 13
+								});
+
+								const date : DateTime = new DateTime(
+									padDigit(refDate.hours, 2),
+									FormatToken.Hours24Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('value - round up', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 26
+								});
+
+								const date : DateTime = new DateTime(
+									'26',
+									FormatToken.Hours24Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 2,
+
+									hours : 2,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('extract', () => {
+								const prefix : string = '123-';
+								const suffix : string = '-321';
+
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 15
+								});
+
+								const date : DateTime = new DateTime(
+									prefix + refDate.hours + suffix,
+									prefix + FormatToken.Hours24Padded + suffix
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+						});
+					});
+
+					// TODO: with meridiem
+					xdescribe('12-hours', () => {
+						describe(FormatToken.Hours12, () => {
+							it('invalid value', () => {
+								expect(() => new DateTime('', FormatToken.Hours12)).to.throws;
+							});
+
+							it('value === 0', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 0
+								});
+
+								const date : DateTime = new DateTime(
+									'0',
+									FormatToken.Hours12
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 0,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+
+							it('simple - 1 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 5
+								});
+
+								const date : DateTime = new DateTime(
+									'' + refDate.hours,
+									FormatToken.Hours12
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('simple - 2 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 11
+								});
+
+								const date : DateTime = new DateTime(
+									padDigit(refDate.hours, 2),
+									FormatToken.Hours12
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('value - round up', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 13
+								});
+
+								const date : DateTime = new DateTime(
+									'13',
+									FormatToken.Hours12
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 2,
+
+									hours : 1,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('extract', () => {
+								const prefix : string = '123-';
+								const suffix : string = '-321';
+
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 11
+								});
+
+								const date : DateTime = new DateTime(
+									prefix + refDate.hours + suffix,
+									prefix + FormatToken.Hours12 + suffix
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+						});
+
+						describe(FormatToken.Hours12Padded, () => {
+							it('invalid value', () => {
+								expect(() => new DateTime('', FormatToken.Hours12Padded)).to.throws;
+							});
+
+							it('invalid length', () => {
+								expect(() => new DateTime(
+									'0',
+									FormatToken.Hours12Padded
+								)).to.throws;
+							});
+
+							it('value === 0', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 0
+								});
+
+								const date : DateTime = new DateTime(
+									'00',
+									FormatToken.Hours12Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : 0,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+
+							it('simple - 1 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 5
+								});
+
+								const date : DateTime = new DateTime(
+									padDigit(refDate.hours, 2),
+									FormatToken.Hours12Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('simple - 2 digit', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 11
+								});
+
+								const date : DateTime = new DateTime(
+									padDigit(refDate.hours, 2),
+									FormatToken.Hours12Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('value - round up', () => {
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 13
+								});
+
+								const date : DateTime = new DateTime(
+									'13',
+									FormatToken.Hours12Padded
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 2,
+
+									hours : 1,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+
+							it('extract', () => {
+								const prefix : string = '123-';
+								const suffix : string = '-321';
+
+								const refDate : DateTime = new DateTime(now).set({
+									hours : 11
+								});
+
+								const date : DateTime = new DateTime(
+									prefix + refDate.hours + suffix,
+									prefix + FormatToken.Hours12Padded + suffix
+								);
+
+								checkDateTime(date, {
+									year : refDate.year,
+									month : 1,
+									date : 1,
+
+									hours : refDate.hours,
+									minutes : 0,
+									seconds : 0,
+									ms : 0
+								});
+							});
+						});
+					});
+				});
+
+				describe('minutes', () => {
+					describe(FormatToken.Minutes, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.Minutes)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.minutes,
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : refDate.minutes,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.minutes, 2),
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : refDate.minutes,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('value - round up', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 90
+							});
+
+							const date : DateTime = new DateTime(
+								'90',
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 1,
+								minutes : 30,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.minutes + suffix,
+								prefix + FormatToken.Minutes + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : refDate.minutes,
+								seconds : 0,
+								ms : 0
+							});
+						});
+					});
+
+					describe(FormatToken.MinutesPadded, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.Minutes)).to.throws;
+						});
+
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.MinutesPadded
+							)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'00',
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 5
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.minutes, 2),
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : refDate.minutes,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.minutes, 2),
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : refDate.minutes,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('value - round up', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 90
+							});
+
+							const date : DateTime = new DateTime(
+								'90',
+								FormatToken.Minutes
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 1,
+								minutes : 30,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								minutes : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.minutes + suffix,
+								prefix + FormatToken.Minutes + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : refDate.minutes,
+								seconds : 0,
+								ms : 0
+							});
+						});
+					});
+				});
+
+				describe('seconds', () => {
+					describe(FormatToken.Seconds, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.Seconds)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.Seconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.seconds,
+								FormatToken.Seconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : refDate.seconds,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.seconds, 2),
+								FormatToken.Seconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : refDate.seconds,
+								ms : 0
+							});
+						});
+
+						it('value - round up', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 80
+							});
+
+							const date : DateTime = new DateTime(
+								'80',
+								FormatToken.Seconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 1,
+								seconds : 20,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.seconds + suffix,
+								prefix + FormatToken.Seconds + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : refDate.seconds,
+								ms : 0
+							});
+						});
+					});
+
+					describe(FormatToken.SecondsPadded, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.SecondsPadded)).to.throws;
+						});
+
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.SecondsPadded
+							)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'00',
+								FormatToken.SecondsPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 5
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.seconds, 2),
+								FormatToken.SecondsPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : refDate.seconds,
+								ms : 0
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.seconds, 2),
+								FormatToken.SecondsPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : refDate.seconds,
+								ms : 0
+							});
+						});
+
+						it('value - round up', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 80
+							});
+
+							const date : DateTime = new DateTime(
+								'80',
+								FormatToken.SecondsPadded
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 1,
+								seconds : 20,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								seconds : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.seconds + suffix,
+								prefix + FormatToken.SecondsPadded + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : refDate.seconds,
+								ms : 0
+							});
+						});
+					});
+				});
+
+				describe('ms', () => {
+					describe(FormatToken.MilliSeconds, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.MilliSeconds)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'0',
+								FormatToken.MilliSeconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 5
+							});
+
+							const date : DateTime = new DateTime(
+								'' + refDate.ms,
+								FormatToken.MilliSeconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 2),
+								FormatToken.MilliSeconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('simple - 3 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 133
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 3),
+								FormatToken.MilliSeconds
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.ms + suffix,
+								prefix + FormatToken.MilliSeconds + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+					});
+
+					describe(FormatToken.MilliSecondsPadded2, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.MilliSecondsPadded2)).to.throws;
+						});
+
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.MilliSecondsPadded2
+							)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'00',
+								FormatToken.MilliSecondsPadded2
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 5
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 2),
+								FormatToken.MilliSecondsPadded2
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 2),
+								FormatToken.MilliSecondsPadded2
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + refDate.ms + suffix,
+								prefix + FormatToken.MilliSecondsPadded2 + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+					});
+
+					describe(FormatToken.MilliSecondsPadded3, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.MilliSecondsPadded3)).to.throws;
+						});
+
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'0',
+								FormatToken.MilliSecondsPadded3
+							)).to.throws;
+						});
+
+						it('invalid length', () => {
+							expect(() => new DateTime(
+								'00',
+								FormatToken.MilliSecondsPadded3
+							)).to.throws;
+						});
+
+						it('value === 0', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 0
+							});
+
+							const date : DateTime = new DateTime(
+								'000',
+								FormatToken.MilliSecondsPadded3
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+
+						it('simple - 1 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 5
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 3),
+								FormatToken.MilliSecondsPadded3
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 13
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 3),
+								FormatToken.MilliSecondsPadded3
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('simple - 2 digit', () => {
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 131
+							});
+
+							const date : DateTime = new DateTime(
+								padDigit(refDate.ms, 3),
+								FormatToken.MilliSecondsPadded3
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const refDate : DateTime = new DateTime(now).set({
+								ms : 15
+							});
+
+							const date : DateTime = new DateTime(
+								prefix + padDigit(refDate.ms, 3) + suffix,
+								prefix + FormatToken.MilliSecondsPadded3 + suffix
+							);
+
+							checkDateTime(date, {
+								year : refDate.year,
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : refDate.ms
 							});
 						});
 					});

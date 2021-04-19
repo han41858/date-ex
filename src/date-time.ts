@@ -21,13 +21,11 @@ import {
 } from './constants';
 import {
 	durationUnitToDateTimeUnit,
-	findFormatTokens,
 	isDateTimeParam,
 	isDurationParam,
 	loadLocaleFile,
 	newArray,
-	padDigit,
-	sortDate
+	padDigit
 } from './util';
 
 // load default locale
@@ -46,6 +44,52 @@ const globalConfig : {
 
 const localeSetCached : AnyObject<LocaleSet> = {
 	[DefaultLocale] : locale
+};
+
+
+// internal functions
+const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {
+	const dateArr : DateTime[] = dates.map(date => new DateTime(date));
+
+	return dateArr.sort((a, b) => {
+		return +a - +b;
+	});
+};
+
+const extractValueStr = (data : string, matchResult : TokenMatchResult, length : number) : string => {
+	return data
+		.substr(matchResult.startIndex, length)
+		.trim();
+};
+
+const findFormatTokens = (formatString : string) : TokenMatchResult[] => {
+	const regExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+
+	const matchArr : TokenMatchResult[] = [];
+
+	let formatFrag : string = formatString;
+	let omitLength = 0;
+
+	let execResult : RegExpExecArray | null = regExp.exec(formatFrag);
+
+	if (execResult) {
+		do {
+			const strFound : string = execResult[0];
+
+			matchArr.push({
+				token : strFound as FormatToken,
+				startIndex : omitLength + execResult.index
+			});
+
+			formatFrag = formatFrag.substr(execResult.index + strFound.length);
+			omitLength += execResult.index + strFound.length;
+
+			execResult = regExp.exec(formatFrag);
+		}
+		while (execResult);
+	}
+
+	return matchArr;
 };
 
 const parseNumberWithDecreaseLength = (
@@ -99,6 +143,7 @@ export class DateTime extends DateProxy {
 			const matchArr : TokenMatchResult[] = findFormatTokens(formatString);
 
 			if (matchArr?.length > 0) {
+				// const lengthGuard = (valueStr : string, length : number[]) : void => {
 				const lengthGuard = (valueStr : string, length : number) : void => {
 					if (valueStr.trim().length !== length) {
 						throw new Error('invalid format string with init data');
@@ -130,7 +175,7 @@ export class DateTime extends DateProxy {
 
 				// prevent duplicated tokens in a unit
 				const unitAndTokens : {
-					unit : DateTimeUnit,
+					unit : DateTimeUnit | string,
 					tokens : FormatToken[]
 				}[] = [{
 					unit : DateTimeUnit.Year,
@@ -142,11 +187,11 @@ export class DateTime extends DateProxy {
 					unit : DateTimeUnit.Date,
 					tokens : [FormatToken.DayOfMonth, FormatToken.DayOfMonthPadded, FormatToken.DayOfYear, FormatToken.DayOfYearPadded]
 				}, {
+					unit : 'meridiem',
+					tokens : [FormatToken.MeridiemLower, FormatToken.MeridiemCapital]
+				}, {
 					unit : DateTimeUnit.Hours,
-					tokens : [
-						FormatToken.Hours24, FormatToken.Hours24Padded, FormatToken.Hours12, FormatToken.Hours12Padded,
-						FormatToken.MeridiemCapital, FormatToken.MeridiemLower
-					]
+					tokens : [FormatToken.Hours24, FormatToken.Hours24Padded, FormatToken.Hours12, FormatToken.Hours12Padded]
 				}, {
 					unit : DateTimeUnit.Minutes,
 					tokens : [FormatToken.Minutes, FormatToken.MinutesPadded]
@@ -175,34 +220,34 @@ export class DateTime extends DateProxy {
 
 					let value : number | undefined;
 
-					if (!!matchResult) {
+					if (matchResult) {
 						let valueStr : string;
 
 						switch (token) {
 							// length : 3 ~ 6 (max: 275760)
 							case FormatToken.Year:
-								valueStr = initData.substr(matchResult.startIndex, 6);
+								valueStr = extractValueStr(initData, matchResult, 6);
 
 								value = parseInt(valueStr);
 								break;
 
 							// length : 1 ~ 2
 							case FormatToken.YearShort:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								value = 1900 + parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
 							// length : 1 ~ 2
 							case FormatToken.Month:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								value = parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
 							// length : 2
 							case FormatToken.MonthPadded:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								lengthGuard(valueStr, 2);
 
@@ -211,7 +256,7 @@ export class DateTime extends DateProxy {
 
 							// length : 1 ~ 2 & set current month
 							case FormatToken.DayOfMonth:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								value = parseNumberWithDecreaseLength(valueStr, 2);
 
@@ -221,7 +266,7 @@ export class DateTime extends DateProxy {
 
 							// length : 2 & set current month
 							case FormatToken.DayOfMonthPadded:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								lengthGuard(valueStr, 2);
 
@@ -233,30 +278,107 @@ export class DateTime extends DateProxy {
 
 							// length : 1 ~ 3
 							case FormatToken.DayOfYear:
-								valueStr = initData.substr(matchResult.startIndex, 3);
+								valueStr = extractValueStr(initData, matchResult, 3);
 
 								value = parseNumberWithDecreaseLength(valueStr, 3);
 								break;
 
 							// length : 3
 							case FormatToken.DayOfYearPadded:
-								valueStr = initData.substr(matchResult.startIndex, 3);
+								valueStr = extractValueStr(initData, matchResult, 3);
 
 								lengthGuard(valueStr, 3);
 
 								value = parseInt(valueStr);
 								break;
 
+							// length : 2 for en, ko
+							case FormatToken.MeridiemLower:
+								valueStr = extractValueStr(initData, matchResult, 2);
+
+								lengthGuard(valueStr, 2);
+
+								// TODO: enum guard
+
+								// am
+								if (valueStr === locale.Meridiem[0].toLowerCase()) {
+									if (setParam.hours === undefined) {
+										setParam.hours = 0;
+									}
+									else if (setParam.hours >= 12) {
+										setParam.hours -= 12;
+									}
+								}
+								// pm
+								else if (valueStr === locale.Meridiem[1].toLowerCase()) {
+									if (setParam.hours === undefined) {
+										setParam.hours = 12;
+									}
+									else if (setParam.hours < 12) {
+										setParam.hours += 12;
+									}
+								}
+								break;
+
+							case FormatToken.MeridiemCapital:
+								valueStr = extractValueStr(initData, matchResult, 2);
+
+								// TODO: enum guard
+
+								// am
+								if (valueStr === locale.Meridiem[0]) {
+									if (setParam.hours === undefined) {
+										setParam.hours = 0;
+									}
+									else if (setParam.hours >= 12) {
+										setParam.hours -= 12;
+									}
+								}
+								// pm
+								else if (valueStr === locale.Meridiem[1]) {
+									if (setParam.hours === undefined) {
+										setParam.hours = 12;
+									}
+									else if (setParam.hours < 12) {
+										setParam.hours += 12;
+									}
+								}
+								break;
+
 							// length : 1 ~ 2
 							case FormatToken.Hours24:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								value = parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
 							// length : 2
 							case FormatToken.Hours24Padded:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
+
+								lengthGuard(valueStr, 2);
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.Hours12:
+								// meridiem needed
+								if (setParam.hours === undefined) {
+									throw new Error('hours12 should be used with meridiem token');
+								}
+
+								valueStr = extractValueStr(initData, matchResult, 2);
+
+								value = parseInt(valueStr);
+								break;
+
+							case FormatToken.Hours12Padded:
+								// meridiem needed
+								if (setParam.hours === undefined) {
+									throw new Error('hours12 should be used with meridiem token');
+								}
+
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								lengthGuard(valueStr, 2);
 
@@ -265,14 +387,14 @@ export class DateTime extends DateProxy {
 
 							// length : 1 ~ 2
 							case FormatToken.Minutes:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								value = parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
 							// length : 2
 							case FormatToken.MinutesPadded:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								lengthGuard(valueStr, 2);
 
@@ -281,14 +403,14 @@ export class DateTime extends DateProxy {
 
 							// length : 1 ~ 2
 							case FormatToken.Seconds:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								value = parseNumberWithDecreaseLength(valueStr, 2);
 								break;
 
 							// length : 2
 							case FormatToken.SecondsPadded:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								lengthGuard(valueStr, 2);
 
@@ -297,14 +419,14 @@ export class DateTime extends DateProxy {
 
 							// length : 1 ~ 3
 							case FormatToken.MilliSeconds:
-								valueStr = initData.substr(matchResult.startIndex, 3);
+								valueStr = extractValueStr(initData, matchResult, 3);
 
 								value = parseNumberWithDecreaseLength(valueStr, 3);
 								break;
 
 							// length : 2
 							case FormatToken.MilliSecondsPadded2:
-								valueStr = initData.substr(matchResult.startIndex, 2);
+								valueStr = extractValueStr(initData, matchResult, 2);
 
 								lengthGuard(valueStr, 2);
 
@@ -313,7 +435,7 @@ export class DateTime extends DateProxy {
 
 							// length : 3
 							case FormatToken.MilliSecondsPadded3:
-								valueStr = initData.substr(matchResult.startIndex, 3);
+								valueStr = extractValueStr(initData, matchResult, 3);
 
 								lengthGuard(valueStr, 3);
 
@@ -323,7 +445,8 @@ export class DateTime extends DateProxy {
 					}
 
 					// default value
-					if (value === undefined || isNaN(value)) {
+					if ((value === undefined || isNaN(value))
+						&& setParam[def.unit as keyof DateTimeParam] === undefined) {
 						switch (def.unit) {
 							case DateTimeUnit.Year:
 								value = now.getFullYear();

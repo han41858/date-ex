@@ -1,6 +1,6 @@
-import { AnyObject, DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
+import { AnyObject, DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
 import { DateTime } from './date-time';
-import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit, FormatToken } from './constants';
+import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit } from './constants';
 
 
 export const newArray = <T> (length : number, callback? : (i : number, arr : T[]) => T) : T[] => {
@@ -210,45 +210,6 @@ export const datetimeUnitToDurationUnit = (unit : DateTimeUnit) : DurationUnit =
 
 	return key;
 };
-
-export const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {
-	const dateArr : DateTime[] = dates.map(date => new DateTime(date));
-
-	return dateArr.sort((a, b) => {
-		return +a - +b;
-	});
-};
-
-export const findFormatTokens = (formatString : string) : TokenMatchResult[] => {
-	const regExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
-
-	const matchArr : TokenMatchResult[] = [];
-
-	let formatFrag : string = formatString;
-	let omitLength = 0;
-
-	let execResult : RegExpExecArray | null = regExp.exec(formatFrag);
-
-	if (execResult) {
-		do {
-			const strFound : string = execResult[0];
-
-			matchArr.push({
-				token : strFound as FormatToken,
-				startIndex : omitLength + execResult.index
-			});
-
-			formatFrag = formatFrag.substr(execResult.index + strFound.length);
-			omitLength += execResult.index + strFound.length;
-
-			execResult = regExp.exec(formatFrag);
-		}
-		while (execResult);
-	}
-
-	return matchArr;
-};
-
 
 type SafeAddDataType = number | undefined | null;
 

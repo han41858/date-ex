@@ -1321,9 +1321,153 @@ describe('DateTime', () => {
 					});
 				});
 
-				// TODO: meridiem
+				describe('meridiem', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getDate()) + '-' + now.getDate(),
+							FormatToken.MeridiemLower + FormatToken.MeridiemCapital
+						)).to.throws;
+					});
+
+					describe(FormatToken.MeridiemLower, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.MeridiemLower)).to.throws;
+						});
+
+						it('am - from lower string', () => {
+							const date : DateTime = new DateTime('am', FormatToken.MeridiemLower);
+
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('pm - from lower string', () => {
+							const date : DateTime = new DateTime('pm', FormatToken.MeridiemLower);
+
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
+
+								hours : 12,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('am - from capital string', () => {
+							expect(() => new DateTime('AM', FormatToken.MeridiemLower)).to.throws;
+						});
+
+						it('pm - from capital string', () => {
+							expect(() => new DateTime('PM', FormatToken.MeridiemLower)).to.throws;
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const date : DateTime = new DateTime(
+								prefix + 'am' + suffix,
+								prefix + FormatToken.MeridiemLower + suffix
+							);
+
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+					});
+
+					describe(FormatToken.MeridiemCapital, () => {
+						it('invalid value', () => {
+							expect(() => new DateTime('', FormatToken.MeridiemCapital)).to.throws;
+						});
+
+						it('am - from lower string', () => {
+							expect(() => new DateTime('am', FormatToken.MeridiemCapital)).to.throws;
+						});
+
+						it('pm - from lower string', () => {
+							expect(() => new DateTime('PM', FormatToken.MeridiemCapital)).to.throws;
+						});
+
+						it('am - from capital string', () => {
+							const date : DateTime = new DateTime('AM', FormatToken.MeridiemCapital);
+
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
+
+								hours : 0,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('pm - from capital string', () => {
+							const date : DateTime = new DateTime('PM', FormatToken.MeridiemCapital);
+
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
+
+								hours : 12,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+
+						it('extract', () => {
+							const prefix : string = '123-';
+							const suffix : string = '-321';
+
+							const date : DateTime = new DateTime(
+								prefix + 'PM' + suffix,
+								prefix + FormatToken.MeridiemCapital + suffix
+							);
+
+							checkDateTime(date, {
+								year : now.getFullYear(),
+								month : 1,
+								date : 1,
+
+								hours : 12,
+								minutes : 0,
+								seconds : 0,
+								ms : 0
+							});
+						});
+					});
+				});
 
 				describe('hours', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getDate()) + '-' + now.getDate(),
+							FormatToken.Hours24 + FormatToken.Hours12
+						)).to.throws;
+					});
+
 					describe('24-hours', () => {
 						describe(FormatToken.Hours24, () => {
 							it('invalid value', () => {
@@ -1573,11 +1717,14 @@ describe('DateTime', () => {
 						});
 					});
 
-					// TODO: with meridiem
 					xdescribe('12-hours', () => {
 						describe(FormatToken.Hours12, () => {
 							it('invalid value', () => {
 								expect(() => new DateTime('', FormatToken.Hours12)).to.throws;
+							});
+
+							it('without meridiem', () => {
+								expect(() => new DateTime('08', FormatToken.Hours12)).to.throws;
 							});
 
 							it('value === 0', () => {
@@ -1586,8 +1733,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									'0',
-									FormatToken.Hours12
+									'0 am',
+									FormatToken.Hours12 + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1609,8 +1756,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									'' + refDate.hours,
-									FormatToken.Hours12
+									'' + refDate.hours + ' am',
+									FormatToken.Hours12 + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1631,8 +1778,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									padDigit(refDate.hours, 2),
-									FormatToken.Hours12
+									padDigit(refDate.hours, 2) + ' am',
+									FormatToken.Hours12 + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1653,8 +1800,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									'13',
-									FormatToken.Hours12
+									'13 pm',
+									FormatToken.Hours12 + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1678,8 +1825,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									prefix + refDate.hours + suffix,
-									prefix + FormatToken.Hours12 + suffix
+									prefix + refDate.hours + suffix + ' am',
+									prefix + FormatToken.Hours12 + suffix + ' am'
 								);
 
 								checkDateTime(date, {
@@ -1700,10 +1847,14 @@ describe('DateTime', () => {
 								expect(() => new DateTime('', FormatToken.Hours12Padded)).to.throws;
 							});
 
+							it('without meridiem', () => {
+								expect(() => new DateTime('08', FormatToken.Hours12Padded)).to.throws;
+							});
+
 							it('invalid length', () => {
 								expect(() => new DateTime(
-									'0',
-									FormatToken.Hours12Padded
+									'0 am',
+									FormatToken.Hours12Padded + ' ' + FormatToken.MeridiemLower
 								)).to.throws;
 							});
 
@@ -1714,7 +1865,7 @@ describe('DateTime', () => {
 
 								const date : DateTime = new DateTime(
 									'00',
-									FormatToken.Hours12Padded
+									FormatToken.Hours12Padded + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1736,8 +1887,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									padDigit(refDate.hours, 2),
-									FormatToken.Hours12Padded
+									padDigit(refDate.hours, 2) + ' am',
+									FormatToken.Hours12Padded + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1758,8 +1909,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									padDigit(refDate.hours, 2),
-									FormatToken.Hours12Padded
+									padDigit(refDate.hours, 2) + ' am',
+									FormatToken.Hours12Padded + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1780,8 +1931,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									'13',
-									FormatToken.Hours12Padded
+									'13 pm',
+									FormatToken.Hours12Padded + ' ' + FormatToken.MeridiemLower
 								);
 
 								checkDateTime(date, {
@@ -1805,8 +1956,8 @@ describe('DateTime', () => {
 								});
 
 								const date : DateTime = new DateTime(
-									prefix + refDate.hours + suffix,
-									prefix + FormatToken.Hours12Padded + suffix
+									prefix + refDate.hours + suffix + ' am',
+									prefix + FormatToken.Hours12Padded + suffix + ' am'
 								);
 
 								checkDateTime(date, {
@@ -1825,6 +1976,13 @@ describe('DateTime', () => {
 				});
 
 				describe('minutes', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getDate()) + '-' + now.getDate(),
+							FormatToken.MinutesPadded + FormatToken.Minutes
+						)).to.throws;
+					});
+
 					describe(FormatToken.Minutes, () => {
 						it('invalid value', () => {
 							expect(() => new DateTime('', FormatToken.Minutes)).to.throws;
@@ -2074,6 +2232,13 @@ describe('DateTime', () => {
 				});
 
 				describe('seconds', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getDate()) + '-' + now.getDate(),
+							FormatToken.Seconds + FormatToken.SecondsPadded
+						)).to.throws;
+					});
+
 					describe(FormatToken.Seconds, () => {
 						it('invalid value', () => {
 							expect(() => new DateTime('', FormatToken.Seconds)).to.throws;
@@ -2323,6 +2488,13 @@ describe('DateTime', () => {
 				});
 
 				describe('ms', () => {
+					it('duplicated tokens', () => {
+						expect(() => new DateTime(
+							('' + now.getDate()) + '-' + now.getDate(),
+							FormatToken.MilliSeconds + FormatToken.MilliSecondsPadded2
+						)).to.throws;
+					});
+
 					describe(FormatToken.MilliSeconds, () => {
 						it('invalid value', () => {
 							expect(() => new DateTime('', FormatToken.MilliSeconds)).to.throws;

@@ -12,7 +12,7 @@ export interface DateTimeParam {
 	hours? : number;
 	minutes? : number;
 	seconds? : number;
-	ms? : number
+	ms? : number;
 }
 
 export type String2 = [string, string];
@@ -48,8 +48,12 @@ export interface DurationParam {
 }
 
 export interface TokenMatchResult {
+	startIndex : number; // for DateTime.format()
+
 	token : FormatToken;
-	startIndex : number;
+	regExpStr : string;
+
+	value : number;
 }
 
 export interface YearCalendar {

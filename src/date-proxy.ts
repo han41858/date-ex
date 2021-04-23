@@ -8,25 +8,25 @@ export class DateProxy {
 	protected _date ! : Date;
 
 
-	constructor (initDate? : InitDataFormat, formatString? : string) {
-		if (initDate === null || initDate === undefined) {
+	constructor (initData? : InitDataFormat, formatString? : string) {
+		if (initData === null || initData === undefined) {
 			this._date = new Date();
 		}
 		else {
-			if (initDate instanceof DateTime) {
-				this._date = new Date(initDate.toDate());
+			if (initData instanceof DateTime) {
+				this._date = new Date(initData.toDate());
 			}
-			else if (initDate instanceof Date) {
-				this._date = new Date(initDate);
+			else if (initData instanceof Date) {
+				this._date = new Date(initData);
 			}
-			else if (typeof initDate === 'string') {
+			else if (typeof initData === 'string') {
 				if (!formatString) {
-					this._date = new Date(initDate);
+					this._date = new Date(initData);
 				}
 				// else in DateTime
 			}
-			else if (typeof initDate === 'number') {
-				this._date = new Date(initDate);
+			else if (typeof initData === 'number') {
+				this._date = new Date(initData);
 			}
 			else {
 				this._date = new Date();

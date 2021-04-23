@@ -1,3 +1,5 @@
+import { DateTimeParam } from '../src/interfaces';
+
 export enum DateTimeUnit {
 	Year = 'year',
 	Quarter = 'quarter',
@@ -103,9 +105,20 @@ export enum ISO8601Format {
 	Time = 'hh:mm:ss.sss'
 }
 
-export const DefaultLocale = 'en';
+export const DefaultLocale = 'en'; // TODO: find from Date
 
 export const Gregorian1Year : number = 146097 / 400; // 365.2425
 export const Gregorian1Month : number = Gregorian1Year / 12; // 30.436875
 
 export const DaysToMs = 24 * 60 * 60 * 1000;
+
+export const DefaultValue : DateTimeParam = {
+	year : 1970,
+	month : 1,
+	date : 1,
+
+	hours : 0,
+	minutes : 0,
+	seconds : 0,
+	ms : 0
+};

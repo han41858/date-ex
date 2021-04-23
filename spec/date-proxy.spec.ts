@@ -157,6 +157,9 @@ describe('DateProxy', () => {
 			}, {
 				param : { year : 2021, month : 1, date : 1 },
 				week : 1
+			}, {
+				param : { year : 2021, month : 1, date : 3 },
+				week : 2
 			}];
 
 			it('ok', () => {

@@ -1,6 +1,13 @@
-import { AnyObject, DateTimeParam, DurationParam, InitDataFormat, LocaleSet } from './interfaces';
+import { AnyObject, DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
 import { DateTime } from './date-time';
-import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit } from './constants';
+import {
+	DateTimeParamKeys,
+	DateTimeUnit,
+	DefaultValue,
+	DurationParamKeys,
+	DurationUnit,
+	FormatToken
+} from './constants';
 
 
 export const newArray = <T> (length : number, callback? : (i : number, arr : T[]) => T) : T[] => {
@@ -210,6 +217,239 @@ export const datetimeUnitToDurationUnit = (unit : DateTimeUnit) : DurationUnit =
 
 	return key;
 };
+
+export const parseDateString = (valueString : string, formatString : string) : DateTimeParam => {
+	const dateParam : DateTimeParam = {};
+
+	const matchArr : TokenMatchResult[] = parseValueWithFormat(valueString, formatString);
+
+	if (matchArr.length > 0) {
+		// prevent duplicated tokens in a unit
+		const unitAndTokens : {
+			unit : DateTimeUnit | string,
+			tokens : FormatToken[]
+		}[] = [{
+			unit : DateTimeUnit.Year,
+			tokens : [FormatToken.Year, FormatToken.YearShort]
+		}, {
+			unit : DateTimeUnit.Month,
+			tokens : [FormatToken.Month, FormatToken.MonthPadded, FormatToken.MonthStringShort, FormatToken.MonthStringLong]
+		}, {
+			unit : DateTimeUnit.Date,
+			tokens : [FormatToken.DayOfMonth, FormatToken.DayOfMonthPadded, FormatToken.DayOfYear, FormatToken.DayOfYearPadded]
+		}, {
+			unit : 'meridiem',
+			tokens : [FormatToken.MeridiemLower, FormatToken.MeridiemCapital]
+		}, {
+			unit : DateTimeUnit.Hours,
+			tokens : [FormatToken.Hours24, FormatToken.Hours24Padded, FormatToken.Hours12, FormatToken.Hours12Padded]
+		}, {
+			unit : DateTimeUnit.Minutes,
+			tokens : [FormatToken.Minutes, FormatToken.MinutesPadded]
+		}, {
+			unit : DateTimeUnit.Seconds,
+			tokens : [FormatToken.Seconds, FormatToken.SecondsPadded]
+		}, {
+			unit : DateTimeUnit.Ms,
+			tokens : [FormatToken.MilliSeconds, FormatToken.MilliSecondsPadded2, FormatToken.MilliSecondsPadded3]
+		}];
+
+		const tokens : FormatToken[] = matchArr.map(one => one.token);
+
+		unitAndTokens.forEach(def => {
+			const tokensFiltered : FormatToken[] = def.tokens.filter(token => {
+				return tokens.includes(token);
+			});
+
+			if (tokensFiltered.length >= 2) {
+				throw new Error('duplicated tokens in one unit');
+			}
+
+			let value : number | undefined;
+
+			if (tokensFiltered.length === 1) {
+				const token : FormatToken = tokensFiltered[0];
+
+				const resultFound : TokenMatchResult | undefined = matchArr.find(one => {
+					return token === one.token;
+				});
+
+				value = resultFound?.value;
+			}
+
+			// default value
+			if ((value === undefined || isNaN(value))
+				&& dateParam[def.unit as keyof DateTimeParam] === undefined) {
+				value = DefaultValue[def.unit as keyof DateTimeParam];
+			}
+
+			if (value !== undefined) {
+				dateParam[def.unit as keyof DateTimeParam] = value;
+			}
+		});
+	}
+	else {
+		throw new Error('invalid format string');
+	}
+
+	return dateParam;
+};
+
+export const parseValueWithFormat = (valueString : string, formatString : string) : TokenMatchResult[] => {
+	// find tokens
+	const regExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
+
+	const matchArr : TokenMatchResult[] = [];
+
+	let execResult : RegExpExecArray | null = regExp.exec(formatString);
+
+	if (!execResult) {
+		throw new Error('invalid value string with format string');
+	}
+
+	let fullFormatStr : string = '';
+	let formatStrRemains : string = formatString;
+	let valueStrRemains : string = valueString;
+	let omitLength = 0;
+
+	do {
+		const token : FormatToken = execResult[0] as FormatToken;
+		const regExpStr : string = formatTokenToRegExpStr(token);
+		const regExpPartial : RegExp = new RegExp(regExpStr);
+
+		fullFormatStr += valueStrRemains.substr(0, execResult.index);
+		// skip don't care string
+		valueStrRemains = valueStrRemains.substr(execResult.index);
+
+		// not null
+		const fragResult : RegExpExecArray = regExpPartial.exec(valueStrRemains) as RegExpExecArray;
+		const valueStr : string = fragResult[0];
+		const value : number = parseValueStr(token, valueStr);
+
+		matchArr.push({
+			startIndex : omitLength + execResult.index,
+
+			token,
+			regExpStr,
+
+			value
+		});
+
+		fullFormatStr += regExpStr;
+		formatStrRemains = formatStrRemains.substr(execResult.index + token.length);
+		valueStrRemains = valueStrRemains.substr(fragResult.index + valueStr.length);
+		omitLength += execResult.index + token.length;
+
+		execResult = regExp.exec(formatStrRemains);
+
+		if (!execResult) {
+			fullFormatStr += valueStrRemains;
+		}
+	}
+	while (execResult);
+
+
+	// check fields with all tokens
+	const fullRegExp : RegExp = new RegExp(fullFormatStr);
+
+	if (!fullRegExp.test(valueString)) {
+		throw new Error('invalid value string with format string');
+	}
+
+	return matchArr;
+};
+
+const formatTokenToRegExpStr = (token : FormatToken) : string => {
+	let regExpStr : string;
+
+	// order by min, max length
+	switch (token) {
+		// length : 1
+		case FormatToken.DayOfWeek:
+			regExpStr = '\\d{1}';
+			break;
+
+		// length : 1 ~ 2
+		case FormatToken.YearShort:
+		case FormatToken.Month:
+		case FormatToken.DayOfMonth:
+		case FormatToken.Week:
+		case FormatToken.Hours24:
+		case FormatToken.Hours12:
+		case FormatToken.Minutes:
+		case FormatToken.Seconds:
+			regExpStr = '\\d{1,2}';
+			break;
+
+		// length : 1 ~ 3
+		case FormatToken.DayOfYear:
+		case FormatToken.MilliSeconds:
+			regExpStr = '\\d{1,3}';
+			break;
+
+		// length : 2
+		case FormatToken.MonthPadded:
+		case FormatToken.WeekPadded:
+		case FormatToken.DayOfMonthPadded:
+		case FormatToken.Hours24Padded:
+		case FormatToken.Hours12Padded:
+		case FormatToken.MinutesPadded:
+		case FormatToken.SecondsPadded:
+		case FormatToken.MilliSecondsPadded2:
+			regExpStr = '\\d{2}';
+			break;
+
+		case FormatToken.DayOfYearPadded:
+		case FormatToken.MilliSecondsPadded3:
+			regExpStr = '\\d{3}';
+			break;
+
+		// length : 3 ~ 6
+		case FormatToken.Year:
+			regExpStr = '\\d{3,6}';
+			break;
+
+		// special case
+		case FormatToken.WeekPaddedWithPrefix:
+			regExpStr = 'W\\d{2}';
+			break;
+
+		// TODO: MonthStringShort, MonthStringLong
+		// TODO: DayOfWeekStringShort, DayOfWeekStringMiddle, DayOfWeekStringLong
+		// TODO: MeridiemLower, MeridiemCapital - multi language
+		// TODO: timezone
+
+		default:
+			regExpStr = 'TODO';
+	}
+
+	return regExpStr;
+};
+
+const parseValueStr = (token : FormatToken, valueStr : string) : number => {
+	let value : number;
+
+	switch (token) {
+		// string
+		case FormatToken.MonthStringShort:
+		case FormatToken.MonthStringLong:
+			// value = valueStr; // TODO: parse to real month number
+			value = 0;
+			break;
+
+		// special case
+		case FormatToken.YearShort:
+			value = 1900 + parseInt(valueStr);
+			break;
+
+		// number
+		default:
+			value = parseInt(valueStr);
+	}
+
+	return value;
+};
+
 
 type SafeAddDataType = number | undefined | null;
 

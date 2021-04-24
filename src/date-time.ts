@@ -7,6 +7,7 @@ import {
 	InitDataFormat,
 	LocaleSet,
 	MonthCalendar,
+	TokenMatchResult,
 	YearCalendar
 } from './interfaces';
 import {
@@ -20,6 +21,7 @@ import {
 } from './constants';
 import {
 	durationUnitToDateTimeUnit,
+	findTokens,
 	isDateTimeParam,
 	isDurationParam,
 	loadLocaleFile,
@@ -111,7 +113,7 @@ export class DateTime extends DateProxy {
 			// from zero date time
 			this._date = new Date(0);
 
-			const setParam : DateTimeParam = parseDateString(initData, formatString);
+			const setParam : DateTimeParam = parseDateString(formatString, initData);
 
 			if (setParam.hours === undefined) {
 				setParam.hours = 0; // for timezone
@@ -399,20 +401,18 @@ export class DateTime extends DateProxy {
 	format (format : string) : string {
 		let result : string = format;
 
+		const matchArr : TokenMatchResult[] = findTokens(format);
 
-		// TODO:
-		// const matchArr : TokenMatchResult[] = parseValueWithFormat(format);
-		//
-		// if (matchArr?.length > 0) {
-		// 	// convert tokens to real value
-		// 	const maxIndex : number = matchArr.length - 1;
-		//
-		// 	for (let i = maxIndex; i >= 0; i--) {
-		// 		result = result.substr(0, matchArr[i].startIndex)
-		// 			+ this.convertTokenToValue(matchArr[i].token)
-		// 			+ result.substr(matchArr[i].startIndex + matchArr[i].token.length);
-		// 	}
-		// }
+		if (matchArr?.length > 0) {
+			// convert tokens to real value
+			const maxIndex : number = matchArr.length - 1;
+
+			for (let i = maxIndex; i >= 0; i--) {
+				result = result.substr(0, matchArr[i].startIndex)
+					+ this.convertTokenToValue(matchArr[i].token)
+					+ result.substr(matchArr[i].startIndex + matchArr[i].token.length);
+			}
+		}
 
 		return result;
 	}

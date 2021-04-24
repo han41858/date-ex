@@ -4073,7 +4073,7 @@ describe('DateTime', () => {
 		});
 	});
 
-	xdescribe('format()', () => {
+	describe('format()', () => {
 		describe('year', () => {
 			it(FormatToken.Year, () => {
 				const years : number[] = newArray(20, i => {
@@ -4626,7 +4626,7 @@ describe('DateTime', () => {
 	});
 
 	// test with default locale
-	xdescribe('locale string', () => {
+	describe('locale string', () => {
 		let defaultLocaleSet : LocaleSet;
 
 		const initParam : InitDataFormat = {

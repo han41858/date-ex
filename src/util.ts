@@ -218,10 +218,10 @@ export const datetimeUnitToDurationUnit = (unit : DateTimeUnit) : DurationUnit =
 	return key;
 };
 
-export const parseDateString = (valueString : string, formatString : string) : DateTimeParam => {
+export const parseDateString = (formatString : string, valueString : string) : DateTimeParam => {
 	const dateParam : DateTimeParam = {};
 
-	const matchArr : TokenMatchResult[] = parseValueWithFormat(valueString, formatString);
+	const matchArr : TokenMatchResult[] = findTokens(formatString, valueString);
 
 	if (matchArr.length > 0) {
 		// prevent duplicated tokens in a unit
@@ -295,7 +295,7 @@ export const parseDateString = (valueString : string, formatString : string) : D
 	return dateParam;
 };
 
-export const parseValueWithFormat = (valueString : string, formatString : string) : TokenMatchResult[] => {
+export const findTokens = (formatString : string, valueString ? : string) : TokenMatchResult[] => {
 	// find tokens
 	const regExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
@@ -307,53 +307,73 @@ export const parseValueWithFormat = (valueString : string, formatString : string
 		throw new Error('invalid value string with format string');
 	}
 
-	let fullFormatStr : string = '';
-	let formatStrRemains : string = formatString;
-	let valueStrRemains : string = valueString;
-	let omitLength = 0;
 
-	do {
-		const token : FormatToken = execResult[0] as FormatToken;
-		const regExpStr : string = formatTokenToRegExpStr(token);
-		const regExpPartial : RegExp = new RegExp(regExpStr);
+	if (valueString !== undefined) {
+		let fullFormatStr : string = '';
+		let formatStrRemains : string = formatString;
+		let valueStrRemains : string | undefined = valueString;
+		let omitLength = 0;
 
-		fullFormatStr += valueStrRemains.substr(0, execResult.index);
-		// skip don't care string
-		valueStrRemains = valueStrRemains.substr(execResult.index);
+		do {
+			const token : FormatToken = execResult[0] as FormatToken;
+			const regExpStr : string = formatTokenToRegExpStr(token);
+			const regExpPartial : RegExp = new RegExp(regExpStr);
 
-		// not null
-		const fragResult : RegExpExecArray = regExpPartial.exec(valueStrRemains) as RegExpExecArray;
-		const valueStr : string = fragResult[0];
-		const value : number = parseValueStr(token, valueStr);
+			fullFormatStr += valueStrRemains.substr(0, execResult.index);
+			// skip don't care string
+			valueStrRemains = valueStrRemains.substr(execResult.index);
 
-		matchArr.push({
-			startIndex : omitLength + execResult.index,
+			// not null
+			const fragResult : RegExpExecArray = regExpPartial.exec(valueStrRemains) as RegExpExecArray;
+			const valueStr : string = fragResult[0];
+			const value : number = parseValueStr(token, valueStr);
 
-			token,
-			regExpStr,
+			matchArr.push({
+				startIndex : omitLength + execResult.index,
+				token,
+				value
+			});
 
-			value
-		});
+			fullFormatStr += regExpStr;
+			formatStrRemains = formatStrRemains.substr(execResult.index + token.length);
+			valueStrRemains = valueStrRemains.substr(fragResult.index + valueStr.length);
+			omitLength += execResult.index + token.length;
 
-		fullFormatStr += regExpStr;
-		formatStrRemains = formatStrRemains.substr(execResult.index + token.length);
-		valueStrRemains = valueStrRemains.substr(fragResult.index + valueStr.length);
-		omitLength += execResult.index + token.length;
+			execResult = regExp.exec(formatStrRemains);
 
-		execResult = regExp.exec(formatStrRemains);
+			if (!execResult) {
+				fullFormatStr += valueStrRemains;
+			}
+		}
+		while (execResult);
 
-		if (!execResult) {
-			fullFormatStr += valueStrRemains;
+
+		// check fields with all tokens
+		const fullRegExp : RegExp = new RegExp(fullFormatStr);
+
+		if (!fullRegExp.test(valueString)) {
+			throw new Error('invalid value string with format string');
 		}
 	}
-	while (execResult);
+	else {
+		// only format string
+		let formatStrRemains : string = formatString;
+		let omitLength = 0;
 
+		do {
+			const token : FormatToken = execResult[0] as FormatToken;
 
-	// check fields with all tokens
-	const fullRegExp : RegExp = new RegExp(fullFormatStr);
+			matchArr.push({
+				startIndex : omitLength + execResult.index,
+				token
+			});
 
-	if (!fullRegExp.test(valueString)) {
-		throw new Error('invalid value string with format string');
+			formatStrRemains = formatStrRemains.substr(execResult.index + token.length);
+			omitLength += execResult.index + token.length;
+
+			execResult = regExp.exec(formatStrRemains);
+		}
+		while (execResult);
 	}
 
 	return matchArr;

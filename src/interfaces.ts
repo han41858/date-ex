@@ -49,11 +49,8 @@ export interface DurationParam {
 
 export interface TokenMatchResult {
 	startIndex : number; // for DateTime.format()
-
 	token : FormatToken;
-	regExpStr : string;
-
-	value : number;
+	value? : number;
 }
 
 export interface YearCalendar {

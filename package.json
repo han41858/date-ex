@@ -1,6 +1,6 @@
 {
 	"name": "@han41858/date-ex",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Extensions for Date class.",
 	"main": "build/public-api.js",
 	"types": "build/public-api.d.ts",

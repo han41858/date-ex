@@ -2892,6 +2892,25 @@ describe('DateTime', () => {
 			});
 		});
 
+		describe('with number', () => {
+			it('ok', () => {
+				const now : Date = new Date();
+
+				const newDate : DateTime = new DateTime(+now);
+
+				checkDateTime(newDate, {
+					year : now.getFullYear(),
+					month : now.getMonth() + 1,
+					date : now.getDate(),
+
+					hours : now.getHours(),
+					minutes : now.getMinutes(),
+					seconds : now.getSeconds(),
+					ms : now.getMilliseconds()
+				});
+			});
+		});
+
 		describe('with DateTime', () => {
 			it('ok', () => {
 				const now : Date = new Date();
@@ -3670,7 +3689,7 @@ describe('DateTime', () => {
 		let refDate : DateTime;
 
 		before(() => {
-			refDate = new DateTime(0); // zero base
+			refDate = new DateTime();
 		});
 
 		it('ok', () => {
@@ -3737,7 +3756,7 @@ describe('DateTime', () => {
 		let refDate : DateTime;
 
 		before(() => {
-			refDate = new DateTime(0); // zero base
+			refDate = new DateTime();
 		});
 
 		describe('with DateTimeParam', () => {
@@ -3828,16 +3847,13 @@ describe('DateTime', () => {
 			));
 
 			const dateTime : DateTime = new DateTime(date);
-			const timezoneRemoved : DateTime = new DateTime(dateTime).add({
-				hours : -dateTime.timezoneOffsetInHours
-			});
 
 			const dateTimeByUTC : DateTime = new DateTime(Date.UTC(
 				initParam.year, initParam.month - 1, initParam.date,
 				initParam.hours, initParam.minutes, initParam.seconds, initParam.ms
 			));
 
-			expect(+timezoneRemoved).to.be.eql(+dateTimeByUTC);
+			expect(+dateTime).to.be.eql(+dateTimeByUTC);
 		});
 
 		it('different date & day', () => {

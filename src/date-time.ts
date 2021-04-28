@@ -125,7 +125,6 @@ export class DateTime extends DateProxy {
 			this._date = new Date(0);
 
 			this.set({
-				hours : 0,
 				ms : initData
 			});
 		}
@@ -325,10 +324,6 @@ export class DateTime extends DateProxy {
 		}
 
 		if (Object.keys(setParam).length > 0) {
-			if (setParam.hours === undefined) {
-				setParam.hours = 0; // for timezone
-			}
-
 			this.set(setParam);
 		}
 

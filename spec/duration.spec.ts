@@ -831,4 +831,45 @@ describe('Duration', () => {
 			});
 		});
 	});
+
+	describe('divide()', () => {
+		it('ok', () => {
+			const totalDuration = 1000;
+			const count = 4;
+
+			const duration : Duration = new Duration({
+				ms : totalDuration
+			});
+
+			const divideResult : Duration[] = duration.divide(count);
+
+			expect(divideResult).to.be.instanceOf(Array);
+			expect(divideResult).to.be.lengthOf(count);
+			expect(divideResult.every(one => {
+				return +one === totalDuration / count;
+			})).to.be.true;
+		});
+
+		it('ok - with rebalancing', () => {
+			const totalDuration = 2000;
+			const count = 2;
+
+			const duration : Duration = new Duration({
+				ms : totalDuration
+			});
+
+			const divideResult : Duration[] = duration.divide(count);
+
+			expect(divideResult).to.be.instanceOf(Array);
+			expect(divideResult).to.be.lengthOf(count);
+			expect(divideResult.every(one => {
+				return +one === totalDuration / count;
+			})).to.be.true;
+
+			expect(divideResult.every(one => {
+				return one.seconds === totalDuration / count / 1000
+					&& one.ms === undefined;
+			})).to.be.true;
+		});
+	});
 });

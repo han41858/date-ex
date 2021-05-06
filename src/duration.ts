@@ -1,6 +1,6 @@
-import { DateTimeParam, DurationParam } from './interfaces';
-import { DurationParamKeys, DurationUnit, Gregorian1Month } from './constants';
-import { isDateTimeParam, isDurationParam, safeAdd } from './util';
+import { DateTimeParam, DurationParam, DurationUnitMaxValue } from './interfaces';
+import { DurationParamKeys, DurationUnitMaxValueArr } from './constants';
+import { isDateTimeParam, isDurationParam, newArray, safeAdd } from './util';
 import { DateTime } from './date-time';
 
 
@@ -82,22 +82,14 @@ export class Duration {
 
 	// to milliseconds
 	valueOf () : number {
-		type MultiplierDefine = [keyof DurationParam, number];
-
-		const defs : MultiplierDefine[] = [
-			[DurationUnit.Years, 12],
-			[DurationUnit.Months, Gregorian1Month],
-			[DurationUnit.Dates, 24],
-
-			[DurationUnit.Hours, 60],
-			[DurationUnit.Minutes, 60],
-			[DurationUnit.Seconds, 1000],
-			[DurationUnit.Ms, 1]
-		];
-
-		return defs.reduce((sum : number, def : MultiplierDefine) => {
+		return DurationUnitMaxValueArr.reduce((
+			sum : number,
+			def : DurationUnitMaxValue,
+			i : number,
+			arr : DurationUnitMaxValue[]
+		) => {
 			const unit : keyof DurationParam = def[0];
-			const multiplier : number = def[1];
+			const multiplier : number = arr[i + 1]?.[1] || 1;
 
 			return (sum + (this.values?.[unit] || 0)) * multiplier;
 		}, 0);
@@ -174,39 +166,35 @@ export class Duration {
 	}
 
 	private rebalancing () : void {
-		const repeatArr : [DurationUnit, number][] = [
-			[DurationUnit.Ms, 1000],
-			[DurationUnit.Seconds, 60],
-			[DurationUnit.Minutes, 60],
-			[DurationUnit.Hours, 24],
+		// be careful, Array.reverse() changes original array
+		[...DurationUnitMaxValueArr]
+			.reverse()
+			.forEach((def : any, i : number, arr : any[]) => {
+				const unit : keyof DurationParam = def[0];
 
-			[DurationUnit.Dates, Gregorian1Month],
-			[DurationUnit.Months, 12],
-			[DurationUnit.Years, 0] // 0 means nothing
-		];
+				const key : keyof DurationParam = unit as keyof DurationParam;
+				const value : number | undefined = this.values[key];
 
-		repeatArr.forEach(([unit, divider] : [DurationUnit, number], i : number, arr) => {
-			const key : keyof DurationParam = unit as keyof DurationParam;
-			const value : number | undefined = this.values[key];
+				if (value !== undefined && i < arr.length - 1) {
+					const divider : number = def[1];
 
-			if (value !== undefined && i < arr.length - 1) {
-				const nextKey : keyof DurationParam = arr[i + 1][0] as keyof DurationParam;
+					const nextKey : keyof DurationParam = arr[i + 1][0] as keyof DurationParam;
 
-				if (value < 0) {
-					const nextDown : number = Math.ceil(-value / 1000);
+					if (value < 0) {
+						const nextDown : number = Math.ceil(-value / 1000);
 
-					this.values[nextKey] = safeAdd(this.values[nextKey], -nextDown);
-					(this.values[key] as number) += nextDown * divider;
+						this.values[nextKey] = safeAdd(this.values[nextKey], -nextDown);
+						(this.values[key] as number) += nextDown * divider;
+					}
+
+					if (value >= divider) {
+						const nextUp : number = Math.floor(value / divider);
+
+						this.values[nextKey] = safeAdd(this.values[nextKey], nextUp);
+						(this.values[key] as number) -= nextUp * divider;
+					}
 				}
-
-				if (value >= divider) {
-					const nextUp : number = Math.floor(value / divider);
-
-					this.values[nextKey] = safeAdd(this.values[nextKey], nextUp);
-					(this.values[key] as number) -= nextUp * divider;
-				}
-			}
-		});
+			});
 
 		// remove undefined field
 		Object.entries(this.values).forEach(([key, value] : [string, number]) => {
@@ -266,6 +254,16 @@ export class Duration {
 		}
 
 		return result;
+	}
+
+	divide (count : number) : Duration[] {
+		const eachDuration : number = this.valueOf() / count;
+
+		return newArray(count, () : Duration => {
+			return new Duration({
+				ms : eachDuration
+			});
+		});
 	}
 
 }

@@ -1,4 +1,4 @@
-import { DateTimeParam } from '../src/interfaces';
+import { DateTimeParam, DurationUnitMaxValue } from './interfaces';
 
 export enum DateTimeUnit {
 	Year = 'year',
@@ -122,3 +122,14 @@ export const DefaultValue : DateTimeParam = {
 	seconds : 0,
 	ms : 0
 };
+
+export const DurationUnitMaxValueArr : DurationUnitMaxValue[] = [
+	[DurationUnit.Years, undefined],
+	[DurationUnit.Months, 12],
+	[DurationUnit.Dates, Gregorian1Month],
+
+	[DurationUnit.Hours, 24],
+	[DurationUnit.Minutes, 60],
+	[DurationUnit.Seconds, 60],
+	[DurationUnit.Ms, 1000]
+];

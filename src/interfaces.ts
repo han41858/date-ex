@@ -69,3 +69,5 @@ export interface MonthCalendar {
 export interface AnyObject<T> {
 	[index : string] : T;
 }
+
+export type DurationUnitMaxValue = [keyof DurationParam, number | undefined];

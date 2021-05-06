@@ -589,6 +589,78 @@ describe('Duration', () => {
 		});
 	});
 
+	describe('valueOf()', () => {
+		it('ms', () => {
+			const value = 88;
+
+			const valueOf : number = +new Duration({
+				ms : value
+			});
+
+			expect(valueOf).to.be.eql(value);
+		});
+
+		it('seconds', () => {
+			const value = 35;
+
+			const valueOf : number = +new Duration({
+				seconds : value
+			});
+
+			expect(valueOf).to.be.eql(value * 1000);
+		});
+
+		it('minutes', () => {
+			const value = 53;
+
+			const valueOf : number = +new Duration({
+				minutes : value
+			});
+
+			expect(valueOf).to.be.eql(value * 60 * 1000);
+		});
+
+		it('hours', () => {
+			const value = 10;
+
+			const valueOf : number = +new Duration({
+				hours : value
+			});
+
+			expect(valueOf).to.be.eql(value * 60 * 60 * 1000);
+		});
+
+		it('dates', () => {
+			const value = 10;
+
+			const valueOf : number = +new Duration({
+				dates : value
+			});
+
+			expect(valueOf).to.be.eql(value * 24 * 60 * 60 * 1000);
+		});
+
+		it('months', () => {
+			const value = 3;
+
+			const valueOf : number = +new Duration({
+				months : value
+			});
+
+			expect(valueOf).to.be.eql(value * Gregorian1Month * 24 * 60 * 60 * 1000);
+		});
+
+		it('years', () => {
+			const value = 3;
+
+			const valueOf : number = +new Duration({
+				years : value
+			});
+
+			expect(valueOf).to.be.eql(value * 12 * Gregorian1Month * 24 * 60 * 60 * 1000);
+		});
+	});
+
 	describe('add()', () => {
 		describe('with Duration', () => {
 			it('ok - simple', () => {

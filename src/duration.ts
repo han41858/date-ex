@@ -80,6 +80,29 @@ export class Duration {
 		}
 	}
 
+	// to milliseconds
+	valueOf () : number {
+		type MultiplierDefine = [keyof DurationParam, number];
+
+		const defs : MultiplierDefine[] = [
+			[DurationUnit.Years, 12],
+			[DurationUnit.Months, Gregorian1Month],
+			[DurationUnit.Dates, 24],
+
+			[DurationUnit.Hours, 60],
+			[DurationUnit.Minutes, 60],
+			[DurationUnit.Seconds, 1000],
+			[DurationUnit.Ms, 1]
+		];
+
+		return defs.reduce((sum : number, def : MultiplierDefine) => {
+			const unit : keyof DurationParam = def[0];
+			const multiplier : number = def[1];
+
+			return (sum + (this.values?.[unit] || 0)) * multiplier;
+		}, 0);
+	}
+
 	get years () : number | undefined {
 		return this.values.years;
 	}

@@ -11,7 +11,6 @@ and represent Date in any format.
 
 > `date-ex` is written by TypeScript, and published by JavaScript. So you can use this library in TypeScript code and JavaScript code also.
 
-
 ## `DateTime`
 
 Represent date and time.
@@ -338,9 +337,9 @@ Represent date, time value. This object consists with this fields.
 | `month` | `number` | `1` ~ `12` | Represents month. |
 | `date` | `number` | `1` ~ `31` | Represents date. |
 | `hours` | `number` | `0` ~ `23` | Represents hours. |
-| `minutes` | `number` | `0` ~ `59` | Represents minutes |
-| `seconds` | `number` | `0` ~ `59` | Represents seconds |
-| `ms` | `number` | `0` ~ `999` | Represents mlliseconds |
+| `minutes` | `number` | `0` ~ `59` | Represents minutes. |
+| `seconds` | `number` | `0` ~ `59` | Represents seconds. |
+| `ms` | `number` | `0` ~ `999` | Represents mlliseconds. |
 
 * `month` field range is not `0` ~ `11`. This field represent the real month value `1` ~ `12`
 
@@ -448,9 +447,9 @@ Represent duration value. This object consists with this fields.
 | `months` | `number` | `1` ~ `12` | Represents months. |
 | `dates` | `number` | `1` ~ `31` | Represents dates. |
 | `hours` | `number` | `0` ~ `23` | Represents hours. |
-| `minutes` | `number` | `0` ~ `59` | Represents minutes |
-| `seconds` | `number` | `0` ~ `59` | Represents seconds |
-| `ms` | `number` | `0` ~ `999` | Represents milliseconds |
+| `minutes` | `number` | `0` ~ `59` | Represents minutes. |
+| `seconds` | `number` | `0` ~ `59` | Represents seconds. |
+| `ms` | `number` | `0` ~ `999` | Represents milliseconds. |
 
 ## `DurationUnit`
 

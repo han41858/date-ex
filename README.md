@@ -11,9 +11,8 @@ and represent Date in any format.
 
 > `date-ex` is written by TypeScript, and published by JavaScript. So you can use this library in TypeScript code and JavaScript code also.
 
-## Classes
 
-### `DateTime`
+## `DateTime`
 
 Represent date and time.
 
@@ -42,64 +41,7 @@ const newDateByDateTimeParam : DateTime = new DateTime({
 });
 ```
 
-### `Duration`
-
-Represents duration.
-
-`Duration` instance is created with `new` keyword.
-
-```TypeScript
-const duration : Duration = new Duration();
-```
-
-If you pass parameter to constructor, you can create instance with specific duration. Parameter type supports
-for `string`, `Duration`, [`json` type(`DurationParam`)](#DurationParam).
-
-```TypeScript
-const newDurationByString : Duration = new Duration('PY2');
-
-const newDurationByDuration : Duration = new Duration(new Duration());
-
-const newDurationByDurationParam : Duration = new Duration({
-	years : 2
-});
-```
-
-### `DateTimeParam`
-
-Represent date, time value. This object consists with this fields.
-
-| Field | Field Type | Value Range | Description |
-|---|---|---|---|
-| `year` | `number` | - | Represents year. |
-| `month` | `number` | `1` ~ `12` | Represents month. |
-| `date` | `number` | `1` ~ `31` | Represents date. |
-| `hours` | `number` | `0` ~ `23` | Represents hours. |
-| `minutes` | `number` | `0` ~ `59` | Represents minutes |
-| `seconds` | `number` | `0` ~ `59` | Represents seconds |
-| `ms` | `number` | `0` ~ `999` | Represents mlliseconds |
-
-* `month` field range is not `0` ~ `11`. This field represent the real month value `1` ~ `12`
-
-### `DateTimeUnit`
-
-Represents date and time unit.
-
-| Token | Field | Type | Description |
-|---|---|---|---|
-| `DateTimeUnit.Year` | `year` | `number` | Represents year. |
-| `DateTimeUnit.Quarter` | `quarter` | `number` | Represents quarter. |
-| `DateTimeUnit.Month` | `month` | `number` | Represents month. |
-| `DateTimeUnit.Week` | `week` | `number` | Represents week number. |
-| `DateTimeUnit.Date` | `date` | `number` | Represents date. |
-| `DateTimeUnit.Hours` | `hours` | `number` | Represents hours. |
-| `DateTimeUnit.Minutes` | `minutes` | `number` | Represents minutes. |
-| `DateTimeUnit.Seconds` | `seconds` | `number` | Represents seconds. |
-| `DateTimeUnit.Ms` | `ms` | `number` | Represents milliseconds. |
-
-## Getter
-
-### Basic fields
+### Getter - Basic fields
 
 | Getter | Return type | Value Range | Description | `Date` methods |
 |---|---|---|---|---|
@@ -118,7 +60,7 @@ Represents date and time unit.
 
 * `month` field range is not `0` ~ `11`. This field represent the real month value `1` ~ `12`
 
-### Extended fields
+### Getter - Extended fields
 
 | Getter | Return type | Value Range | Description |
 |---|---|---|---|
@@ -157,9 +99,7 @@ const utcDate : DateTime = date.UTC;
 | `toUTCString()` | `string` | Returns with UTC string. Same with `Date.toUTCString()`. |
 | `toJson()` | `object` | Returns with [`DateTimeParam`](#DateTimeParam). |
 
-## Setter
-
-### Basic fields
+### Setter - Each fields
 
 | Setter | Value Type | Description | `Date` Methods |
 |---|---|---|---|
@@ -238,7 +178,7 @@ date.add({
 });
 ```
 
-## `startOf(unit): DateTime`, `endOf(unit): DateTime`
+### `startOf(unit): DateTime`, `endOf(unit): DateTime`
 
 Returns the start/end date and time based on the unit passed as a factor.
 
@@ -249,7 +189,7 @@ console.log(date.startOf('year').toISOString()); // 2020-01-01T00:00:00.000Z
 console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 ```
 
-## `format(): string`
+### `format(): string`
 
 Returns string with the format.
 
@@ -287,7 +227,7 @@ Returns string with the format.
 | `FormatToken.MilliSecondsPadded2` | `SS` | - | Converts to a milliseconds in 2-digit. | `00` ~ `99` |
 | `FormatToken.MilliSecondsPadded3` | `SSS` | - | Converts to a milliseconds in 3-digit. | `000` ~ `999`  |
 
-## Internationalization
+### Internationalization
 
 You can set i18n in global context or each instance. If the setting in global and local is different, i18n is working
 with local setting.
@@ -317,7 +257,7 @@ want to set i18n value, pass language code to `locale()` methods.
 
 Default value is `en`..
 
-### Warning
+#### Warning
 
 `locale()` methods uses ES6 `import` function. `import` function is working as `Promise`, so you should wait JavaScript
 1 cycle after called `locale()` to load i18n file.
@@ -339,7 +279,7 @@ Set language in locally.
 | `en` | English |
 | `ko-kr` | Korean (Korea) |
 
-## Compare methods
+### Compare methods
 
 All compare methods can be received `DateTimeUnit`. The accuracy of the calculation is based on this unit, and if the
 unit is omitted, it is calculated in milliseconds.
@@ -379,14 +319,46 @@ console.log(date1.isAfter(date2, 'date')); // false
 console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 
 const date3 : DateTime = new DateTime({
-	year : 2020,
-	month : 10,
-	date : 27
+  year : 2020,
+  month : 10,
+  date : 27
 });
 
 console.log(date2.isBetween(date1, date3, 'date')); // true
 console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 ```
+
+## `DateTimeParam`
+
+Represent date, time value. This object consists with this fields.
+
+| Field | Field Type | Value Range | Description |
+|---|---|---|---|
+| `year` | `number` | - | Represents year. |
+| `month` | `number` | `1` ~ `12` | Represents month. |
+| `date` | `number` | `1` ~ `31` | Represents date. |
+| `hours` | `number` | `0` ~ `23` | Represents hours. |
+| `minutes` | `number` | `0` ~ `59` | Represents minutes |
+| `seconds` | `number` | `0` ~ `59` | Represents seconds |
+| `ms` | `number` | `0` ~ `999` | Represents mlliseconds |
+
+* `month` field range is not `0` ~ `11`. This field represent the real month value `1` ~ `12`
+
+## `DateTimeUnit`
+
+Represents date and time unit.
+
+| Token | Field | Type | Description |
+|---|---|---|---|
+| `DateTimeUnit.Year` | `year` | `number` | Represents year. |
+| `DateTimeUnit.Quarter` | `quarter` | `number` | Represents quarter. |
+| `DateTimeUnit.Month` | `month` | `number` | Represents month. |
+| `DateTimeUnit.Week` | `week` | `number` | Represents week number. |
+| `DateTimeUnit.Date` | `date` | `number` | Represents date. |
+| `DateTimeUnit.Hours` | `hours` | `number` | Represents hours. |
+| `DateTimeUnit.Minutes` | `minutes` | `number` | Represents minutes. |
+| `DateTimeUnit.Seconds` | `seconds` | `number` | Represents seconds. |
+| `DateTimeUnit.Ms` | `ms` | `number` | Represents milliseconds. |
 
 ## Calendar
 
@@ -401,3 +373,97 @@ Length of `dates` array field is same with the number of date in that year.
 Returns the month calendar for that month value of the instance. Time fields are set to `0`.
 
 Length of `dates` array field is same with the number of date in that month.
+
+## `Duration`
+
+Represents duration.
+
+`Duration` instance is created with `new` keyword.
+
+```TypeScript
+const duration : Duration = new Duration();
+```
+
+If you pass parameter to constructor, you can create instance with specific duration. Parameter type supports
+for `string`, `Duration`, [`json` type(`DurationParam`)](#DurationParam).
+
+```TypeScript
+const newDurationByString : Duration = new Duration('PY2');
+
+const newDurationByDuration : Duration = new Duration(new Duration());
+
+const newDurationByDurationParam : Duration = new Duration({
+  years : 2
+});
+```
+
+### Getter & Setter - Each fields
+
+| Token | Field | Type |
+|---|---|---|
+| `DurationUnit.Years` | `years` | `number` |
+| `DurationUnit.Months` | `months` | `number` |
+| `DurationUnit.Dates` | `dates` | `number` |
+| `DurationUnit.Hours` | `hours` | `number` |
+| `DurationUnit.Minutes` | `minutes` | `number` |
+| `DurationUnit.Seconds` | `seconds` | `number` |
+| `DurationUnit.Ms` | `ms` | `number` |
+
+```TypeScript
+const duration : Duration = new Duration(); // value : {}
+
+duration.years = 2; // value : { years : 2 }
+duration.ms = 1001; // value : { years : 2, seconds : 1, ms : 1} - with rebalancing
+
+console.log(duration.seconds); // 1
+```
+
+### `add()`
+
+#### `add (param : Duration | DurationParam) : Duration`
+
+If param is `Duration` or `DurationParam`, returns `Duration`.
+
+#### `add (param : DateTime | DateTimeParam) : DateTime`
+
+If param is `DateTime` or `DateTimeParam`, returns `DateTime`.
+
+### `divide(count : number) : Duration[]`
+
+Divide total duration by `count` as `Duration` array.
+
+```TypeScript
+const duration : Duration = { seconds : 1 };
+
+console.log(duration.divide(4)); // 4 Duration instances with value of { ms : 250 }
+```
+
+## `DurationParam`
+
+Represent duration value. This object consists with this fields.
+
+| Field | Field Type | Value Range | Description |
+|---|---|---|---|
+| `years` | `number` | - | Represents years. |
+| `months` | `number` | `1` ~ `12` | Represents months. |
+| `dates` | `number` | `1` ~ `31` | Represents dates. |
+| `hours` | `number` | `0` ~ `23` | Represents hours. |
+| `minutes` | `number` | `0` ~ `59` | Represents minutes |
+| `seconds` | `number` | `0` ~ `59` | Represents seconds |
+| `ms` | `number` | `0` ~ `999` | Represents milliseconds |
+
+## `DurationUnit`
+
+Represents duration unit.
+
+| Token | Field | Type | Description |
+|---|---|---|---|
+| `DurationUnit.Years` | `years` | `number` | Represents years. |
+| `DurationUnit.Quarters` | `quarters` | `number` | Represents quarters. |
+| `DurationUnit.Months` | `months` | `number` | Represents months. |
+| `DurationUnit.Weeks` | `weeks` | `number` | Represents weeks. |
+| `DurationUnit.Dates` | `dates` | `number` | Represents dates. |
+| `DurationUnit.Hours` | `hours` | `number` | Represents hours. |
+| `DurationUnit.Minutes` | `minutes` | `number` | Represents minutes. |
+| `DurationUnit.Seconds` | `seconds` | `number` | Represents seconds. |
+| `DurationUnit.Ms` | `ms` | `number` | Represents milliseconds. |

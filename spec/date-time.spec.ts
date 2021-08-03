@@ -3756,7 +3756,9 @@ describe('DateTime', () => {
 		let refDate : DateTime;
 
 		before(() => {
-			refDate = new DateTime();
+			refDate = new DateTime().set({
+				hours: 0
+			});
 		});
 
 		describe('with DateTimeParam', () => {

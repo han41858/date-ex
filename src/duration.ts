@@ -1,15 +1,15 @@
 import { DateTimeParam, DurationParam, DurationUnitMaxValue } from './interfaces';
-import { DurationParamKeys, DurationUnitMaxValueArr } from './constants';
+import { DurationParamKeys, DurationUnit, DurationUnitMaxValueArr } from './constants';
 import { isDateTimeParam, isDurationParam, newArray, safeAdd } from './util';
 import { DateTime } from './date-time';
 
 
 export class Duration {
 
-	private readonly values : DurationParam = {};
+	private readonly values: DurationParam = {};
 
 
-	constructor (initData? : string | Duration | DurationParam) {
+	constructor (initData?: string | Duration | DurationParam) {
 		if (initData !== undefined && initData !== null) {
 			if (typeof initData === 'string') {
 				const regExp1 = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
@@ -21,7 +21,7 @@ export class Duration {
 
 
 				if (regExp1.test(initData)) {
-					const execResult : RegExpExecArray | null = regExp1.exec(initData);
+					const execResult: RegExpExecArray | null = regExp1.exec(initData);
 
 					if (execResult) {
 						const [dateStr, timeStr] = initData // divide date & time for 'M'
@@ -29,16 +29,16 @@ export class Duration {
 							.split('T');
 
 						[
-							{ key : 'years', value : /\d+Y/.exec(dateStr)?.[0]?.replace('Y', '') },
-							{ key : 'months', value : /\d+M/.exec(dateStr)?.[0]?.replace('M', '') },
-							{ key : 'dates', value : /\d+D/.exec(dateStr)?.[0]?.replace('D', '') },
+							{ key: 'years', value: /\d+Y/.exec(dateStr)?.[0]?.replace('Y', '') },
+							{ key: 'months', value: /\d+M/.exec(dateStr)?.[0]?.replace('M', '') },
+							{ key: 'dates', value: /\d+D/.exec(dateStr)?.[0]?.replace('D', '') },
 
-							{ key : 'hours', value : /\d+H/.exec(timeStr)?.[0]?.replace('H', '') },
-							{ key : 'minutes', value : /\d+M/.exec(timeStr)?.[0]?.replace('M', '') },
-							{ key : 'seconds', value : /\d+S/.exec(timeStr)?.[0]?.replace('S', '') }
+							{ key: 'hours', value: /\d+H/.exec(timeStr)?.[0]?.replace('H', '') },
+							{ key: 'minutes', value: /\d+M/.exec(timeStr)?.[0]?.replace('M', '') },
+							{ key: 'seconds', value: /\d+S/.exec(timeStr)?.[0]?.replace('S', '') }
 						].forEach((obj) => {
-							const key : keyof DurationParam = obj.key as keyof DurationParam;
-							const valueStr : string | undefined = obj.value;
+							const key: keyof DurationParam = obj.key as keyof DurationParam;
+							const valueStr: string | undefined = obj.value;
 
 							if (valueStr !== undefined) {
 								this[key] = +valueStr;
@@ -49,7 +49,7 @@ export class Duration {
 					}
 				}
 				else if (regExp2.test(initData)) {
-					const weeksStr : string = initData
+					const weeksStr: string = initData
 						.replace(/^P/, '')
 						.replace(/W$/, '');
 
@@ -69,7 +69,7 @@ export class Duration {
 				this.rebalancing();
 			}
 			else if (isDurationParam(initData)) {
-				Object.entries(initData).forEach(([key, value] : [string, number]) => {
+				Object.entries(initData).forEach(([key, value]: [string, number]) => {
 					if (value !== undefined && value !== null) {
 						this.values[key as keyof DurationParam] = value;
 					}
@@ -81,114 +81,114 @@ export class Duration {
 	}
 
 	// to milliseconds
-	valueOf () : number {
+	valueOf (): number {
 		return DurationUnitMaxValueArr.reduce((
-			sum : number,
-			def : DurationUnitMaxValue,
-			i : number,
-			arr : DurationUnitMaxValue[]
+			sum: number,
+			def: DurationUnitMaxValue,
+			i: number,
+			arr: DurationUnitMaxValue[]
 		) => {
-			const unit : keyof DurationParam = def[0];
-			const multiplier : number = arr[i + 1]?.[1] || 1;
+			const unit: keyof DurationParam = def[0];
+			const multiplier: number = arr[i + 1]?.[1] || 1;
 
 			return (sum + (this.values?.[unit] || 0)) * multiplier;
 		}, 0);
 	}
 
-	get years () : number | undefined {
+	get years (): number | undefined {
 		return this.values.years;
 	}
 
-	set years (years : number | undefined) {
+	set years (years: number | undefined) {
 		this.values.years = years;
 
 		this.rebalancing();
 	}
 
-	get months () : number | undefined {
+	get months (): number | undefined {
 		return this.values.months;
 	}
 
-	set months (months : number | undefined) {
+	set months (months: number | undefined) {
 		this.values.months = months;
 
 		this.rebalancing();
 	}
 
-	get dates () : number | undefined {
+	get dates (): number | undefined {
 		return this.values.dates;
 	}
 
-	set dates (dates : number | undefined) {
+	set dates (dates: number | undefined) {
 		this.values.dates = dates;
 
 		this.rebalancing();
 	}
 
-	get hours () : number | undefined {
+	get hours (): number | undefined {
 		return this.values.hours;
 	}
 
-	set hours (hours : number | undefined) {
+	set hours (hours: number | undefined) {
 		this.values.hours = hours;
 
 		this.rebalancing();
 	}
 
-	get minutes () : number | undefined {
+	get minutes (): number | undefined {
 		return this.values.minutes;
 	}
 
-	set minutes (minutes : number | undefined) {
+	set minutes (minutes: number | undefined) {
 		this.values.minutes = minutes;
 
 		this.rebalancing();
 	}
 
-	get seconds () : number | undefined {
+	get seconds (): number | undefined {
 		return this.values.seconds;
 	}
 
-	set seconds (seconds : number | undefined) {
+	set seconds (seconds: number | undefined) {
 		this.values.seconds = seconds;
 
 		this.rebalancing();
 	}
 
-	get ms () : number | undefined {
+	get ms (): number | undefined {
 		return this.values.ms;
 	}
 
-	set ms (ms : number | undefined) {
+	set ms (ms: number | undefined) {
 		this.values.ms = ms;
 
 		this.rebalancing();
 	}
 
-	private rebalancing () : void {
+	private rebalancing (): void {
 		// be careful, Array.reverse() changes original array
 		[...DurationUnitMaxValueArr]
 			.reverse()
-			.forEach((def : any, i : number, arr : any[]) => {
-				const unit : keyof DurationParam = def[0];
+			.forEach((def: DurationUnitMaxValue, i: number, arr: DurationUnitMaxValue[]): void => {
+				const unit: keyof DurationParam = def[0];
 
-				const key : keyof DurationParam = unit as keyof DurationParam;
-				const value : number | undefined = this.values[key];
+				const key: keyof DurationParam = unit as keyof DurationParam;
+				const value: number | undefined = this.values[key];
 
 				if (value !== undefined && i < arr.length - 1) {
-					const divider : number = def[1];
+					const divider: number = def[1];
 
-					const nextKey : keyof DurationParam = arr[i + 1][0] as keyof DurationParam;
+					const nextKey: keyof DurationParam = arr[i + 1][0] as keyof DurationParam;
 
 					if (value < 0) {
-						const nextDown : number = Math.ceil(-value / 1000);
+						const nextDown: number = Math.ceil(-value / 1000);
 
 						this.values[nextKey] = safeAdd(this.values[nextKey], -nextDown);
 						(this.values[key] as number) += nextDown * divider;
 					}
 
 					if (value >= divider) {
-						const nextUp : number = Math.floor(value / divider);
+						const nextUp: number = Math.floor(value / divider);
 
 						this.values[nextKey] = safeAdd(this.values[nextKey], nextUp);
 						(this.values[key] as number) -= nextUp * divider;
@@ -197,19 +197,19 @@ export class Duration {
 			});
 
 		// remove undefined field
-		Object.entries(this.values).forEach(([key, value] : [string, number]) => {
+		Object.entries(this.values).forEach(([key, value]: [string, number]): void => {
 			if (value === undefined || value === 0) {
 				delete this.values[key as keyof DurationParam];
 			}
 		});
 
 		// check net duration
-		const firstKey : string | undefined = DurationParamKeys.find(key => {
+		const firstKey: string | undefined = DurationParamKeys.find((key: DurationUnit): boolean => {
 			return !!this.values[key as keyof DurationParam];
 		});
 
 		if (firstKey) {
-			const value : number | undefined = this.values[firstKey as keyof DurationParam];
+			const value: number | undefined = this.values[firstKey as keyof DurationParam];
 
 			if (value !== undefined && value < 0) {
 				throw new Error('net duration should be positive value');
@@ -217,37 +217,37 @@ export class Duration {
 		}
 	}
 
-	add (param : Duration | DurationParam) : Duration;
-	add (param : DateTime | DateTimeParam) : DateTime;
-	add (param : Duration | DurationParam | DateTime | DateTimeParam) : Duration | DateTime {
-		let result ! : Duration | DateTime;
+	add (param: Duration | DurationParam): Duration;
+	add (param: DateTime | DateTimeParam): DateTime;
+	add (param: Duration | DurationParam | DateTime | DateTimeParam): Duration | DateTime {
+		let result !: Duration | DateTime;
 
 		if (param instanceof Duration
 			|| isDurationParam(param)) {
-			const initDurationParam : DurationParam = {
-				years : safeAdd(this.years, param.years),
-				months : safeAdd(this.months, param.months),
-				dates : safeAdd(this.dates, param.dates),
+			const initDurationParam: DurationParam = {
+				years: safeAdd(this.years, param.years),
+				months: safeAdd(this.months, param.months),
+				dates: safeAdd(this.dates, param.dates),
 
-				hours : safeAdd(this.hours, param.hours),
-				minutes : safeAdd(this.minutes, param.minutes),
-				seconds : safeAdd(this.seconds, param.seconds),
-				ms : safeAdd(this.ms, param.ms)
+				hours: safeAdd(this.hours, param.hours),
+				minutes: safeAdd(this.minutes, param.minutes),
+				seconds: safeAdd(this.seconds, param.seconds),
+				ms: safeAdd(this.ms, param.ms)
 			};
 
 			result = new Duration(initDurationParam);
 		}
 		else if (param instanceof DateTime
 			|| isDateTimeParam(param)) {
-			const initDateTimeParam : DateTimeParam = {
-				year : safeAdd(param.year, this.years),
-				month : safeAdd(param.month, this.months),
-				date : safeAdd(param.date, this.dates),
+			const initDateTimeParam: DateTimeParam = {
+				year: safeAdd(param.year, this.years),
+				month: safeAdd(param.month, this.months),
+				date: safeAdd(param.date, this.dates),
 
-				hours : safeAdd(param.hours, this.hours),
-				minutes : safeAdd(param.minutes, this.minutes),
-				seconds : safeAdd(param.seconds, this.seconds),
-				ms : safeAdd(param.ms, this.ms)
+				hours: safeAdd(param.hours, this.hours),
+				minutes: safeAdd(param.minutes, this.minutes),
+				seconds: safeAdd(param.seconds, this.seconds),
+				ms: safeAdd(param.ms, this.ms)
 			};
 
 			result = new DateTime(initDateTimeParam);
@@ -256,12 +256,12 @@ export class Duration {
 		return result;
 	}
 
-	divide (count : number) : Duration[] {
-		const eachDuration : number = this.valueOf() / count;
+	divide (count: number): Duration[] {
+		const eachDuration: number = this.valueOf() / count;
 
-		return newArray(count, () : Duration => {
+		return newArray(count, (): Duration => {
 			return new Duration({
-				ms : eachDuration
+				ms: eachDuration
 			});
 		});
 	}

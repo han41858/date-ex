@@ -31,65 +31,41 @@ import {
 } from './util';
 
 // load default locale
-import { locale } from './locale/en';
+import { localeSet } from './locale/en';
 import { Duration } from './duration';
 
 
 // internal global storage
-const globalConfig : {
-	locale? : string,
-	localeTimer? : number
+const globalConfig: {
+	locale?: string,
+	localeTimer?: number
 } = {
-	locale : undefined,
-	localeTimer : undefined
+	locale: undefined,
+	localeTimer: undefined
 };
 
-const localeSetCached : AnyObject<LocaleSet> = {
-	[DefaultLocale] : locale
+const localeSetCached: AnyObject<LocaleSet> = {
+	[DefaultLocale]: localeSet
 };
 
 
 // internal functions
-const sortDate = (...dates : InitDataFormat[]) : DateTime[] => {
-	const dateArr : DateTime[] = dates.map(date => new DateTime(date));
+const sortDate = (...dates: InitDataFormat[]): DateTime[] => {
+	const dateArr: DateTime[] = dates.map((date: InitDataFormat): DateTime => new DateTime(date));
 
-	return dateArr.sort((a, b) => {
+	return dateArr.sort((a: DateTime, b: DateTime): number => {
 		return +a - +b;
 	});
 };
 
 
-const parseNumberWithDecreaseLength = (
-	str : string,
-	length : number
-) : number => {
-	let result : number;
-
-	const numberParsed : number = parseInt(str);
-
-	if (isNaN(numberParsed)) {
-		if (length > 0) {
-			result = parseNumberWithDecreaseLength(str, length - 1);
-		}
-		else {
-			throw new Error('invalid format string with init data');
-		}
-	}
-	else {
-		result = numberParsed;
-	}
-
-	return result;
-};
-
-
 export class DateTime extends DateProxy {
 
-	private ownLocale ! : string;
-	private setLocaleTimer : undefined | number;
+	private ownLocale !: string;
+	private setLocaleTimer: undefined | number;
 
 
-	constructor (initData? : InitDataFormat, formatString? : string) {
+	constructor (initData?: InitDataFormat, formatString?: string) {
 		super(initData, formatString);
 
 		if (initData !== null
@@ -113,7 +89,7 @@ export class DateTime extends DateProxy {
 			// from zero date time
 			this._date = new Date(0);
 
-			const setParam : DateTimeParam = parseDateString(formatString, initData);
+			const setParam: DateTimeParam = parseDateString(formatString, initData);
 
 			if (setParam.hours === undefined) {
 				setParam.hours = 0; // for timezone
@@ -125,12 +101,12 @@ export class DateTime extends DateProxy {
 			this._date = new Date(0);
 
 			this.set({
-				ms : initData
+				ms: initData
 			});
 		}
 
 
-		let localeFromAnotherDateTime : undefined | string;
+		let localeFromAnotherDateTime: undefined | string;
 
 		if (initData instanceof DateTime) {
 			localeFromAnotherDateTime = initData.locale();
@@ -147,8 +123,8 @@ export class DateTime extends DateProxy {
 		}
 	}
 
-	private setDefaultLocale (localeFromAnotherDateTime ? : string) : DateTime {
-		const defaultLocale : string = localeFromAnotherDateTime
+	private setDefaultLocale (localeFromAnotherDateTime?: string): DateTime {
+		const defaultLocale: string = localeFromAnotherDateTime
 			|| this.ownLocale
 			|| globalConfig.locale
 			|| DefaultLocale;
@@ -162,20 +138,20 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	toString () : string {
+	toString (): string {
 		return this.toISOString();
 	}
 
 	// global locale setter
-	static locale (locale? : string) : undefined | string {
-		let returnValue : undefined | string;
+	static locale (locale?: string): undefined | string {
+		let returnValue: undefined | string;
 
 		// get
 		if (locale === undefined) {
 			returnValue = globalConfig.locale;
 		}
 		else {
-			const previousLocale : undefined | string = globalConfig.locale;
+			const previousLocale: undefined | string = globalConfig.locale;
 
 			if (previousLocale !== locale) {
 				if (globalConfig.localeTimer) {
@@ -219,15 +195,15 @@ export class DateTime extends DateProxy {
 		return returnValue;
 	}
 
-	locale (locale ? : string) : string {
-		let returnValue : string; // not undefined
+	locale (locale?: string): string {
+		let returnValue: string; // not undefined
 
 		// get
 		if (locale === undefined) {
 			returnValue = this.ownLocale;
 		}
 		else {
-			const previousLocale : string = this.ownLocale;
+			const previousLocale: string = this.ownLocale;
 
 			if (previousLocale !== locale) {
 				if (this.setLocaleTimer) {
@@ -270,7 +246,7 @@ export class DateTime extends DateProxy {
 	}
 
 	// allow null, no limit number range
-	set (param : DateTimeParam) : DateTime {
+	set (param: DateTimeParam): DateTime {
 		this._date.setFullYear(
 			param.year !== undefined ? param.year : this.year,
 			param.month !== undefined ? param.month - 1 : this.month - 1,
@@ -288,13 +264,13 @@ export class DateTime extends DateProxy {
 	}
 
 	// DateTime + DateTime is not possible
-	add (param : DateTimeParam | Duration | DurationParam) : DateTime {
-		const setParam : DateTimeParam = {};
+	add (param: DateTimeParam | Duration | DurationParam): DateTime {
+		const setParam: DateTimeParam = {};
 
 		if (isDateTimeParam(param)) {
-			DateTimeParamKeys.forEach((_key : DateTimeUnit) => {
-				const key : keyof DateTimeParam = _key as keyof DateTimeParam;
-				const value : number | undefined = param[key];
+			DateTimeParamKeys.forEach((_key: DateTimeUnit) => {
+				const key: keyof DateTimeParam = _key as keyof DateTimeParam;
+				const value: number | undefined = param[key];
 
 				if (value !== undefined) {
 					setParam[key] = this[key] + value;
@@ -302,11 +278,11 @@ export class DateTime extends DateProxy {
 			});
 		}
 		else if (param instanceof Duration) {
-			DurationParamKeys.forEach(_key => {
-				const key : keyof DurationParam = _key as keyof DurationParam;
-				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(_key) as keyof DateTimeParam;
+			DurationParamKeys.forEach((_key: DurationUnit): void => {
+				const key: keyof DurationParam = _key as keyof DurationParam;
+				const datetimeUnit: keyof DateTimeParam = durationUnitToDateTimeUnit(_key) as keyof DateTimeParam;
 
-				const value : number | undefined = param[key];
+				const value: number | undefined = param[key];
 
 				if (value) {
 					setParam[datetimeUnit] = this[datetimeUnit] + value;
@@ -314,8 +290,8 @@ export class DateTime extends DateProxy {
 			});
 		}
 		else if (isDurationParam(param)) {
-			Object.entries(param).forEach(([key, value]) => {
-				const datetimeUnit : keyof DateTimeParam = durationUnitToDateTimeUnit(key as DurationUnit) as keyof DateTimeParam;
+			Object.entries(param).forEach(([key, value]): void => {
+				const datetimeUnit: keyof DateTimeParam = durationUnitToDateTimeUnit(key as DurationUnit) as keyof DateTimeParam;
 
 				if (value) {
 					setParam[datetimeUnit] = this[datetimeUnit] + value;
@@ -330,22 +306,22 @@ export class DateTime extends DateProxy {
 		return this;
 	}
 
-	get UTC () : DateTime {
-		const utcAdded : DateTime = new DateTime(this);
+	get UTC (): DateTime {
+		const utcAdded: DateTime = new DateTime(this);
 
 		utcAdded.add({
-			minutes : this.timezoneOffset
+			minutes: this.timezoneOffset
 		});
 
 		return utcAdded;
 	}
 
-	startOf (unit : DateTimeUnit | keyof DateTimeParam) : DateTime {
+	startOf (unit: DateTimeUnit | keyof DateTimeParam): DateTime {
 		let foundFlag = false;
 
-		const setParam : DateTimeParam = DateTimeParamKeys.reduce((acc : DateTimeParam, _key : string) => {
+		const setParam: DateTimeParam = DateTimeParamKeys.reduce((acc: DateTimeParam, _key: string) => {
 			if (!foundFlag) {
-				const key : keyof DateTimeParam = _key as keyof DateTimeParam;
+				const key: keyof DateTimeParam = _key as keyof DateTimeParam;
 
 				acc[key] = this[key];
 
@@ -364,16 +340,16 @@ export class DateTime extends DateProxy {
 		return new DateTime(setParam);
 	}
 
-	endOf (unit : DateTimeUnit | keyof DateTimeParam) : DateTime {
-		const setParam : DateTimeParam = {
-			ms : unit === DateTimeUnit.Ms ? 999 : -1
+	endOf (unit: DateTimeUnit | keyof DateTimeParam): DateTime {
+		const setParam: DateTimeParam = {
+			ms: unit === DateTimeUnit.Ms ? 999 : -1
 		};
 
-		let foundFlag : boolean;
+		let foundFlag: boolean;
 
-		DateTimeParamKeys.forEach(key => {
+		DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
 			if (!foundFlag && key !== DateTimeUnit.Ms) {
-				const keyAsMember : keyof DateTimeParam = key as keyof DateTimeParam;
+				const keyAsMember: keyof DateTimeParam = key as keyof DateTimeParam;
 
 				if (unit === key) {
 					setParam[keyAsMember] = this[keyAsMember] + 1;
@@ -393,14 +369,14 @@ export class DateTime extends DateProxy {
 		return new DateTime(setParam);
 	}
 
-	format (format : string) : string {
-		let result : string = format;
+	format (format: string): string {
+		let result: string = format;
 
-		const matchArr : TokenMatchResult[] = findTokens(format);
+		const matchArr: TokenMatchResult[] = findTokens(format);
 
 		if (matchArr?.length > 0) {
 			// convert tokens to real value
-			const maxIndex : number = matchArr.length - 1;
+			const maxIndex: number = matchArr.length - 1;
 
 			for (let i = maxIndex; i >= 0; i--) {
 				result = result.substr(0, matchArr[i].startIndex)
@@ -412,7 +388,7 @@ export class DateTime extends DateProxy {
 		return result;
 	}
 
-	private convertTokenToValue (token : FormatToken) : string {
+	private convertTokenToValue (token: FormatToken): string {
 		let returnValue = '';
 
 		switch (token) {
@@ -560,23 +536,23 @@ export class DateTime extends DateProxy {
 		return returnValue;
 	}
 
-	toLocaleDateTimeString () : string {
+	toLocaleDateTimeString (): string {
 		return this.format(localeSetCached[this.locale()].LocaleDateTimeFormat);
 	}
 
-	toLocaleDateString () : string {
+	toLocaleDateString (): string {
 		return this.format(localeSetCached[this.locale()].LocaleDateFormat);
 	}
 
-	toLocaleTimeString () : string {
+	toLocaleTimeString (): string {
 		return this.format(localeSetCached[this.locale()].LocaleTimeFormat);
 	}
 
 	diff (
-		date : InitDataFormat,
-		unit : ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms
-	) : number {
-		let dateWith : DateTime;
+		date: InitDataFormat,
+		unit: ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms
+	): number {
+		let dateWith: DateTime;
 
 		if (date instanceof DateTime) {
 			dateWith = date;
@@ -585,7 +561,7 @@ export class DateTime extends DateProxy {
 			dateWith = new DateTime(date);
 		}
 
-		let diffValue ! : number;
+		let diffValue !: number;
 
 		switch (unit) {
 			case DateTimeUnit.Year:
@@ -593,24 +569,24 @@ export class DateTime extends DateProxy {
 				break;
 
 			case DateTimeUnit.Quarter: {
-				const yearModifier : number = (this.year - dateWith.year) * 4;
+				const yearModifier: number = (this.year - dateWith.year) * 4;
 
 				diffValue = yearModifier + this.quarter - dateWith.quarter;
 				break;
 			}
 
 			case DateTimeUnit.Month: {
-				const yearModifier : number = (this.year - dateWith.year) * 12;
+				const yearModifier: number = (this.year - dateWith.year) * 12;
 
 				diffValue = yearModifier + this.month - dateWith.month;
 				break;
 			}
 
 			case DateTimeUnit.Week: {
-				const sign : number = Math.sign(+this - +dateWith);
+				const sign: number = Math.sign(+this - +dateWith);
 
-				let smallerDate : DateTime;
-				let biggerDate : DateTime;
+				let smallerDate: DateTime;
+				let biggerDate: DateTime;
 
 				if (sign < 0) {
 					smallerDate = this;
@@ -621,10 +597,10 @@ export class DateTime extends DateProxy {
 					biggerDate = this;
 				}
 
-				const numberOfDays : number = Math.floor((+biggerDate - +smallerDate) / DaysToMs);
+				const numberOfDays: number = Math.floor((+biggerDate - +smallerDate) / DaysToMs);
 
 				// add 1 for day starting from 0
-				const diffWeeks : number = Math.ceil(sign * (smallerDate.day + 1 + numberOfDays) / 7);
+				const diffWeeks: number = Math.ceil(sign * (smallerDate.day + 1 + numberOfDays) / 7);
 
 				// can be -0
 				diffValue = Object.is(diffWeeks, -0)
@@ -634,32 +610,32 @@ export class DateTime extends DateProxy {
 			}
 
 			case DateTimeUnit.Date: {
-				const diffInMs : number = +this - +dateWith;
-				const diffInDays : number = diffInMs / 1000 / 60 / 60 / 24;
+				const diffInMs: number = +this - +dateWith;
+				const diffInDays: number = diffInMs / 1000 / 60 / 60 / 24;
 
 				diffValue = Math.floor(diffInDays);
 				break;
 			}
 
 			case DateTimeUnit.Hours: {
-				const diffInMs : number = +this - +dateWith;
-				const diffInHours : number = diffInMs / 1000 / 60 / 60;
+				const diffInMs: number = +this - +dateWith;
+				const diffInHours: number = diffInMs / 1000 / 60 / 60;
 
 				diffValue = Math.floor(diffInHours);
 				break;
 			}
 
 			case DateTimeUnit.Minutes: {
-				const diffInMs : number = +this - +dateWith;
-				const diffInMinutes : number = diffInMs / 1000 / 60;
+				const diffInMs: number = +this - +dateWith;
+				const diffInMinutes: number = diffInMs / 1000 / 60;
 
 				diffValue = Math.floor(diffInMinutes);
 				break;
 			}
 
 			case DateTimeUnit.Seconds: {
-				const diffInMs : number = +this - +dateWith;
-				const diffInSeconds : number = diffInMs / 1000;
+				const diffInMs: number = +this - +dateWith;
+				const diffInSeconds: number = diffInMs / 1000;
 
 				diffValue = Math.floor(diffInSeconds);
 				break;
@@ -674,45 +650,45 @@ export class DateTime extends DateProxy {
 	}
 
 	isEqual (
-		date : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		return this.diff(date, unit) === 0;
 	}
 
 	isBefore (
-		date : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		return this.diff(date, unit) < 0;
 	}
 
 	isBeforeOrEqual (
-		date : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		return this.diff(date, unit) <= 0;
 	}
 
 	isAfter (
-		date : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		return this.diff(date, unit) > 0;
 	}
 
 	isAfterOrEqual (
-		date : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		return this.diff(date, unit) >= 0;
 	}
 
 	isBetween (
-		date1 : InitDataFormat,
-		date2 : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date1: InitDataFormat,
+		date2: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) > 0
@@ -720,10 +696,10 @@ export class DateTime extends DateProxy {
 	}
 
 	isBetweenOrEqual (
-		date1 : InitDataFormat,
-		date2 : InitDataFormat,
-		unit : DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
-	) : boolean {
+		date1: InitDataFormat,
+		date2: InitDataFormat,
+		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+	): boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
 		return this.diff(smallerDate, unit) >= 0
@@ -733,41 +709,41 @@ export class DateTime extends DateProxy {
 	// TODO:
 	// at(countryCode: string, city : string) : DateTime;
 
-	getYearCalendar () : YearCalendar {
-		const dates : DateTime[] = newArray<DateTime>(
+	getYearCalendar (): YearCalendar {
+		const dates: DateTime[] = newArray<DateTime>(
 			this.daysInYear,
-			(i) : DateTime => {
+			(i): DateTime => {
 				return new DateTime(this)
 					.set({
-						month : 1,
-						date : i + 1
+						month: 1,
+						date: i + 1
 					})
 					.startOf(DateTimeUnit.Date);
 			}
 		);
 
 		return {
-			year : this.year,
+			year: this.year,
 
 			dates
 		};
 	}
 
-	getMonthCalendar () : MonthCalendar {
-		const dates : DateTime[] = newArray<DateTime>(
+	getMonthCalendar (): MonthCalendar {
+		const dates: DateTime[] = newArray<DateTime>(
 			this.daysInMonth,
-			(i) : DateTime => {
+			(i): DateTime => {
 				return new DateTime(this)
 					.set({
-						date : i + 1
+						date: i + 1
 					})
 					.startOf(DateTimeUnit.Date);
 			}
 		);
 
 		return {
-			year : this.year,
-			month : this.month,
+			year: this.year,
+			month: this.month,
 
 			dates
 		};

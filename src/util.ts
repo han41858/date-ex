@@ -10,15 +10,15 @@ import {
 } from './constants';
 
 
-export const newArray = <T> (length : number, callback? : (i : number, arr : T[]) => T) : T[] => {
-	const arr : T[] = new Array(length).fill(undefined);
+export const newArray = <T> (length: number, callback?: (i: number, arr: T[]) => T): T[] => {
+	const arr: T[] = new Array(length).fill(undefined);
 
 	return (!!callback && typeof callback === 'function')
-		? arr.map((nothing, _i : number) : T => callback(_i, arr))
+		? arr.map((nothing, _i: number): T => callback(_i, arr))
 		: arr;
 };
 
-export const padDigit = (str : string | number, length : number) : string => {
+export const padDigit = (str: string | number, length: number): string => {
 	return ('' + str).padStart(length, '0');
 };
 
@@ -36,14 +36,14 @@ enum CloneDataType {
 }
 
 // sanitize removes undefined & null fields from object. default false
-export const clone = <T> (obj : T, sanitize? : boolean) : T => {
-	let result ! : T;
+export const clone = <T> (obj: T, sanitize?: boolean): T => {
+	let result !: T;
 
 	if (obj) {
-		let type : CloneDataType = typeof obj as CloneDataType;
+		let type: CloneDataType = typeof obj as CloneDataType;
 
 		if (type === CloneDataType.Object) {
-			const objAsObject : AnyObject<unknown> = obj as unknown as AnyObject<unknown>;
+			const objAsObject: AnyObject<unknown> = obj as unknown as AnyObject<unknown>;
 
 			if (Array.isArray(objAsObject)) {
 				type = CloneDataType.Array;
@@ -62,14 +62,14 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 
 		switch (type) {
 			case CloneDataType.Date: {
-				const objAsDate : Date = obj as unknown as Date;
+				const objAsDate: Date = obj as unknown as Date;
 				result = new Date(objAsDate) as unknown as T;
 				break;
 			}
 
 			case  CloneDataType.Array: {
-				const objAsArray : unknown[] = obj as unknown as unknown[];
-				result = objAsArray.map(one => {
+				const objAsArray: unknown[] = obj as unknown as unknown[];
+				result = objAsArray.map((one: unknown): unknown => {
 					return clone(one);
 				}) as unknown as T;
 				break;
@@ -79,7 +79,7 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 				// sanitize default false
 				result = {} as unknown as T;
 
-				const entries : [string, unknown][] = Object.entries(obj)
+				const entries: [string, unknown][] = Object.entries(obj)
 					.filter(([, value]) => {
 						return sanitize
 							? value !== undefined && value !== null
@@ -106,19 +106,21 @@ export const clone = <T> (obj : T, sanitize? : boolean) : T => {
 	return result;
 };
 
-export const loadLocaleFile = async (locale : string) : Promise<LocaleSet> => {
-	const localeSetObj : { locale : LocaleSet } = await import(`./locale/${ locale }.js`);
-	return localeSetObj.locale;
+export const loadLocaleFile = async (locale: string): Promise<LocaleSet> => {
+	const localeSetObj: { localeSet: LocaleSet } = await import(`./locale/${ locale }.js`);
+	return localeSetObj.localeSet;
 };
 
-export const wait = (ms ? : number) : Promise<void> => {
-	return new Promise<void>(resolve => setTimeout(() => {
-		resolve();
-	}, ms || 0));
+export const wait = (ms?: number): Promise<void> => {
+	return new Promise<void>((resolve) => {
+		setTimeout(() => {
+			resolve();
+		}, ms || 0);
+	});
 };
 
-export const dateFormat = (date : InitDataFormat, format : string) : string => {
-	let dateTime : DateTime;
+export const dateFormat = (date: InitDataFormat, format: string): string => {
+	let dateTime: DateTime;
 
 	if (date instanceof DateTime) {
 		dateTime = date;
@@ -132,22 +134,22 @@ export const dateFormat = (date : InitDataFormat, format : string) : string => {
 		: date as string;
 };
 
-export const isDateTimeParam = (param : unknown) : param is DateTimeParam => {
+export const isDateTimeParam = (param: unknown): param is DateTimeParam => {
 	return typeof param === 'object'
-		&& Object.keys(param as AnyObject<unknown>).every(key => {
+		&& Object.keys(param as AnyObject<unknown>).every((key: string): boolean => {
 			return DateTimeParamKeys.includes(key as DateTimeUnit);
 		});
 };
 
-export const isDurationParam = (param : unknown) : param is DurationParam => {
+export const isDurationParam = (param: unknown): param is DurationParam => {
 	return typeof param === 'object'
-		&& Object.keys(param as AnyObject<unknown>).every(key => {
+		&& Object.keys(param as AnyObject<unknown>).every((key: string): boolean => {
 			return DurationParamKeys.includes(key as DurationUnit);
 		});
 };
 
-export const durationUnitToDateTimeUnit = (unit : DurationUnit) : DateTimeUnit => {
-	let dateTimeKey ! : DateTimeUnit;
+export const durationUnitToDateTimeUnit = (unit: DurationUnit): DateTimeUnit => {
+	let dateTimeKey !: DateTimeUnit;
 
 	switch (unit) {
 		case DurationUnit.Years:
@@ -182,8 +184,8 @@ export const durationUnitToDateTimeUnit = (unit : DurationUnit) : DateTimeUnit =
 	return dateTimeKey;
 };
 
-export const datetimeUnitToDurationUnit = (unit : DateTimeUnit) : DurationUnit => {
-	let key! : DurationUnit;
+export const datetimeUnitToDurationUnit = (unit: DateTimeUnit): DurationUnit => {
+	let key!: DurationUnit;
 
 	switch (unit) {
 		case DateTimeUnit.Year:
@@ -218,46 +220,48 @@ export const datetimeUnitToDurationUnit = (unit : DateTimeUnit) : DurationUnit =
 	return key;
 };
 
-export const parseDateString = (formatString : string, valueString : string) : DateTimeParam => {
-	const dateParam : DateTimeParam = {};
+export const parseDateString = (formatString: string, valueString: string): DateTimeParam => {
+	const dateParam: DateTimeParam = {};
 
-	const matchArr : TokenMatchResult[] = findTokens(formatString, valueString);
+	const matchArr: TokenMatchResult[] = findTokens(formatString, valueString);
 
 	if (matchArr.length > 0) {
 		// prevent duplicated tokens in a unit
-		const unitAndTokens : {
-			unit : DateTimeUnit | string,
-			tokens : FormatToken[]
-		}[] = [{
-			unit : DateTimeUnit.Year,
-			tokens : [FormatToken.Year, FormatToken.YearShort]
+		interface UnitAndTokens {
+			unit: DateTimeUnit | string;
+			tokens: FormatToken[];
+		}
+
+		const unitAndTokens: UnitAndTokens[] = [{
+			unit: DateTimeUnit.Year,
+			tokens: [FormatToken.Year, FormatToken.YearShort]
 		}, {
-			unit : DateTimeUnit.Month,
-			tokens : [FormatToken.Month, FormatToken.MonthPadded, FormatToken.MonthStringShort, FormatToken.MonthStringLong]
+			unit: DateTimeUnit.Month,
+			tokens: [FormatToken.Month, FormatToken.MonthPadded, FormatToken.MonthStringShort, FormatToken.MonthStringLong]
 		}, {
-			unit : DateTimeUnit.Date,
-			tokens : [FormatToken.DayOfMonth, FormatToken.DayOfMonthPadded, FormatToken.DayOfYear, FormatToken.DayOfYearPadded]
+			unit: DateTimeUnit.Date,
+			tokens: [FormatToken.DayOfMonth, FormatToken.DayOfMonthPadded, FormatToken.DayOfYear, FormatToken.DayOfYearPadded]
 		}, {
-			unit : 'meridiem',
-			tokens : [FormatToken.MeridiemLower, FormatToken.MeridiemCapital]
+			unit: 'meridiem',
+			tokens: [FormatToken.MeridiemLower, FormatToken.MeridiemCapital]
 		}, {
-			unit : DateTimeUnit.Hours,
-			tokens : [FormatToken.Hours24, FormatToken.Hours24Padded, FormatToken.Hours12, FormatToken.Hours12Padded]
+			unit: DateTimeUnit.Hours,
+			tokens: [FormatToken.Hours24, FormatToken.Hours24Padded, FormatToken.Hours12, FormatToken.Hours12Padded]
 		}, {
-			unit : DateTimeUnit.Minutes,
-			tokens : [FormatToken.Minutes, FormatToken.MinutesPadded]
+			unit: DateTimeUnit.Minutes,
+			tokens: [FormatToken.Minutes, FormatToken.MinutesPadded]
 		}, {
-			unit : DateTimeUnit.Seconds,
-			tokens : [FormatToken.Seconds, FormatToken.SecondsPadded]
+			unit: DateTimeUnit.Seconds,
+			tokens: [FormatToken.Seconds, FormatToken.SecondsPadded]
 		}, {
-			unit : DateTimeUnit.Ms,
-			tokens : [FormatToken.MilliSeconds, FormatToken.MilliSecondsPadded2, FormatToken.MilliSecondsPadded3]
+			unit: DateTimeUnit.Ms,
+			tokens: [FormatToken.MilliSeconds, FormatToken.MilliSecondsPadded2, FormatToken.MilliSecondsPadded3]
 		}];
 
-		const tokens : FormatToken[] = matchArr.map(one => one.token);
+		const tokens: FormatToken[] = matchArr.map((one: TokenMatchResult): FormatToken => one.token);
 
-		unitAndTokens.forEach(def => {
-			const tokensFiltered : FormatToken[] = def.tokens.filter(token => {
+		unitAndTokens.forEach((def: UnitAndTokens): void => {
+			const tokensFiltered: FormatToken[] = def.tokens.filter((token: FormatToken): boolean => {
 				return tokens.includes(token);
 			});
 
@@ -265,12 +269,12 @@ export const parseDateString = (formatString : string, valueString : string) : D
 				throw new Error('duplicated tokens in one unit');
 			}
 
-			let value : number | undefined;
+			let value: number | undefined;
 
 			if (tokensFiltered.length === 1) {
-				const token : FormatToken = tokensFiltered[0];
+				const token: FormatToken = tokensFiltered[0];
 
-				const resultFound : TokenMatchResult | undefined = matchArr.find(one => {
+				const resultFound: TokenMatchResult | undefined = matchArr.find((one: TokenMatchResult): boolean => {
 					return token === one.token;
 				});
 
@@ -295,41 +299,40 @@ export const parseDateString = (formatString : string, valueString : string) : D
 	return dateParam;
 };
 
-export const findTokens = (formatString : string, valueString ? : string) : TokenMatchResult[] => {
+export const findTokens = (formatString: string, valueString?: string): TokenMatchResult[] => {
 	// find tokens
 	const regExp = /YYYY|YY|Q|M{1,4}|Www|W{1,2}|[Dd]{1,4}|[aA]|[Hh]{1,2}|m{1,2}|s{1,2}|S{1,3}/;
 
-	const matchArr : TokenMatchResult[] = [];
+	const matchArr: TokenMatchResult[] = [];
 
-	let execResult : RegExpExecArray | null = regExp.exec(formatString);
+	let execResult: RegExpExecArray | null = regExp.exec(formatString);
 
 	if (!execResult) {
 		throw new Error('invalid value string with format string');
 	}
 
-
 	if (valueString !== undefined) {
-		let fullFormatStr : string = '';
-		let formatStrRemains : string = formatString;
-		let valueStrRemains : string | undefined = valueString;
+		let fullFormatStr: string = '';
+		let formatStrRemains: string = formatString;
+		let valueStrRemains: string | undefined = valueString;
 		let omitLength = 0;
 
 		do {
-			const token : FormatToken = execResult[0] as FormatToken;
-			const regExpStr : string = formatTokenToRegExpStr(token);
-			const regExpPartial : RegExp = new RegExp(regExpStr);
+			const token: FormatToken = execResult[0] as FormatToken;
+			const regExpStr: string = formatTokenToRegExpStr(token);
+			const regExpPartial: RegExp = new RegExp(regExpStr);
 
 			fullFormatStr += valueStrRemains.substr(0, execResult.index);
 			// skip don't care string
 			valueStrRemains = valueStrRemains.substr(execResult.index);
 
 			// not null
-			const fragResult : RegExpExecArray = regExpPartial.exec(valueStrRemains) as RegExpExecArray;
-			const valueStr : string = fragResult[0];
-			const value : number = parseValueStr(token, valueStr);
+			const fragResult: RegExpExecArray = regExpPartial.exec(valueStrRemains) as RegExpExecArray;
+			const valueStr: string = fragResult[0];
+			const value: number = parseValueStr(token, valueStr);
 
 			matchArr.push({
-				startIndex : omitLength + execResult.index,
+				startIndex: omitLength + execResult.index,
 				token,
 				value
 			});
@@ -349,7 +352,7 @@ export const findTokens = (formatString : string, valueString ? : string) : Toke
 
 
 		// check fields with all tokens
-		const fullRegExp : RegExp = new RegExp(fullFormatStr);
+		const fullRegExp: RegExp = new RegExp(fullFormatStr);
 
 		if (!fullRegExp.test(valueString)) {
 			throw new Error('invalid value string with format string');
@@ -357,14 +360,14 @@ export const findTokens = (formatString : string, valueString ? : string) : Toke
 	}
 	else {
 		// only format string
-		let formatStrRemains : string = formatString;
+		let formatStrRemains: string = formatString;
 		let omitLength = 0;
 
 		do {
-			const token : FormatToken = execResult[0] as FormatToken;
+			const token: FormatToken = execResult[0] as FormatToken;
 
 			matchArr.push({
-				startIndex : omitLength + execResult.index,
+				startIndex: omitLength + execResult.index,
 				token
 			});
 
@@ -379,8 +382,8 @@ export const findTokens = (formatString : string, valueString ? : string) : Toke
 	return matchArr;
 };
 
-const formatTokenToRegExpStr = (token : FormatToken) : string => {
-	let regExpStr : string;
+const formatTokenToRegExpStr = (token: FormatToken): string => {
+	let regExpStr: string;
 
 	// order by min, max length
 	switch (token) {
@@ -446,8 +449,8 @@ const formatTokenToRegExpStr = (token : FormatToken) : string => {
 	return regExpStr;
 };
 
-const parseValueStr = (token : FormatToken, valueStr : string) : number => {
-	let value : number;
+const parseValueStr = (token: FormatToken, valueStr: string): number => {
+	let value: number;
 
 	switch (token) {
 		// string
@@ -473,6 +476,6 @@ const parseValueStr = (token : FormatToken, valueStr : string) : number => {
 
 type SafeAddDataType = number | undefined | null;
 
-export const safeAdd = (a : SafeAddDataType, b : SafeAddDataType) : number => {
+export const safeAdd = (a: SafeAddDataType, b: SafeAddDataType): number => {
 	return (a || 0) + (b || 0);
 };

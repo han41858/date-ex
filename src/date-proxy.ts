@@ -5,10 +5,10 @@ import { DaysToMs } from './constants';
 
 export class DateProxy {
 
-	protected _date ! : Date;
+	protected _date !: Date;
 
 
-	constructor (initData? : InitDataFormat, formatString? : string) {
+	constructor (initData?: InitDataFormat, formatString?: string) {
 		if (initData === null || initData === undefined) {
 			this._date = new Date();
 		}
@@ -34,239 +34,239 @@ export class DateProxy {
 		}
 	}
 
-	get valid () : boolean {
+	get valid (): boolean {
 		return !!this._date
 			&& this._date.getFullYear !== undefined
 			&& typeof this._date.getFullYear === 'function'
 			&& !isNaN(this._date.getFullYear());
 	}
 
-	get timezoneOffset () : number {
+	get timezoneOffset (): number {
 		return this._date.getTimezoneOffset();
 	}
 
 	// UTC-12:00 ~ UTC+14:00 -> -12 ~ 14
-	get timezoneOffsetInHours () : number {
+	get timezoneOffsetInHours (): number {
 		return -this.timezoneOffset / 60;
 	}
 
-	get year () : number {
+	get year (): number {
 		return this._date.getFullYear();
 	}
 
-	set year (year : number) {
+	set year (year: number) {
 		this._date.setFullYear(year);
 	}
 
 	// 1 ~ 4
-	get quarter () : number {
+	get quarter (): number {
 		return Math.floor((this.month - 1) / 3) + 1;
 	}
 
-	get month () : number {
+	get month (): number {
 		return this._date.getMonth() + 1;
 	}
 
-	set month (month : number) {
+	set month (month: number) {
 		this._date.setMonth(month - 1);
 	}
 
-	private isFirstDayOfMonth () : boolean {
-		const nextDay : DateTime = new DateTime(this);
+	private isFirstDayOfMonth (): boolean {
+		const nextDay: DateTime = new DateTime(this);
 
 		nextDay.add({
-			date : -1
+			date: -1
 		});
 
 		return this.month !== nextDay.month;
 	}
 
-	private isLastDayOfMonth () : boolean {
-		const nextDay : DateTime = new DateTime(this);
+	private isLastDayOfMonth (): boolean {
+		const nextDay: DateTime = new DateTime(this);
 
 		nextDay.add({
-			date : 1
+			date: 1
 		});
 
 		return this.month !== nextDay.month;
 	}
 
-	get weekOfYear () : number {
-		const firstDayOfYear : DateTime = new DateTime({
-			year : this.year,
-			month : 1,
-			date : 1
+	get weekOfYear (): number {
+		const firstDayOfYear: DateTime = new DateTime({
+			year: this.year,
+			month: 1,
+			date: 1
 		});
 
-		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / DaysToMs);
+		const numberOfDays: number = Math.floor((+this._date - +firstDayOfYear) / DaysToMs);
 
 		// add 1 for day starting from 0
 		return Math.ceil((firstDayOfYear.day + 1 + numberOfDays) / 7);
 	}
 
-	get weekOfMonth () : number {
-		const firstDayOfMonth : DateTime = new DateTime({
-			year : this.year,
-			month : this.month,
-			date : 1
+	get weekOfMonth (): number {
+		const firstDayOfMonth: DateTime = new DateTime({
+			year: this.year,
+			month: this.month,
+			date: 1
 		});
 
-		const numberOfDays : number = Math.floor((+this._date - +firstDayOfMonth) / DaysToMs);
+		const numberOfDays: number = Math.floor((+this._date - +firstDayOfMonth) / DaysToMs);
 
 		// add 1 for day starting from 0
 		return Math.ceil((firstDayOfMonth.day + 1 + numberOfDays) / 7);
 	}
 
-	get weeksInYear () : number {
-		const lastDayOfYear : DateTime = new DateTime({
-			year : this.year + 1,
-			month : 1,
-			date : 0
+	get weeksInYear (): number {
+		const lastDayOfYear: DateTime = new DateTime({
+			year: this.year + 1,
+			month: 1,
+			date: 0
 		});
 
 		return lastDayOfYear.weekOfYear;
 	}
 
-	get weeksInMonth () : number {
-		const lastDayOfMonth : DateTime = new DateTime({
-			year : this.year,
-			month : this.month + 1,
-			date : 0
+	get weeksInMonth (): number {
+		const lastDayOfMonth: DateTime = new DateTime({
+			year: this.year,
+			month: this.month + 1,
+			date: 0
 		});
 
 		return lastDayOfMonth.weekOfMonth;
 	}
 
-	get date () : number {
+	get date (): number {
 		return this._date.getDate();
 	}
 
-	set date (date : number) {
+	set date (date: number) {
 		this._date.setDate(date);
 	}
 
-	get dayOfYear () : number {
-		const firstDayOfYear : DateTime = new DateTime({
-			year : this.year,
-			month : 1,
-			date : 1
+	get dayOfYear (): number {
+		const firstDayOfYear: DateTime = new DateTime({
+			year: this.year,
+			month: 1,
+			date: 1
 		});
 
-		const numberOfDays : number = Math.floor((+this._date - +firstDayOfYear) / DaysToMs);
+		const numberOfDays: number = Math.floor((+this._date - +firstDayOfYear) / DaysToMs);
 
 		return numberOfDays + 1;
 	}
 
-	get daysInYear () : number {
-		const firstDayOfYear : DateTime = new DateTime({
-			year : this.year,
-			month : 1,
-			date : 1
+	get daysInYear (): number {
+		const firstDayOfYear: DateTime = new DateTime({
+			year: this.year,
+			month: 1,
+			date: 1
 		});
 
-		const firstDayOfNextYear : DateTime = new DateTime({
-			year : this.year + 1,
-			month : 1,
-			date : 1
+		const firstDayOfNextYear: DateTime = new DateTime({
+			year: this.year + 1,
+			month: 1,
+			date: 1
 		});
 
 		return Math.floor((+firstDayOfNextYear - +firstDayOfYear) / DaysToMs);
 	}
 
-	get daysInMonth () : number {
-		const firstDayOfMonth : DateTime = new DateTime({
-			year : this.year,
-			month : this.month,
-			date : 1
+	get daysInMonth (): number {
+		const firstDayOfMonth: DateTime = new DateTime({
+			year: this.year,
+			month: this.month,
+			date: 1
 		});
 
-		const firstDayOfNextMonth : DateTime = new DateTime({
-			year : this.year,
-			month : this.month + 1,
-			date : 1
+		const firstDayOfNextMonth: DateTime = new DateTime({
+			year: this.year,
+			month: this.month + 1,
+			date: 1
 		});
 
 		return Math.floor((+firstDayOfNextMonth - +firstDayOfMonth) / DaysToMs);
 	}
 
-	get day () : number {
+	get day (): number {
 		return this._date.getDay();
 	}
 
-	get isAm () : boolean {
+	get isAm (): boolean {
 		return this.hours < 12;
 	}
 
-	get hours () : number {
+	get hours (): number {
 		return this._date.getHours();
 	}
 
-	set hours (hours : number) {
+	set hours (hours: number) {
 		this._date.setHours(hours);
 	}
 
 	// 0 ~ 23
-	get hours24 () : number {
+	get hours24 (): number {
 		return this.hours;
 	}
 
 	// 0 ~ 12
-	get hours12 () : number {
-		const hours : number = this.hours;
+	get hours12 (): number {
+		const hours: number = this.hours;
 
 		return hours > 12 ? hours % 12 : hours;
 	}
 
-	get minutes () : number {
+	get minutes (): number {
 		return this._date.getMinutes();
 	}
 
-	set minutes (minutes : number) {
+	set minutes (minutes: number) {
 		this._date.setMinutes(minutes);
 	}
 
-	get seconds () : number {
+	get seconds (): number {
 		return this._date.getSeconds();
 	}
 
-	set seconds (seconds : number) {
+	set seconds (seconds: number) {
 		this._date.setSeconds(seconds);
 	}
 
-	get ms () : number {
+	get ms (): number {
 		return this._date.getMilliseconds();
 	}
 
-	set ms (ms : number) {
+	set ms (ms: number) {
 		this._date.setMilliseconds(ms);
 	}
 
-	toDate () : Date {
+	toDate (): Date {
 		return this._date;
 	}
 
-	valueOf () : number {
+	valueOf (): number {
 		return +this._date;
 	}
 
-	toISOString () : string {
+	toISOString (): string {
 		return this._date.toISOString();
 	}
 
-	toUTCString () : string {
+	toUTCString (): string {
 		return this._date.toUTCString();
 	}
 
-	toJson () : Required<DateTimeParam> {
+	toJson (): Required<DateTimeParam> {
 		return {
-			year : this.year,
-			month : this.month,
-			date : this.date,
+			year: this.year,
+			month: this.month,
+			date: this.date,
 
-			hours : this.hours,
-			minutes : this.minutes,
-			seconds : this.seconds,
-			ms : this.ms
+			hours: this.hours,
+			minutes: this.minutes,
+			seconds: this.seconds,
+			ms: this.ms
 		};
 	}
 

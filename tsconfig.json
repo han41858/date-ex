@@ -1,12 +1,9 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
 		"target": "es5",
 		"sourceMap": true,
 		"strict": true,
-		"outDir": "build",
-		"declaration": true,
-		"declarationDir": "build",
+		"declaration": false,
 		"lib": [
 			"es2018",
 			"dom"

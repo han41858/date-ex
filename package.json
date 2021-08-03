@@ -2,11 +2,12 @@
 	"name": "@han41858/date-ex",
 	"version": "0.0.6",
 	"description": "Extensions for Date class.",
-	"main": "build/public-api.js",
-	"types": "build/public-api.d.ts",
+	"main": "build/cjs/public-api.js",
+	"module": "build/esm/public-api.js",
+	"types": "build/types/public-api.d.ts",
 	"scripts": {
 		"clean": "rimraf build",
-		"build": "yarn clean&&tsc -p tsconfig.json",
+		"build": "yarn clean&&tsc -p tsconfig.esm.json&&tsc -p tsconfig.umd.json",
 		"pretest": "yarn clean&&tsc -p tsconfig.spec.json",
 		"test": "mocha ./build/**/*.spec.js",
 		"lint": "eslint src/**/*.ts"

@@ -97,7 +97,7 @@ describe('DateTime', () => {
 
 						const dateStr: string = [
 							'--',
-							padDigit(now.getMonth(), 2), // not +1
+							padDigit(now.getMonth() + 1, 2), // real month
 							'-',
 							padDigit(now.getDate(), 2)
 						].join('');

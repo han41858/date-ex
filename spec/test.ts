@@ -8,13 +8,13 @@ import { Duration } from '../src/duration';
 
 export const checkDateTime = (date: DateTime, param: DateTimeParam): void => {
 	expect(date).to.be.ok;
-	expect(date).to.be.instanceOf(DateTime);
-	expect(date.valid).to.be.true;
+	expect(date, 'instanceOf DateTime').to.be.instanceOf(DateTime);
+	expect(date.valid, 'is valid').to.be.true;
 
 	DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
 		// skip if null
 		if (param[key] !== null) {
-			expect(date[key]).to.be.eql(param[key]);
+			expect(date[key], 'check value').to.be.eql(param[key]);
 		}
 	});
 };

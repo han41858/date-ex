@@ -85,17 +85,22 @@ export class DateTime extends DateProxy {
 			}
 		}
 		// init by string format
-		else if (typeof initData === 'string' && formatString !== undefined) {
-			// from zero date time
-			this._date = new Date(0);
-
-			const setParam: DateTimeParam = parseDateString(formatString, initData);
-
-			if (setParam.hours === undefined) {
-				setParam.hours = 0; // for timezone
+		else if (typeof initData === 'string') {
+			if (formatString === undefined) {
+				this._date = new Date(initData);
 			}
+			else {
+				// from zero date time
+				this._date = new Date(0);
 
-			this.set(setParam);
+				const setParam: DateTimeParam = parseDateString(formatString, initData);
+
+				if (setParam.hours === undefined) {
+					setParam.hours = 0; // for timezone
+				}
+
+				this.set(setParam);
+			}
 		}
 		else if (typeof initData === 'number') {
 			this._date = new Date(0);

@@ -3,7 +3,7 @@
     "ts-node/register"
   ],
   "spec": [
-    "spec/**/*.spec.ts"
+    "spec/*.spec.ts"
   ],
   "timeout": 1000
 }

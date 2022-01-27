@@ -24,7 +24,7 @@ describe('DateProxy', () => {
 		});
 
 		it('invalid case - with invalid string', () => {
-			expect(new DateTime('abc' as unknown).valid).to.be.false;
+			expect(new DateTime('abc').valid).to.be.false;
 		});
 	});
 

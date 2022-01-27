@@ -244,12 +244,15 @@ describe('util', () => {
 					];
 
 					defs.forEach((def: Define): void => {
-						const target: TokenMatchResult = result.find((one: TokenMatchResult): boolean => {
+						const target: TokenMatchResult | undefined = result.find((one: TokenMatchResult): boolean => {
 							return one.token === def.token;
 						});
 
 						expect(target).to.be.ok;
-						expect(target.value).to.be.eql(def.value);
+
+						if (target) {
+							expect(target.value).to.be.eql(def.value);
+						}
 					});
 				});
 			});

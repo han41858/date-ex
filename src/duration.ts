@@ -1,5 +1,5 @@
 import { DateTimeParam, DurationParam, DurationUnitMaxValue } from './interfaces';
-import { DurationParamKeys, DurationUnit, DurationUnitMaxValueArr } from './constants';
+import { DurationParamKeys, DurationUnitMaxValueArr } from './constants';
 import { isDateTimeParam, isDurationParam, newArray, safeAdd } from './util';
 import { DateTime } from './date-time';
 
@@ -204,7 +204,7 @@ export class Duration {
 		});
 
 		// check net duration
-		const firstKey: string | undefined = DurationParamKeys.find((key: DurationUnit): boolean => {
+		const firstKey: string | undefined = DurationParamKeys.find((key: keyof DurationParam): boolean => {
 			return !!this.values[key as keyof DurationParam];
 		});
 

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { DateTime } from '../src/date-time';
 import { DateTimeParam, DurationParam } from '../src/interfaces';
-import { DateTimeParamKeys, DateTimeUnit, DurationParamKeys, DurationUnit } from '../src/constants';
+import { DateTimeParamKeys, DurationParamKeys } from '../src/constants';
 import { Duration } from '../src/duration';
 
 
@@ -11,9 +11,9 @@ export const checkDateTime = (date: DateTime, param: DateTimeParam): void => {
 	expect(date, 'instanceOf DateTime').to.be.instanceOf(DateTime);
 	expect(date.valid, 'is valid').to.be.true;
 
-	DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+	DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 		// skip if null
-		if (param[key] !== null) {
+		if (param[key] !== undefined) {
 			expect(date[key], 'check value').to.be.eql(param[key]);
 		}
 	});
@@ -25,9 +25,9 @@ export const checkDuration = (duration: Duration, param?: DurationParam): void =
 
 	// param is optional
 	if (param) {
-		DurationParamKeys.forEach((key: DurationUnit): void => {
+		DurationParamKeys.forEach((key: keyof DurationParam): void => {
 			// skip if null
-			if (param[key] !== null) {
+			if (param[key] !== undefined) {
 				expect(duration[key]).to.be.eql(param[key]);
 			}
 		});

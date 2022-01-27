@@ -1,4 +1,4 @@
-import { DateTimeParam, DurationUnitMaxValue } from './interfaces';
+import { DateTimeParam, DurationParam, DurationUnitMaxValue } from './interfaces';
 
 export enum DateTimeUnit {
 	Year = 'year',
@@ -13,7 +13,7 @@ export enum DateTimeUnit {
 	Ms = 'ms'
 }
 
-export const DateTimeParamKeys: DateTimeUnit[] = [
+export const DateTimeParamKeys: (keyof DateTimeParam)[] = [
 	DateTimeUnit.Year,
 	DateTimeUnit.Month,
 	DateTimeUnit.Date,
@@ -37,7 +37,7 @@ export enum DurationUnit {
 	Ms = 'ms'
 }
 
-export const DurationParamKeys: DurationUnit[] = [
+export const DurationParamKeys: (keyof DurationParam)[] = [
 	DurationUnit.Years,
 	DurationUnit.Months,
 	DurationUnit.Dates,
@@ -112,7 +112,7 @@ export const Gregorian1Month: number = Gregorian1Year / 12; // 30.436875
 
 export const DaysToMs = 24 * 60 * 60 * 1000;
 
-export const DefaultValue: DateTimeParam = {
+export const DefaultValue: Required<DateTimeParam> = {
 	year: 1970,
 	month: 1,
 	date: 1,

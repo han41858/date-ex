@@ -9,12 +9,19 @@ import {
 	DefaultLocale,
 	DefaultValue,
 	DurationParamKeys,
-	DurationUnit,
 	FormatToken
 } from '../src/constants';
-import { durationUnitToDateTimeUnit, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
-import { AnyObject, InitDataFormat, LocaleSet, MonthCalendar, YearCalendar } from '../src/interfaces';
-import { checkDateTime } from '../spec/test';
+import { durationUnitToDateTimeKey, loadLocaleFile, newArray, padDigit, wait } from '../src/util';
+import {
+	AnyObject,
+	DateTimeParam,
+	DurationParam,
+	InitDataFormat,
+	LocaleSet,
+	MonthCalendar,
+	YearCalendar
+} from '../src/interfaces';
+import { checkDateTime } from './test';
 
 
 const MilliSecondsCloseTo: number = 10;
@@ -34,7 +41,7 @@ describe('DateTime', () => {
 				hours: now.getHours(),
 				minutes: now.getMinutes(),
 				seconds: now.getSeconds(),
-				ms: null // no ms
+				ms: undefined // no ms
 			});
 
 			expect(+now).to.be.closeTo(+newDate, MilliSecondsCloseTo);
@@ -2934,7 +2941,7 @@ describe('DateTime', () => {
 
 		describe('with DateTimeParam', () => {
 			describe('each field', () => {
-				DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+				DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 					it(key, () => {
 						const date: DateTime = new DateTime({
 							[key]: key === DateTimeUnit.Year
@@ -2942,7 +2949,7 @@ describe('DateTime', () => {
 								: 5
 						});
 
-						DateTimeParamKeys.forEach((checkKey: DateTimeUnit): void => {
+						DateTimeParamKeys.forEach((checkKey: keyof DateTimeParam): void => {
 							if (checkKey === key) {
 								expect(date[checkKey]).to.be.eql(
 									checkKey === DateTimeUnit.Year
@@ -3544,7 +3551,7 @@ describe('DateTime', () => {
 
 			expect(result).to.be.instanceOf(Object);
 
-			DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 				expect(result[key]).to.be.a('number');
 				expect(result[key]).to.be.eql(initParam[key]);
 			});
@@ -3694,12 +3701,12 @@ describe('DateTime', () => {
 		});
 
 		it('ok', () => {
-			DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 				const now: Date = new Date();
 
 				const newDate: DateTime = new DateTime(refDate);
 
-				let changingValue: number;
+				let changingValue: number | undefined;
 
 				switch (key) {
 					case DateTimeUnit.Year:
@@ -3729,8 +3736,10 @@ describe('DateTime', () => {
 					case DateTimeUnit.Ms:
 						changingValue = now.getMilliseconds();
 						break;
+				}
 
-
+				if (changingValue === undefined) {
+					throw new Error('spec failed');
 				}
 
 				// set
@@ -3741,7 +3750,7 @@ describe('DateTime', () => {
 				expect(setResult).to.be.instanceOf(DateTime);
 
 				// check
-				DateTimeParamKeys.forEach((checkKey: DateTimeUnit): void => {
+				DateTimeParamKeys.forEach((checkKey: keyof DateTimeParam): void => {
 					if (checkKey === key) {
 						expect(newDate[checkKey]).to.be.eql(changingValue);
 					}
@@ -3764,13 +3773,13 @@ describe('DateTime', () => {
 
 		describe('with DateTimeParam', () => {
 			it('ok', () => {
-				DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+				DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 					const newDate: DateTime = new DateTime(refDate).add({
 						[key]: 1
 					});
 
 					// check
-					DateTimeParamKeys.forEach((checkKey: DateTimeUnit): void => {
+					DateTimeParamKeys.forEach((checkKey: keyof DateTimeParam): void => {
 						if (checkKey === key) {
 							expect(newDate[checkKey]).to.be.eql(refDate[checkKey] + 1);
 						}
@@ -3784,7 +3793,7 @@ describe('DateTime', () => {
 
 		describe('with Duration', () => {
 			it('ok', () => {
-				DurationParamKeys.forEach((key: DurationUnit): void => {
+				DurationParamKeys.forEach((key: keyof DurationParam): void => {
 					const newDate: DateTime = new DateTime(refDate);
 
 					const duration: Duration = new Duration({
@@ -3795,8 +3804,8 @@ describe('DateTime', () => {
 					newDate.add(duration);
 
 					// check
-					DurationParamKeys.forEach((checkKey: DurationUnit): void => {
-						const datetimeKey: DateTimeUnit = durationUnitToDateTimeUnit(checkKey);
+					DurationParamKeys.forEach((checkKey: keyof DurationParam): void => {
+						const datetimeKey: keyof DateTimeParam = durationUnitToDateTimeKey(checkKey);
 
 						if (checkKey === key) {
 							expect(newDate[datetimeKey]).to.be.eql(refDate[datetimeKey] + 1);
@@ -3811,7 +3820,7 @@ describe('DateTime', () => {
 
 		describe('with DurationParam', () => {
 			it('ok', () => {
-				DurationParamKeys.forEach((durationKey: DurationUnit): void => {
+				DurationParamKeys.forEach((durationKey: keyof DurationParam): void => {
 					const newDate: DateTime = new DateTime(refDate);
 
 					// add
@@ -3822,9 +3831,9 @@ describe('DateTime', () => {
 					expect(addResult).to.be.instanceOf(DateTime);
 
 					// check
-					const changedKey: DateTimeUnit = durationUnitToDateTimeUnit(durationKey);
+					const changedKey: keyof DateTimeParam = durationUnitToDateTimeKey(durationKey);
 
-					DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+					DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 						if (changedKey === key) {
 							expect(newDate[key]).to.be.eql(refDate[key] + 1);
 						}
@@ -3839,7 +3848,7 @@ describe('DateTime', () => {
 
 	describe('UTC', () => {
 		it('same date', () => {
-			const initParam: InitDataFormat = {
+			const initParam: Required<InitDataFormat> = {
 				year: 2020, month: 8, date: 4,
 				hours: 5, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3860,7 +3869,7 @@ describe('DateTime', () => {
 		});
 
 		it('different date & day', () => {
-			const initParam: InitDataFormat = {
+			const initParam: Required<InitDataFormat> = {
 				year: 2020, month: 8, date: 4,
 				hours: 17, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3872,7 +3881,7 @@ describe('DateTime', () => {
 
 			const dateTime: DateTime = new DateTime(date);
 
-			DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 				switch (key) {
 					case DateTimeUnit.Date:
 						expect(dateTime.date).to.be.eql(initParam.date + 1);
@@ -3892,7 +3901,7 @@ describe('DateTime', () => {
 		});
 
 		it('different month', () => {
-			const initParam: InitDataFormat = {
+			const initParam: Required<InitDataFormat> = {
 				year: 2020, month: 7, date: 31,
 				hours: 15, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3904,7 +3913,7 @@ describe('DateTime', () => {
 
 			const dateTime: DateTime = new DateTime(date);
 
-			DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 				switch (key) {
 					case DateTimeUnit.Month:
 						expect(dateTime.date).to.be.eql(1);
@@ -3926,7 +3935,7 @@ describe('DateTime', () => {
 		});
 
 		it('different quarter', () => {
-			const initParam: InitDataFormat = {
+			const initParam: Required<InitDataFormat> = {
 				year: 2020, month: 6, date: 30,
 				hours: 15, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3938,7 +3947,7 @@ describe('DateTime', () => {
 
 			const dateTime: DateTime = new DateTime(date);
 
-			DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 				switch (key) {
 					// skip of other specs
 					case DateTimeUnit.Month:
@@ -3958,7 +3967,7 @@ describe('DateTime', () => {
 		});
 
 		it('different year', () => {
-			const initParam: InitDataFormat = {
+			const initParam: Required<InitDataFormat> = {
 				year: 2020, month: 12, date: 31,
 				hours: 15, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3970,7 +3979,7 @@ describe('DateTime', () => {
 
 			const dateTime: DateTime = new DateTime(date);
 
-			DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 				switch (key) {
 					case DateTimeUnit.Year:
 						expect(dateTime.date).to.be.eql(1);
@@ -4648,7 +4657,7 @@ describe('DateTime', () => {
 	describe('locale string', () => {
 		let defaultLocaleSet: LocaleSet;
 
-		const initParam: InitDataFormat = {
+		const initParam: Required<InitDataFormat> = {
 			year: 2020, month: 8, date: 4,
 			hours: 13, minutes: 3, seconds: 16, ms: 32
 		};

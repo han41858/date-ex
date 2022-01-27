@@ -10,17 +10,9 @@ import {
 	TokenMatchResult,
 	YearCalendar
 } from './interfaces';
+import { DateTimeParamKeys, DateTimeUnit, DaysToMs, DefaultLocale, DurationParamKeys, FormatToken } from './constants';
 import {
-	DateTimeParamKeys,
-	DateTimeUnit,
-	DaysToMs,
-	DefaultLocale,
-	DurationParamKeys,
-	DurationUnit,
-	FormatToken
-} from './constants';
-import {
-	durationUnitToDateTimeUnit,
+	durationUnitToDateTimeKey,
 	findTokens,
 	isDateTimeParam,
 	isDurationParam,
@@ -273,8 +265,7 @@ export class DateTime extends DateProxy {
 		const setParam: DateTimeParam = {};
 
 		if (isDateTimeParam(param)) {
-			DateTimeParamKeys.forEach((_key: DateTimeUnit) => {
-				const key: keyof DateTimeParam = _key as keyof DateTimeParam;
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam) => {
 				const value: number | undefined = param[key];
 
 				if (value !== undefined) {
@@ -283,9 +274,9 @@ export class DateTime extends DateProxy {
 			});
 		}
 		else if (param instanceof Duration) {
-			DurationParamKeys.forEach((_key: DurationUnit): void => {
+			DurationParamKeys.forEach((_key: keyof DurationParam): void => {
 				const key: keyof DurationParam = _key as keyof DurationParam;
-				const datetimeUnit: keyof DateTimeParam = durationUnitToDateTimeUnit(_key) as keyof DateTimeParam;
+				const datetimeUnit: keyof DateTimeParam = durationUnitToDateTimeKey(_key) as keyof DateTimeParam;
 
 				const value: number | undefined = param[key];
 
@@ -296,7 +287,7 @@ export class DateTime extends DateProxy {
 		}
 		else if (isDurationParam(param)) {
 			Object.entries(param).forEach(([key, value]): void => {
-				const datetimeUnit: keyof DateTimeParam = durationUnitToDateTimeUnit(key as DurationUnit) as keyof DateTimeParam;
+				const datetimeUnit: keyof DateTimeParam = durationUnitToDateTimeKey(key as keyof DurationParam) as keyof DateTimeParam;
 
 				if (value) {
 					setParam[datetimeUnit] = this[datetimeUnit] + value;
@@ -352,17 +343,15 @@ export class DateTime extends DateProxy {
 
 		let foundFlag: boolean;
 
-		DateTimeParamKeys.forEach((key: DateTimeUnit): void => {
+		DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
 			if (!foundFlag && key !== DateTimeUnit.Ms) {
-				const keyAsMember: keyof DateTimeParam = key as keyof DateTimeParam;
-
 				if (unit === key) {
-					setParam[keyAsMember] = this[keyAsMember] + 1;
+					setParam[key] = this[key] + 1;
 
 					foundFlag = true;
 				}
 				else {
-					setParam[keyAsMember] = this[keyAsMember];
+					setParam[key] = this[key];
 				}
 			}
 		});

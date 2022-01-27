@@ -4,7 +4,7 @@ import { Duration } from '../src/duration';
 import { DurationParamKeys, DurationUnit, Gregorian1Month, Gregorian1Year } from '../src/constants';
 import { DurationParam } from '../src/interfaces';
 import { DateTime } from '../src/date-time';
-import { checkDateTime, checkDuration } from '../spec/test';
+import { checkDateTime, checkDuration } from './test';
 
 
 describe('Duration', () => {
@@ -188,7 +188,7 @@ describe('Duration', () => {
 					checkDuration(duration, {
 						years: 1,
 
-						dates: null // skip
+						dates: undefined // skip
 					});
 
 					expect(duration.dates).to.be.closeTo(53 * 7 - Gregorian1Year, 1);
@@ -198,14 +198,14 @@ describe('Duration', () => {
 
 		describe('by Duration', () => {
 			it('ok', () => {
-				DurationParamKeys.forEach((key: DurationUnit): void => {
+				DurationParamKeys.forEach((key: keyof DurationParam): void => {
 					const refDuration: Duration = new Duration({
 						[key]: 1
 					});
 
 					const newDuration: Duration = new Duration(refDuration);
 
-					DurationParamKeys.forEach((checkKey: DurationUnit): void => {
+					DurationParamKeys.forEach((checkKey: keyof DurationParam): void => {
 						expect(newDuration[checkKey]).to.be.eql(refDuration[checkKey]);
 					});
 				});
@@ -681,13 +681,13 @@ describe('Duration', () => {
 
 
 				checkDuration(result, {
-					minutes: initData1.minutes + initData2.minutes
+					minutes: (initData1.minutes as number) + (initData2.minutes as number)
 				});
 			});
 
 			// no round up
 			it('ok - full', () => {
-				const initData1: DurationParam = {
+				const initData1: Required<DurationParam> = {
 					years: 5,
 					months: 1,
 					dates: 10,
@@ -700,7 +700,7 @@ describe('Duration', () => {
 
 				const duration1: Duration = new Duration(initData1);
 
-				const initData2: DurationParam = {
+				const initData2: Required<DurationParam> = {
 					years: 1,
 					months: 5,
 					dates: 10,
@@ -744,13 +744,13 @@ describe('Duration', () => {
 				const result: Duration = duration1.add(initData2);
 
 				checkDuration(result, {
-					minutes: initData1.minutes + initData2.minutes
+					minutes: (initData1.minutes as number) + (initData2.minutes as number)
 				});
 			});
 
 			// no round up
 			it('ok - full', () => {
-				const initData1: DurationParam = {
+				const initData1: Required<DurationParam> = {
 					years: 5,
 					months: 1,
 					dates: 10,
@@ -763,7 +763,7 @@ describe('Duration', () => {
 
 				const duration1: Duration = new Duration(initData1);
 
-				const initData2: DurationParam = {
+				const initData2: Required<DurationParam> = {
 					years: 1,
 					months: 5,
 					dates: 10,
@@ -792,7 +792,7 @@ describe('Duration', () => {
 		describe('with DateTime', () => {
 			// no round up
 			it('ok', () => {
-				const durationData: DurationParam = {
+				const durationData: Required<DurationParam> = {
 					years: 5,
 					months: 1,
 					dates: 10,

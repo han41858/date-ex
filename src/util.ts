@@ -107,7 +107,7 @@ export const clone = <T> (obj: T, sanitize?: boolean): T => {
 };
 
 export const loadLocaleFile = async (locale: string): Promise<LocaleSet> => {
-	const localeSetObj: { localeSet: LocaleSet } = await import(`./locale/${ locale }.js`);
+	const localeSetObj: { localeSet: LocaleSet } = await import(`./locale/${ locale }`);
 	return localeSetObj.localeSet;
 };
 
@@ -137,19 +137,19 @@ export const dateFormat = (date: InitDataFormat, format: string): string => {
 export const isDateTimeParam = (param: unknown): param is DateTimeParam => {
 	return typeof param === 'object'
 		&& Object.keys(param as AnyObject<unknown>).every((key: string): boolean => {
-			return DateTimeParamKeys.includes(key as DateTimeUnit);
+			return DateTimeParamKeys.includes(key as keyof DateTimeParam);
 		});
 };
 
 export const isDurationParam = (param: unknown): param is DurationParam => {
 	return typeof param === 'object'
 		&& Object.keys(param as AnyObject<unknown>).every((key: string): boolean => {
-			return DurationParamKeys.includes(key as DurationUnit);
+			return DurationParamKeys.includes(key as keyof DurationParam);
 		});
 };
 
-export const durationUnitToDateTimeUnit = (unit: DurationUnit): DateTimeUnit => {
-	let dateTimeKey !: DateTimeUnit;
+export const durationUnitToDateTimeKey = (unit: keyof DurationParam): keyof DateTimeParam => {
+	let dateTimeKey !: keyof DateTimeParam;
 
 	switch (unit) {
 		case DurationUnit.Years:

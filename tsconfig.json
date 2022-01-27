@@ -1,11 +1,12 @@
 {
 	"compilerOptions": {
-		"target": "es5",
-		"sourceMap": true,
+		"module": "commonjs",
+		"target": "ES2015",
 		"strict": true,
 		"declaration": false,
+		"inlineSourceMap": true,
 		"lib": [
-			"es2018",
+			"ESNext",
 			"dom"
 		]
 	},

@@ -7,7 +7,7 @@
 	"types": "build/types/public-api.d.ts",
 	"scripts": {
 		"clean": "rimraf build",
-		"build": "yarn clean&&tsc -p tsconfig.esm.json&&tsc -p tsconfig.umd.json",
+		"build": "yarn clean&&tsc -p tsconfig.esm.json&&tsc -p tsconfig.cjs.json",
 		"test": "mocha",
 		"lint": "eslint src/**/*.ts spec/**/*.ts"
 	},

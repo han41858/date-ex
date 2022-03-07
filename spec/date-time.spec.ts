@@ -16,7 +16,7 @@ import {
 	AnyObject,
 	DateTimeParam,
 	DurationParam,
-	InitDataFormat,
+	InitDataType,
 	LocaleSet,
 	MonthCalendar,
 	YearCalendar
@@ -3542,7 +3542,7 @@ describe('DateTime', () => {
 
 	describe('toJson()', () => {
 		it('ok', () => {
-			const initParam: InitDataFormat = {
+			const initParam: InitDataType = {
 				year: 2020, month: 8, date: 4,
 				hours: 13, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3848,7 +3848,7 @@ describe('DateTime', () => {
 
 	describe('UTC', () => {
 		it('same date', () => {
-			const initParam: Required<InitDataFormat> = {
+			const initParam: Required<InitDataType> = {
 				year: 2020, month: 8, date: 4,
 				hours: 5, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3869,7 +3869,7 @@ describe('DateTime', () => {
 		});
 
 		it('different date & day', () => {
-			const initParam: Required<InitDataFormat> = {
+			const initParam: Required<InitDataType> = {
 				year: 2020, month: 8, date: 4,
 				hours: 17, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3901,7 +3901,7 @@ describe('DateTime', () => {
 		});
 
 		it('different month', () => {
-			const initParam: Required<InitDataFormat> = {
+			const initParam: Required<InitDataType> = {
 				year: 2020, month: 7, date: 31,
 				hours: 15, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3935,7 +3935,7 @@ describe('DateTime', () => {
 		});
 
 		it('different quarter', () => {
-			const initParam: Required<InitDataFormat> = {
+			const initParam: Required<InitDataType> = {
 				year: 2020, month: 6, date: 30,
 				hours: 15, minutes: 3, seconds: 16, ms: 32
 			};
@@ -3967,7 +3967,7 @@ describe('DateTime', () => {
 		});
 
 		it('different year', () => {
-			const initParam: Required<InitDataFormat> = {
+			const initParam: Required<InitDataType> = {
 				year: 2020, month: 12, date: 31,
 				hours: 15, minutes: 3, seconds: 16, ms: 32
 			};
@@ -4657,7 +4657,7 @@ describe('DateTime', () => {
 	describe('locale string', () => {
 		let defaultLocaleSet: LocaleSet;
 
-		const initParam: Required<InitDataFormat> = {
+		const initParam: Required<InitDataType> = {
 			year: 2020, month: 8, date: 4,
 			hours: 13, minutes: 3, seconds: 16, ms: 32
 		};

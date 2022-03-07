@@ -1,4 +1,4 @@
-import { DateTimeParam, InitDataFormat } from './interfaces';
+import { DateTimeParam, InitDataType } from './interfaces';
 import { DateTime } from './date-time';
 import { DaysToMs } from './constants';
 
@@ -8,7 +8,7 @@ export class DateProxy {
 	protected _date !: Date;
 
 
-	constructor (initData?: InitDataFormat, formatString?: string) {
+	constructor (initData?: InitDataType, formatString?: string) {
 		if (initData === null || initData === undefined) {
 			this._date = new Date();
 		}

@@ -1,4 +1,4 @@
-import { AnyObject, DateTimeParam, DurationParam, InitDataFormat, LocaleSet, TokenMatchResult } from './interfaces';
+import { AnyObject, DateTimeParam, DurationParam, InitDataType, LocaleSet, TokenMatchResult } from './interfaces';
 import { DateTime } from './date-time';
 import {
 	DateTimeParamKeys,
@@ -119,7 +119,7 @@ export const wait = (ms?: number): Promise<void> => {
 	});
 };
 
-export const dateFormat = (date: InitDataFormat, format: string): string => {
+export const dateFormat = (date: InitDataType, format: string): string => {
 	let dateTime: DateTime;
 
 	if (date instanceof DateTime) {

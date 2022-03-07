@@ -2,7 +2,7 @@ import { DateTime } from './date-time';
 import { FormatToken } from './constants';
 
 
-export type InitDataFormat = number | string | Date | DateTime | DateTimeParam;
+export type InitDataType = number | string | Date | DateTime | DateTimeParam;
 
 export interface DateTimeParam {
 	year?: number;

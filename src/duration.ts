@@ -9,6 +9,8 @@ export class Duration {
 	private readonly values: DurationParam = {};
 
 
+	constructor ();
+	constructor (initData: string | Duration | DurationParam);
 	constructor (initData?: string | Duration | DurationParam) {
 		if (initData !== undefined && initData !== null) {
 			if (typeof initData === 'string') {

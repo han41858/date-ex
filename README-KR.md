@@ -68,8 +68,8 @@ const newDateByDateTimeParam : DateTime = new DateTime({
 | `weeksOfYear`           | `number` | `52` ~ `53` | 해당 연도의 최대 주차수를 반환합니다.              |
 | `weeksOfMonth`          | `number` | `4` ~ `6` | 해당 월의 최대 주차수를 반환합니다.               |
 | `dayOfYear`             | `number` | `1` ~ `365` | 해당 연도를 기준으로 몇일차인지 반환합니다.           |
-| `daysOfYear`            | `number` | `1` ~ `366` | 해당 연도의 마지막 일자를 반환합니다.              |
-| `lastDate`              | `number` | `28` ~ `31` | 해당 월의 마지막 일자를 반환합니다.               |
+| `daysOfYear`            | `number` | `1` ~ `366` | 해당 연도의 일자 개수를 반환합니다.               |
+| `lastDate`              | `number` | `28` ~ `31` | 해당 월의 마지막 일자를 반환합니다.          |
 | `timezoneOffsetInHours` | `number` | `-12` ~ `14` | 타임존 오프셋을 시각 단위로 반환합니다.             |
 | `isAm`                  | `boolean` | `true`/`false` | 오전이면 `true`, 오후이면 `false`를 반환합니다.  |
 | `hours24`               | `number` | `0` ~ `23` | 24시 기준으로 시각을 반환합니다. `hours`와 같습니다. |

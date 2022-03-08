@@ -69,7 +69,7 @@ const newDateByDateTimeParam : DateTime = new DateTime({
 | `weeksOfYear`           | `number` | `52` ~ `53` | Returns the number of week in year.                           |
 | `weeksOfMonth`          | `number` | `4` ~ `6` | Returns the number of week in month.                          |
 | `dayOfYear`             | `number` | `1` ~ `365` | Returns the number of day in the year.                        |
-| `daysOfYear`            | `number` | `1` ~ `366` | Returns the last date of the year.                            |
+| `daysOfYear`            | `number` | `1` ~ `366` | Returns the number of date in the year.                       |
 | `lastDate`              | `number` | `28` ~ `31` | Returns the last date of the month.                           |
 | `timezoneOffsetInHours` | `number` | `-12` ~ `14` | Returns the timezone offset in hours unit.                    |
 | `isAm`                  | `boolean` | `true`/`false` | Returns `true` for the morning and `false` for the afternoon. |

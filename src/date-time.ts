@@ -728,7 +728,7 @@ export class DateTime extends DateProxy {
 
 	getMonthCalendar (): MonthCalendar {
 		const dates: DateTime[] = newArray<DateTime>(
-			this.daysInMonth,
+			this.lastDate,
 			(i): DateTime => {
 				return new DateTime(this)
 					.set({

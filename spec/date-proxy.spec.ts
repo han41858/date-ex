@@ -331,36 +331,6 @@ describe('DateProxy', () => {
 			});
 		});
 
-		describe('daysInMonth', () => {
-			interface Target {
-				param: DateTimeParam;
-				days: number;
-			}
-
-			const targets: Target[] = [
-				{ param: { year: 2020, month: 1 }, days: 31 },
-				{ param: { year: 2020, month: 2 }, days: 29 },
-				{ param: { year: 2020, month: 3 }, days: 31 },
-				{ param: { year: 2020, month: 4 }, days: 30 },
-				{ param: { year: 2020, month: 5 }, days: 31 },
-				{ param: { year: 2020, month: 6 }, days: 30 },
-				{ param: { year: 2020, month: 7 }, days: 31 },
-				{ param: { year: 2020, month: 8 }, days: 31 },
-				{ param: { year: 2020, month: 9 }, days: 30 },
-				{ param: { year: 2020, month: 10 }, days: 31 },
-				{ param: { year: 2020, month: 11 }, days: 30 },
-				{ param: { year: 2020, month: 12 }, days: 31 }
-			];
-
-			it('ok', () => {
-				targets.forEach((target: Target): void => {
-					const date: DateTime = new DateTime(target.param);
-
-					expect(date.daysInMonth).to.be.eql(target.days);
-				});
-			});
-		});
-
 		describe('date', () => {
 			it('ok', () => {
 				const dates: number[] = newArray<number>(31, (i: number): number => {
@@ -374,6 +344,43 @@ describe('DateProxy', () => {
 						date
 					}).date).to.be.eql(date);
 				});
+			});
+		});
+
+		describe.only('lastDate', () => {
+			it('ok', () => {
+				const year: number = 2022;
+
+				newArray<number>(12, (i: number): number => i + 1)
+					.forEach((month: number): void => {
+						const date: DateTime = new DateTime({
+							year,
+							month
+						});
+
+						switch (month) {
+							case 1:
+							case 3:
+							case 5:
+							case 7:
+							case 8:
+							case 10:
+							case 12:
+								expect(date.lastDate).to.be.eql(31);
+								break;
+
+							case 2:
+								expect(date.lastDate).to.be.eql(28);
+								break;
+
+							case 4:
+							case 6:
+							case 9:
+							case 11:
+								expect(date.lastDate).to.be.eql(30);
+								break;
+						}
+					});
 			});
 		});
 

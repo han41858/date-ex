@@ -5534,7 +5534,7 @@ describe('DateTime', () => {
 
 				expect(calendar).to.have.property('dates');
 				expect(calendar.dates).to.be.instanceOf(Array);
-				expect(calendar.dates).to.be.lengthOf(date.daysInMonth);
+				expect(calendar.dates).to.be.lengthOf(date.lastDate);
 
 				calendar.dates.forEach((calendarDate: DateTime, i: number) => {
 					expect(calendarDate.year).to.be.eql(date.year, 'year');

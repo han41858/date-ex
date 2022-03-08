@@ -61,20 +61,20 @@ const newDateByDateTimeParam : DateTime = new DateTime({
 
 ### Getter - Extended fields
 
-| Getter | Return type | Value Range | Description |
-|---|---|---|---|
-| `quarter` | `number` | `1` ~ `4` | Returns quarter of the date. |
-| `weekOfYear` | `number` | `1` ~ `53` | Returns the number of week of the date in the year. |
-| `weekOfMonth` | `number` | `1` ~ `5` | Returns the number of week of the date in the month. |
-| `weeksOfYear` | `number` | `52` ~ `53` | Returns the number of week in year. |
-| `weeksOfMonth` | `number` | `4` ~ `6` | Returns the number of week in month. |
-| `dayOfYear` | `number` | `1` ~ `365` | Returns the number of day in the year. |
-| `daysOfYear` | `number` | `1` ~ `366` | Returns the max number of days in the year. |
-| `daysOfMonth` | `number` | `28` ~ `31` | Returns the max number of days in the month. |
-| `timezoneOffsetInHours` | `number` | `-12` ~ `14` | Returns the timezone offset in hours unit. |
-| `isAm` | `boolean` | `true`/`false` | Returns `true` for the morning and `false` for the afternoon. |
-| `hours24` | `number` | `0` ~ `23` | Returns hours in 24 format. Same with `hours`. |
-| `hours12` | `number` | `0` ~ `12` | Returns hours in 12 format. |
+| Getter                  | Return type | Value Range | Description                                                   |
+|-------------------------|---|---|---------------------------------------------------------------|
+| `quarter`               | `number` | `1` ~ `4` | Returns quarter of the date.                                  |
+| `weekOfYear`            | `number` | `1` ~ `53` | Returns the number of week of the date in the year.           |
+| `weekOfMonth`           | `number` | `1` ~ `5` | Returns the number of week of the date in the month.          |
+| `weeksOfYear`           | `number` | `52` ~ `53` | Returns the number of week in year.                           |
+| `weeksOfMonth`          | `number` | `4` ~ `6` | Returns the number of week in month.                          |
+| `dayOfYear`             | `number` | `1` ~ `365` | Returns the number of day in the year.                        |
+| `daysOfYear`            | `number` | `1` ~ `366` | Returns the last date of the year.                            |
+| `lastDate`              | `number` | `28` ~ `31` | Returns the last date of the month.                           |
+| `timezoneOffsetInHours` | `number` | `-12` ~ `14` | Returns the timezone offset in hours unit.                    |
+| `isAm`                  | `boolean` | `true`/`false` | Returns `true` for the morning and `false` for the afternoon. |
+| `hours24`               | `number` | `0` ~ `23` | Returns hours in 24 format. Same with `hours`.                |
+| `hours12`               | `number` | `0` ~ `12` | Returns hours in 12 format.                                   |
 
 ### UTC fields
 

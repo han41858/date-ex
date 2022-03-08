@@ -145,6 +145,21 @@ export class DateProxy {
 		this._date.setDate(date);
 	}
 
+	get lastDate (): number {
+		const lastDate: DateTime = new DateTime(this)
+			.add({
+				month: 1
+			})
+			.set({
+				date: 1
+			})
+			.add({
+				date: -1
+			});
+
+		return lastDate.date;
+	}
+
 	get dayOfYear (): number {
 		const firstDayOfYear: DateTime = new DateTime({
 			year: this.year,
@@ -171,22 +186,6 @@ export class DateProxy {
 		});
 
 		return Math.floor((+firstDayOfNextYear - +firstDayOfYear) / DaysToMs);
-	}
-
-	get daysInMonth (): number {
-		const firstDayOfMonth: DateTime = new DateTime({
-			year: this.year,
-			month: this.month,
-			date: 1
-		});
-
-		const firstDayOfNextMonth: DateTime = new DateTime({
-			year: this.year,
-			month: this.month + 1,
-			date: 1
-		});
-
-		return Math.floor((+firstDayOfNextMonth - +firstDayOfMonth) / DaysToMs);
 	}
 
 	get day (): number {

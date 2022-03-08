@@ -146,18 +146,19 @@ export class DateProxy {
 	}
 
 	get lastDate (): number {
-		const lastDate: DateTime = new DateTime(this)
-			.add({
-				month: 1
-			})
-			.set({
-				date: 1
-			})
-			.add({
-				date: -1
-			});
+		const firstDayOfMonth: DateTime = new DateTime({
+			year: this.year,
+			month: this.month,
+			date: 1
+		});
 
-		return lastDate.date;
+		const firstDayOfNextMonth: DateTime = new DateTime({
+			year: this.year,
+			month: this.month + 1,
+			date: 1
+		});
+
+		return Math.floor((+firstDayOfNextMonth - +firstDayOfMonth) / DaysToMs);
 	}
 
 	get dayOfYear (): number {

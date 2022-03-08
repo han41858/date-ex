@@ -347,7 +347,7 @@ describe('DateProxy', () => {
 			});
 		});
 
-		describe.only('lastDate', () => {
+		describe('lastDate', () => {
 			it('ok', () => {
 				const year: number = 2022;
 

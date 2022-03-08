@@ -3,6 +3,7 @@ import { DateProxy } from './date-proxy';
 import {
 	AnyObject,
 	DateTimeParam,
+	DateTimeParamEx,
 	DurationParam,
 	InitDataType,
 	LocaleSet,
@@ -315,55 +316,129 @@ export class DateTime extends DateProxy {
 		return utcAdded;
 	}
 
-	startOf (unit: DateTimeUnit | keyof DateTimeParam): DateTime {
-		let foundFlag = false;
+	startOf (unit: keyof DateTimeParamEx): DateTime {
+		let result: DateTime | undefined;
 
-		const setParam: DateTimeParam = DateTimeParamKeys.reduce((acc: DateTimeParam, _key: string) => {
-			if (!foundFlag) {
-				const key: keyof DateTimeParam = _key as keyof DateTimeParam;
+		if (DateTimeParamKeys.includes(unit as keyof DateTimeParam)) {
+			let foundFlag = false;
 
-				acc[key] = this[key];
+			const setParam: DateTimeParam = DateTimeParamKeys.reduce((acc: DateTimeParam, _key: string) => {
+				if (!foundFlag) {
+					const key: keyof DateTimeParam = _key as keyof DateTimeParam;
 
-				if (key === unit) {
-					foundFlag = true;
+					acc[key] = this[key];
+
+					if (key === unit) {
+						foundFlag = true;
+					}
 				}
+
+				return acc;
+			}, {} as DateTimeParam);
+
+			if (setParam.hours === undefined) {
+				setParam.hours = 0; // for timezone
 			}
 
-			return acc;
-		}, {} as DateTimeParam);
+			result = new DateTime(setParam);
+		}
+		else {
+			switch (unit) {
+				case 'quarter':
+					result = new DateTime({
+						year: this.year,
+						month: (this.quarter - 1) * 4 + 1,
+						date: 1,
 
-		if (setParam.hours === undefined) {
-			setParam.hours = 0; // for timezone
+						hours: 0 // for timezone
+					});
+					break;
+
+				case 'week':
+					result = new DateTime(this)
+						.set({
+							hours: 0,
+							minutes: 0,
+							seconds: 0,
+							ms: 0
+						})
+						.add({
+							date: -this.day
+						});
+					break;
+			}
 		}
 
-		return new DateTime(setParam);
+		if (!result) {
+			throw new Error('not created');
+		}
+
+		return result;
 	}
 
-	endOf (unit: DateTimeUnit | keyof DateTimeParam): DateTime {
-		const setParam: DateTimeParam = {
-			ms: unit === DateTimeUnit.Ms ? 999 : -1
-		};
+	endOf (unit: keyof DateTimeParamEx): DateTime {
+		let result: DateTime | undefined;
 
-		let foundFlag: boolean;
+		if (DateTimeParamKeys.includes(unit as keyof DateTimeParam)) {
+			const setParam: DateTimeParam = {
+				ms: unit === DateTimeUnit.Ms ? 999 : -1
+			};
 
-		DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
-			if (!foundFlag && key !== DateTimeUnit.Ms) {
-				if (unit === key) {
-					setParam[key] = this[key] + 1;
+			let foundFlag: boolean;
 
-					foundFlag = true;
+			DateTimeParamKeys.forEach((key: keyof DateTimeParam): void => {
+				if (!foundFlag && key !== DateTimeUnit.Ms) {
+					if (unit === key) {
+						setParam[key] = this[key] + 1;
+
+						foundFlag = true;
+					}
+					else {
+						setParam[key] = this[key];
+					}
 				}
-				else {
-					setParam[key] = this[key];
-				}
+			});
+
+			if (setParam.hours === undefined) {
+				setParam.hours = 0; // for timezone
 			}
-		});
 
-		if (setParam.hours === undefined) {
-			setParam.hours = 0; // for timezone
+			result = new DateTime(setParam);
+		}
+		else {
+			switch (unit) {
+				case 'quarter':
+					result = new DateTime({
+						year: this.year,
+						month: this.quarter * 4,
+						date: 1,
+
+						hours: 0, // for timezone
+						ms: -1
+					});
+					break;
+
+				case 'week':
+					result = new DateTime(this)
+						.set({
+							hours: 0,
+							minutes: 0,
+							seconds: 0,
+							ms: 0
+						})
+						.add({
+							date: 7 - this.day,
+							ms: -1
+						});
+					break;
+			}
 		}
 
-		return new DateTime(setParam);
+		if (!result) {
+			throw new Error('not created');
+		}
+
+		return result;
 	}
 
 	format (format: string): string {

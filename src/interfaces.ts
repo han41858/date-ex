@@ -15,6 +15,12 @@ export interface DateTimeParam {
 	ms?: number;
 }
 
+export interface DateTimeParamEx extends DateTimeParam {
+	quarter?: number;
+	week?: number;
+}
+
+
 export type String2 = [string, string];
 export type String7 = [string, string, string, string, string, string, string];
 export type String12 = [string, string, string, string, string, string, string, string, string, string, string, string];

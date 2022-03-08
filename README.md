@@ -181,6 +181,8 @@ date.add({
 
 Returns the start/end date and time based on the unit passed as a factor.
 
+unit: `year`, `quarter`, `month`, `week`, `date`, `hours`, `minutes`, `seconds`, `ms`
+
 ```typescript
 const date : DateTime = new DateTime();
 

@@ -179,6 +179,8 @@ date.add({
 
 인자로 전달한 단위 기준으로 처음/끝 시각을 반환합니다.
 
+unit: `year`, `quarter`, `month`, `week`, `date`, `hours`, `minutes`, `seconds`, `ms`
+
 ```typescript
 const date: DateTime = new DateTime();
 

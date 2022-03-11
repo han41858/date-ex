@@ -346,7 +346,7 @@ export class DateTime extends DateProxy {
 		}
 		else {
 			switch (unit) {
-				case 'quarter':
+				case DateTimeUnit.Quarter:
 					result = new DateTime({
 						year: this.year,
 						month: (this.quarter - 1) * 4 + 1,
@@ -356,7 +356,7 @@ export class DateTime extends DateProxy {
 					});
 					break;
 
-				case 'week':
+				case DateTimeUnit.Week:
 					result = new DateTime(this)
 						.set({
 							hours: 0,
@@ -409,7 +409,7 @@ export class DateTime extends DateProxy {
 		}
 		else {
 			switch (unit) {
-				case 'quarter':
+				case DateTimeUnit.Quarter:
 					result = new DateTime({
 						year: this.year,
 						month: this.quarter * 4,
@@ -420,7 +420,7 @@ export class DateTime extends DateProxy {
 					});
 					break;
 
-				case 'week':
+				case DateTimeUnit.Week:
 					result = new DateTime(this)
 						.set({
 							hours: 0,
@@ -624,7 +624,7 @@ export class DateTime extends DateProxy {
 
 	diff (
 		date: DateTimeInitDataType,
-		unit: ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): number {
 		let dateWith: DateTime;
 
@@ -725,35 +725,35 @@ export class DateTime extends DateProxy {
 
 	isEqual (
 		date: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) === 0;
 	}
 
 	isBefore (
 		date: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) < 0;
 	}
 
 	isBeforeOrEqual (
 		date: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) <= 0;
 	}
 
 	isAfter (
 		date: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) > 0;
 	}
 
 	isAfterOrEqual (
 		date: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) >= 0;
 	}
@@ -761,7 +761,7 @@ export class DateTime extends DateProxy {
 	isBetween (
 		date1: DateTimeInitDataType,
 		date2: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 
@@ -772,7 +772,7 @@ export class DateTime extends DateProxy {
 	isBetweenOrEqual (
 		date1: DateTimeInitDataType,
 		date2: DateTimeInitDataType,
-		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
+		unit: keyof DateTimeParamEx = DateTimeUnit.Ms
 	): boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
 

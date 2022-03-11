@@ -329,21 +329,24 @@ console.log(date2.isBetween(date1, date3, 'date')); // true
 console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 ```
 
-## `DateTimeParam`
+## `DateTimeParam`, `DateTimeParamEx`
 
 Represent date, time value. This object consists with this fields.
 
-| Field | Field Type | Value Range | Description |
-|---|---|---|---|
-| `year` | `number` | - | Represents year. |
-| `month` | `number` | `1` ~ `12` | Represents month. |
-| `date` | `number` | `1` ~ `31` | Represents date. |
-| `hours` | `number` | `0` ~ `23` | Represents hours. |
-| `minutes` | `number` | `0` ~ `59` | Represents minutes. |
-| `seconds` | `number` | `0` ~ `59` | Represents seconds. |
-| `ms` | `number` | `0` ~ `999` | Represents mlliseconds. |
+| Field     | Field Type | Value Range | Description                                          |
+|-----------|---|-------------|------------------------------------------------------|
+| `year`    | `number` | -           | Represents year.                                     |
+| `quarter` | `number` | `1` ~ `4`   | Represents quarter. (only for `DateTimeParamEx`)     |
+| `month`   | `number` | `1` ~ `12`  | Represents month.                                    |
+| `week`    | `number` | `1` ~ `42`  | Represents week number. (only for `DateTimeParamEx`) |
+| `date`    | `number` | `1` ~ `31`  | Represents date.                                     |
+| `hours`   | `number` | `0` ~ `23`  | Represents hours.                                    |
+| `minutes` | `number` | `0` ~ `59`  | Represents minutes.                                  |
+| `seconds` | `number` | `0` ~ `59`  | Represents seconds.                                  |
+| `ms`      | `number` | `0` ~ `999` | Represents mlliseconds.                              |
 
 * `month` field range is not `0` ~ `11`. This field represent the real month value `1` ~ `12`
+* `quarter`, `week` are fields of `DateTimeParamEx`.
 
 ## `DateTimeUnit`
 

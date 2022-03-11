@@ -324,21 +324,24 @@ console.log(date2.isBetween(date1, date3, 'date')); // true
 console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 ```
 
-## `DateTimeParam`
+## `DateTimeParam`, `DateTimeParamEx`
 
 일자와 시각 값을 표현하는 객체입니다. 이 객체는 다음과 같은 필드로 구성됩니다.
 
-| 필드 | 필드 타입 | 값 범위 | 설명 |
-|---|---|---|---|
-| `year` | `number` | - | 연도를 표현합니다. |
-| `month` | `number` | `1` ~ `12` | 월을 표현합니다. |
-| `date` | `number` | `1` ~ `31` | 일자를 표현합니다. |
-| `hours` | `number` | `0` ~ `23` | 시각을 표현합니다. |
-| `minutes` | `number` | `0` ~ `59` | 분을 표현합니다. |
-| `seconds` | `number` | `0` ~ `59` | 초를 표현합니다. |
-| `ms` | `number` | `0` ~ `999` | 밀리초를 표현합니다. |
+| 필드        | 필드 타입 | 값 범위        | 설명                                        |
+|-----------|---|-------------|-------------------------------------------|
+| `year`    | `number` | -           | 연도를 표현합니다.                                |
+| `quarter` | `number` | `1` ~ `4`   | 분기를 표현합니다. (`DateTimeParamEx`에만 존재합니다.)   |
+| `month`   | `number` | `1` ~ `12`  | 월을 표현합니다.                                 |
+| `week`    | `number` | `1` ~ `42`  | 주차수를 표현합니다. (`DateTimeParamEx`에만 존재합니다.) |
+| `date`    | `number` | `1` ~ `31`  | 일자를 표현합니다.                                |
+| `hours`   | `number` | `0` ~ `23`  | 시각을 표현합니다.                                |
+| `minutes` | `number` | `0` ~ `59`  | 분을 표현합니다.                                 |
+| `seconds` | `number` | `0` ~ `59`  | 초를 표현합니다.                                 |
+| `ms`      | `number` | `0` ~ `999` | 밀리초를 표현합니다.                               |
 
 * `month` 필드의 값은 `0` ~ `11` 범위가 아닙니다. 이 필드는 실제 월 값 `1` ~ `12`을 표현합니다.
+* `quarter`, `week` 필드는 `DateTimeParamEx`에만 존재합니다.
 
 ## `DateTimeUnit`
 

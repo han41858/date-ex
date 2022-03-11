@@ -21,22 +21,22 @@ Date 클래스 확장 패키지
 const date: DateTime = new DateTime();
 ```
 
-생성자에 인자를 전달하면 원하는 날짜를 지정하며 인스턴스를 생성할 수 있습니다.
-이 때 인자는 `undefined`, `null`, `number`, `string`, `Date`, `DateTime`, [`json` 타입(`DateTimeParam`)](#DateTimeParam)을 지원합니다.
+생성자에 인자를 전달하면 원하는 날짜를 지정하며 인스턴스를 생성할 수 있습니다. 이 때 인자는 `undefined`, `null`, `number`, `string`, `Date`, `DateTime`
+, [`json` 타입(`DateTimeParam`)](#DateTimeParam)을 지원합니다.
 
 ```TypeScript
-const newDateByNumber : DateTime = new DateTime(1603722868252);
+const newDateByNumber: DateTime = new DateTime(1603722868252);
 
-const newDateByString : DateTime = new DateTime('2020-10-26');
+const newDateByString: DateTime = new DateTime('2020-10-26');
 
-const newDateByDate : DateTime = new DateTime(new Date());
+const newDateByDate: DateTime = new DateTime(new Date());
 
-const newDateByDateTime : DateTime = new DateTime(new DateTime());
+const newDateByDateTime: DateTime = new DateTime(new DateTime());
 
-const newDateByDateTimeParam : DateTime = new DateTime({
-	year : 2020,
-	month : 10,
-	date : 26
+const newDateByDateTimeParam: DateTime = new DateTime({
+	year: 2020,
+	month: 10,
+	date: 26
 });
 ```
 
@@ -122,9 +122,9 @@ const date: DateTime = new DateTime();
 
 // 2020년 10월 27일로 설정합니다.
 date.set({
-	year : 2020,
-	month : 10,
-	date : 27
+	year: 2020,
+	month: 10,
+	date: 27
 });
 ```
 
@@ -143,8 +143,8 @@ const date: DateTime = new DateTime();
 
 // 11개월 뒤로 일자를 설정합니다.
 date.add({
-	year : 1,
-	month : -1
+	year: 1,
+	month: -1
 });
 ```
 
@@ -171,7 +171,7 @@ const date: DateTime = new DateTime();
 
 // 11개월 뒤로 일자를 설정합니다.
 date.add({
-	months : 11
+	months: 11
 });
 ```
 
@@ -235,29 +235,30 @@ console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 ```typescript
 console.log(DateTime.locale()); // 'en'
 
-const date1 : DateTime = new DateTime();
+const date1: DateTime = new DateTime();
 console.log(date1.locale()); // 'en'
 
 DateTime.locale('ko-kr'); // 전역 다국어 설정
 console.log(DateTime.locale()); // 'ko-kr'
 
-const date2 : DateTime = new DateTime();
+const date2: DateTime = new DateTime();
 console.log(date2.locale()); // 'ko-kr'
 
-const date3 : DateTime = new DateTime();
+const date3: DateTime = new DateTime();
 date3.locale('en'); // 객체 다국어 설정
 console.log(date3.locale()); // 'en'
 
 ```
 
-전역 함수 `DateTime.locale()`과 `DateTime` 클래스 함수 `locale()`을 인자없이 사용하면 현재 설정된 다국어 코드를 반환합니다.
-그리고 전역/객체의 다국어를 변경하려면 `locale()` 함수에 다국어 코드를 전달하면 됩니다.
+전역 함수 `DateTime.locale()`과 `DateTime` 클래스 함수 `locale()`을 인자없이 사용하면 현재 설정된 다국어 코드를 반환합니다. 그리고 전역/객체의 다국어를
+변경하려면 `locale()` 함수에 다국어 코드를 전달하면 됩니다.
 
 기본 설정은 `en` 입니다.
 
 #### 주의
 
-`locale()` 함수는 ES6 `import` 함수를 사용합니다. 이 함수는 `Promise` 방식으로 동작하기 때문에 `locale()`을 실행한 후에는 JavaScript 1 싸이클을 기다려야 다국어 파일이 로드됩니다.
+`locale()` 함수는 ES6 `import` 함수를 사용합니다. 이 함수는 `Promise` 방식으로 동작하기 때문에 `locale()`을 실행한 후에는 JavaScript 1 싸이클을 기다려야 다국어 파일이
+로드됩니다.
 
 다국어 코드가 유효하지 않거나 1 싸이클 이후에 다국어 파일 로드를 실패하면 이전값으로 원복됩니다.
 
@@ -293,15 +294,15 @@ console.log(date3.locale()); // 'en'
 
 ```typescript
 const date1: DateTime = new DateTime({
-	year : 2020,
-	month : 10,
-	date : 20
+	year: 2020,
+	month: 10,
+	date: 20
 });
 
-const date2 : DateTime = new DateTime({
-	year : 2020,
-	month : 10,
-	date : 27
+const date2: DateTime = new DateTime({
+	year: 2020,
+	month: 10,
+	date: 27
 });
 
 console.log(date1.diff(date2, 'date')); // -7
@@ -314,10 +315,10 @@ console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 console.log(date1.isAfter(date2, 'date')); // false
 console.log(date1.isBeforeOrEqual(date2, 'month')); // true
 
-const date3 : DateTime = new DateTime({
-	year : 2020,
-	month : 10,
-	date : 27
+const date3: DateTime = new DateTime({
+	year: 2020,
+	month: 10,
+	date: 27
 });
 
 console.log(date2.isBetween(date1, date3, 'date')); // true
@@ -383,16 +384,16 @@ console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 const duration: Duration = new Duration();
 ```
 
-생성자에 인자를 전달하면 원하는 기간을 지정하며 인스턴스를 생성할 수 있습니다. 이 때 인자는 `undefined`, `null`, `number`, `string`, `Duration`, [`json` 타입(`DurationParam`)](#DurationParam)을
-지원합니다.
+생성자에 인자를 전달하면 원하는 기간을 지정하며 인스턴스를 생성할 수 있습니다. 이 때 인자는 `undefined`, `null`, `number`, `string`, `Duration`
+, [`json` 타입(`DurationParam`)](#DurationParam)을 지원합니다.
 
 ```TypeScript
-const newDurationByString : Duration = new Duration('PY2');
+const newDurationByString: Duration = new Duration('PY2');
 
-const newDurationByDuration : Duration = new Duration(new Duration());
+const newDurationByDuration: Duration = new Duration(new Duration());
 
-const newDurationByDurationParam : Duration = new Duration({
-	years : 2
+const newDurationByDurationParam: Duration = new Duration({
+	years: 2
 });
 ```
 
@@ -409,7 +410,7 @@ const newDurationByDurationParam : Duration = new Duration({
 | `DateTimeUnit.Ms` | `ms` | `number` |
 
 ```TypeScript
-const duration : Duration = new Duration(); // value : {}
+const duration: Duration = new Duration(); // value : {}
 
 duration.years = 2; // value : { years : 2 }
 duration.ms = 1001; // value : { years : 2, seconds : 1, ms : 1} - 자리수 조정
@@ -432,7 +433,7 @@ console.log(duration.seconds); // 1
 전체 기간을 `count` 개수만큼 나눠서 `Duration` 배열로 반환합니다.
 
 ```TypeScript
-const duration : Duration = { seconds : 1 };
+const duration: Duration = { seconds: 1 };
 
 console.log(duration.divide(4)); // 값이 { ms : 250 }인 Duration 인스턴스 배열
 ```

@@ -18,10 +18,11 @@ Represent date and time.
 `DataTime` instance is created with `new` keyword.
 
 ```TypeScript
-const date : DateTime = new DateTime();
+const date: DateTime = new DateTime();
 ```
 
-If you pass parameter to constructor, you can create instance with specific date. Parameter type supports for `undefined`, `null`, `number`
+If you pass parameter to constructor, you can create instance with specific date. Parameter type supports
+for `undefined`, `null`, `number`
 , `string`, `Date`, `DateTime`, [`json` type(`DateTimeParam`)](#DateTimeParam).
 
 ```TypeScript
@@ -84,8 +85,8 @@ timezone. The minutes, seconds and milliseconds is not affected.
 The `timezoneOffset` value in UTC is same with `timezoneOffset` value in `DateTime` instance.
 
 ```TypeScript
-const date : DateTime = new DateTime();
-const utcDate : DateTime = date.UTC;
+const date: DateTime = new DateTime();
+const utcDate: DateTime = date.UTC;
 ```
 
 ### With another type
@@ -184,7 +185,7 @@ Returns the start/end date and time based on the unit passed as a factor.
 unit: `year`, `quarter`, `month`, `week`, `date`, `hours`, `minutes`, `seconds`, `ms`
 
 ```typescript
-const date : DateTime = new DateTime();
+const date: DateTime = new DateTime();
 
 console.log(date.startOf('year').toISOString()); // 2020-01-01T00:00:00.000Z
 console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
@@ -238,16 +239,16 @@ If you set i18n value globally, new instances are set with that value.
 ```typescript
 console.log(DateTime.locale()); // 'en'
 
-const date1 : DateTime = new DateTime();
+const date1: DateTime = new DateTime();
 console.log(date1.locale()); // 'en'
 
 DateTime.locale('ko-kr'); // set globally
 console.log(DateTime.locale()); // 'ko-kr'
 
-const date2 : DateTime = new DateTime();
+const date2: DateTime = new DateTime();
 console.log(date2.locale()); // 'ko-kr'
 
-const date3 : DateTime = new DateTime();
+const date3: DateTime = new DateTime();
 date3.locale('en'); // set i18n locally
 console.log(date3.locale()); // 'en'
 
@@ -385,7 +386,7 @@ Represents duration.
 `Duration` instance is created with `new` keyword.
 
 ```TypeScript
-const duration : Duration = new Duration();
+const duration: Duration = new Duration();
 ```
 
 If you pass parameter to constructor, you can create instance with specific duration. Parameter type supports
@@ -414,7 +415,7 @@ const newDurationByDurationParam : Duration = new Duration({
 | `DurationUnit.Ms` | `ms` | `number` |
 
 ```TypeScript
-const duration : Duration = new Duration(); // value : {}
+const duration: Duration = new Duration(); // value : {}
 
 duration.years = 2; // value : { years : 2 }
 duration.ms = 1001; // value : { years : 2, seconds : 1, ms : 1} - with rebalancing
@@ -437,7 +438,7 @@ If param is `DateTime` or `DateTimeParam`, returns `DateTime`.
 Divide total duration by `count` as `Duration` array.
 
 ```TypeScript
-const duration : Duration = { seconds : 1 };
+const duration: Duration = { seconds: 1 };
 
 console.log(duration.divide(4)); // 4 Duration instances with value of { ms : 250 }
 ```

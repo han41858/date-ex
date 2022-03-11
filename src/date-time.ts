@@ -5,7 +5,6 @@ import {
 	DateTimeParam,
 	DateTimeParamEx,
 	DurationParam,
-	InitDataType,
 	LocaleSet,
 	MonthCalendar,
 	TokenMatchResult,
@@ -43,13 +42,16 @@ const localeSetCached: AnyObject<LocaleSet> = {
 
 
 // internal functions
-const sortDate = (...dates: InitDataType[]): DateTime[] => {
-	const dateArr: DateTime[] = dates.map((date: InitDataType): DateTime => new DateTime(date));
+const sortDate = (...dates: DateTimeInitDataType[]): DateTime[] => {
+	const dateArr: DateTime[] = dates.map((date: DateTimeInitDataType): DateTime => new DateTime(date));
 
 	return dateArr.sort((a: DateTime, b: DateTime): number => {
 		return +a - +b;
 	});
 };
+
+
+export type DateTimeInitDataType = undefined | null | number | string | Date | DateTime | DateTimeParam;
 
 
 export class DateTime extends DateProxy {
@@ -59,9 +61,9 @@ export class DateTime extends DateProxy {
 
 
 	constructor ();
-	constructor (initData: InitDataType);
+	constructor (initData: DateTimeInitDataType);
 	constructor (initData: string, formatString: string);
-	constructor (initData?: InitDataType, formatString?: string) {
+	constructor (initData?: DateTimeInitDataType, formatString?: string) {
 		super(initData, formatString);
 
 		if (initData !== null
@@ -621,7 +623,7 @@ export class DateTime extends DateProxy {
 	}
 
 	diff (
-		date: InitDataType,
+		date: DateTimeInitDataType,
 		unit: ('year' | 'quarter' | 'month' | 'week' | 'date' | 'hours' | 'minutes' | 'seconds' | 'ms') = DateTimeUnit.Ms
 	): number {
 		let dateWith: DateTime;
@@ -722,43 +724,43 @@ export class DateTime extends DateProxy {
 	}
 
 	isEqual (
-		date: InitDataType,
+		date: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) === 0;
 	}
 
 	isBefore (
-		date: InitDataType,
+		date: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) < 0;
 	}
 
 	isBeforeOrEqual (
-		date: InitDataType,
+		date: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) <= 0;
 	}
 
 	isAfter (
-		date: InitDataType,
+		date: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) > 0;
 	}
 
 	isAfterOrEqual (
-		date: InitDataType,
+		date: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		return this.diff(date, unit) >= 0;
 	}
 
 	isBetween (
-		date1: InitDataType,
-		date2: InitDataType,
+		date1: DateTimeInitDataType,
+		date2: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);
@@ -768,8 +770,8 @@ export class DateTime extends DateProxy {
 	}
 
 	isBetweenOrEqual (
-		date1: InitDataType,
-		date2: InitDataType,
+		date1: DateTimeInitDataType,
+		date2: DateTimeInitDataType,
 		unit: DateTimeUnit | keyof DateTimeParam = DateTimeUnit.Ms
 	): boolean {
 		const [smallerDate, biggerDate] = sortDate(date1, date2);

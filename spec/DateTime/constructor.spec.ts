@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { checkDateTime } from '../test';
+import { checkDateTime, randomBool } from '../test';
 import { DateTime } from '../../src/date-time';
 import { padDigit } from '../../src/util';
 import { DateTimeParamKeys, DateTimeUnit, DefaultValue, FormatToken } from '../../src/constants';
@@ -27,6 +27,91 @@ export const constructorSpec = (): void => {
 
 		expect(+now).to.be.closeTo(+newDate, MilliSecondsCloseTo);
 		expect(newDate.ms).to.be.closeTo(now.getMilliseconds(), MilliSecondsCloseTo);
+	});
+
+	describe('type test', () => {
+		it('no param', () => {
+			const date: DateTime = new DateTime();
+			checkDateTime(date);
+		});
+
+		it('undefined', () => {
+			const initParam: undefined = undefined;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('null', () => {
+			const initParam: null = null;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('number', () => {
+			const initParam: number = 123;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('number | undefined', () => {
+			const initParam: number | undefined = randomBool()
+				? 123
+				: undefined;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('string', () => {
+			const initParam: string = '2022-03-11';
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('string | undefined', () => {
+			const initParam: string | undefined = randomBool()
+				? '2022-03-11'
+				: undefined;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('Date', () => {
+			const initParam: Date = new Date();
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('Date | undefined', () => {
+			const initParam: Date | undefined = randomBool()
+				? new Date()
+				: undefined;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('DateTime', () => {
+			const initParam: DateTime = new DateTime();
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
+
+		it('DateTime | undefined', () => {
+			const initParam: DateTime | undefined = randomBool()
+				? new DateTime()
+				: undefined;
+
+			const date: DateTime = new DateTime(initParam);
+			checkDateTime(date);
+		});
 	});
 
 	// test string initializer

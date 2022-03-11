@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { DateTime } from '../../src/date-time';
 import { DefaultLocale } from '../../src/constants';
 import { loadLocaleFile, padDigit, wait } from '../../src/util';
-import { InitDataType, LocaleSet } from '../../src/interfaces';
+import { DateTimeParam, LocaleSet } from '../../src/interfaces';
 
 
 export const localeSpec = (): void => {
@@ -138,7 +138,7 @@ export const localeSpec = (): void => {
 	describe('locale string', () => {
 		let defaultLocaleSet: LocaleSet;
 
-		const initParam: Required<InitDataType> = {
+		const initParam: Required<DateTimeParam> = {
 			year: 2020, month: 8, date: 4,
 			hours: 13, minutes: 3, seconds: 16, ms: 32
 		};

@@ -2,8 +2,6 @@ import { DateTime } from './date-time';
 import { FormatToken } from './constants';
 
 
-export type InitDataType = number | string | Date | DateTime | DateTimeParam;
-
 export interface DateTimeParam {
 	year?: number;
 	month?: number;

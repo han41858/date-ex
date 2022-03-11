@@ -22,7 +22,7 @@ const date: DateTime = new DateTime();
 ```
 
 생성자에 인자를 전달하면 원하는 날짜를 지정하며 인스턴스를 생성할 수 있습니다.
-이 때 인자는 `number`, `string`, `Date`, `DateTime`, [`json` 타입(`DateTimeParam`)](#DateTimeParam)을 지원합니다.
+이 때 인자는 `undefined`, `null`, `number`, `string`, `Date`, `DateTime`, [`json` 타입(`DateTimeParam`)](#DateTimeParam)을 지원합니다.
 
 ```TypeScript
 const newDateByNumber : DateTime = new DateTime(1603722868252);
@@ -380,7 +380,7 @@ console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 const duration: Duration = new Duration();
 ```
 
-생성자에 인자를 전달하면 원하는 기간을 지정하며 인스턴스를 생성할 수 있습니다. 이 때 인자는 `string`, `Duration`, [`json` 타입(`DurationParam`)](#DurationParam)을
+생성자에 인자를 전달하면 원하는 기간을 지정하며 인스턴스를 생성할 수 있습니다. 이 때 인자는 `undefined`, `null`, `number`, `string`, `Duration`, [`json` 타입(`DurationParam`)](#DurationParam)을
 지원합니다.
 
 ```TypeScript

@@ -21,7 +21,7 @@ Represent date and time.
 const date : DateTime = new DateTime();
 ```
 
-If you pass parameter to constructor, you can create instance with specific date. Parameter type supports for `number`
+If you pass parameter to constructor, you can create instance with specific date. Parameter type supports for `undefined`, `null`, `number`
 , `string`, `Date`, `DateTime`, [`json` type(`DateTimeParam`)](#DateTimeParam).
 
 ```TypeScript
@@ -386,7 +386,7 @@ const duration : Duration = new Duration();
 ```
 
 If you pass parameter to constructor, you can create instance with specific duration. Parameter type supports
-for `string`, `Duration`, [`json` type(`DurationParam`)](#DurationParam).
+for `undefined`, `null`, `number`, `string`, `Duration`, [`json` type(`DurationParam`)](#DurationParam).
 
 ```TypeScript
 const newDurationByString : Duration = new Duration('PY2');

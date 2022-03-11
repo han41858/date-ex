@@ -4,15 +4,108 @@ import { Duration } from '../src/duration';
 import { DurationParamKeys, DurationUnit, Gregorian1Month, Gregorian1Year } from '../src/constants';
 import { DurationParam } from '../src/interfaces';
 import { DateTime } from '../src/date-time';
-import { checkDateTime, checkDuration } from './test';
+import { checkDateTime, checkDuration, randomBool } from './test';
 
 
 describe('Duration', () => {
 	describe('constructor', () => {
-		it('no init data', () => {
-			const duration: Duration = new Duration();
+		describe('type test', () => {
+			it('no param', () => {
+				const duration: Duration = new Duration();
+				checkDuration(duration, {
+					ms: 0
+				});
+			});
 
-			checkDuration(duration);
+			it('undefined', () => {
+				const initParam: undefined = undefined;
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration, {
+					ms: 0
+				});
+			});
+
+			it('null', () => {
+				const initParam: null = null;
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration, {
+					ms: 0
+				});
+			});
+
+			it('number', () => {
+				const initParam: number = 123;
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration, {
+					ms: initParam
+				});
+			});
+
+			it('number | undefined', () => {
+				const initParam: number | undefined = randomBool()
+					? 123
+					: undefined;
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration);
+			});
+
+			it('string', () => {
+				const initParam: string = 'P2Y';
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration);
+			});
+
+			it('string | undefined', () => {
+				const initParam: string | undefined = randomBool()
+					? 'P2Y'
+					: undefined;
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration);
+			});
+
+			it('Duration', () => {
+				const initParam: Duration = new Duration();
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration);
+			});
+
+			it('Duration | undefined', () => {
+				const initParam: Duration | undefined = randomBool()
+					? new Duration()
+					: undefined;
+
+				const duration: Duration = new Duration(initParam);
+				checkDuration(duration);
+			});
+		});
+
+		describe('by number', () => {
+			it('ok', () => {
+				const ms: number = 456;
+
+				const duration: Duration = new Duration(ms);
+
+				checkDuration(duration, {
+					ms
+				})
+			})
+
+		    it('ok - rebalancing', () => {
+				const ms: number = 5000;
+
+				const duration: Duration = new Duration(ms);
+
+			    checkDuration(duration, {
+					seconds : ms / 1000
+				})
+		    })
 		});
 
 		describe('by string', () => {

@@ -4,81 +4,94 @@ import { isDateTimeParam, isDurationParam, newArray, safeAdd } from './util';
 import { DateTime } from './date-time';
 
 
+export type DurationInitDataType = undefined | null | number | string | Duration | DurationParam;
+
+
 export class Duration {
 
 	private readonly values: DurationParam = {};
 
 
 	constructor ();
-	constructor (initData: string | Duration | DurationParam);
-	constructor (initData?: string | Duration | DurationParam) {
-		if (initData !== undefined && initData !== null) {
-			if (typeof initData === 'string') {
-				const regExp1 = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
-				const regExp2 = /^P\d+W$/; // PnW
+	constructor (initData: DurationInitDataType);
+	constructor (initData?: DurationInitDataType) {
+		if (initData === undefined || initData === null) {
+			this.values = {
+				ms: 0
+			};
+		}
+		else if (typeof initData === 'number') {
+			this.values = {
+				ms: initData
+			};
 
-				// P<date>T<time>
-				// const regExp3 = /^P\d{8}T\d{4}$/; // PYYYYMMDDThhmmss
-				// const regExp4 : RegExp = /^P\d{8}T\d{4}$/; // P[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss]
+			this.rebalancing();
+		}
+		else if (typeof initData === 'string') {
+			const regExp1 = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
+			const regExp2 = /^P\d+W$/; // PnW
+
+			// P<date>T<time>
+			// const regExp3 = /^P\d{8}T\d{4}$/; // PYYYYMMDDThhmmss
+			// const regExp4 : RegExp = /^P\d{8}T\d{4}$/; // P[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss]
 
 
-				if (regExp1.test(initData)) {
-					const execResult: RegExpExecArray | null = regExp1.exec(initData);
+			if (regExp1.test(initData)) {
+				const execResult: RegExpExecArray | null = regExp1.exec(initData);
 
-					if (execResult) {
-						const [dateStr, timeStr] = initData // divide date & time for 'M'
-							.replace('P', '') // remove starting 'P'
-							.split('T');
+				if (execResult) {
+					const [dateStr, timeStr] = initData // divide date & time for 'M'
+						.replace('P', '') // remove starting 'P'
+						.split('T');
 
-						[
-							{ key: 'years', value: /\d+Y/.exec(dateStr)?.[0]?.replace('Y', '') },
-							{ key: 'months', value: /\d+M/.exec(dateStr)?.[0]?.replace('M', '') },
-							{ key: 'dates', value: /\d+D/.exec(dateStr)?.[0]?.replace('D', '') },
+					[
+						{ key: 'years', value: /\d+Y/.exec(dateStr)?.[0]?.replace('Y', '') },
+						{ key: 'months', value: /\d+M/.exec(dateStr)?.[0]?.replace('M', '') },
+						{ key: 'dates', value: /\d+D/.exec(dateStr)?.[0]?.replace('D', '') },
 
-							{ key: 'hours', value: /\d+H/.exec(timeStr)?.[0]?.replace('H', '') },
-							{ key: 'minutes', value: /\d+M/.exec(timeStr)?.[0]?.replace('M', '') },
-							{ key: 'seconds', value: /\d+S/.exec(timeStr)?.[0]?.replace('S', '') }
-						].forEach((obj) => {
-							const key: keyof DurationParam = obj.key as keyof DurationParam;
-							const valueStr: string | undefined = obj.value;
+						{ key: 'hours', value: /\d+H/.exec(timeStr)?.[0]?.replace('H', '') },
+						{ key: 'minutes', value: /\d+M/.exec(timeStr)?.[0]?.replace('M', '') },
+						{ key: 'seconds', value: /\d+S/.exec(timeStr)?.[0]?.replace('S', '') }
+					].forEach((obj) => {
+						const key: keyof DurationParam = obj.key as keyof DurationParam;
+						const valueStr: string | undefined = obj.value;
 
-							if (valueStr !== undefined) {
-								this[key] = +valueStr;
-							}
-
-							this.rebalancing();
-						});
-					}
-				}
-				else if (regExp2.test(initData)) {
-					const weeksStr: string = initData
-						.replace(/^P/, '')
-						.replace(/W$/, '');
-
-					if (!isNaN(+weeksStr)) {
-						this.dates = +weeksStr * 7;
+						if (valueStr !== undefined) {
+							this[key] = +valueStr;
+						}
 
 						this.rebalancing();
-					}
+					});
 				}
-
 			}
-			else if (initData instanceof Duration) {
-				this.values = {
-					...initData.values
-				};
+			else if (regExp2.test(initData)) {
+				const weeksStr: string = initData
+					.replace(/^P/, '')
+					.replace(/W$/, '');
 
-				this.rebalancing();
-			}
-			else if (isDurationParam(initData)) {
-				Object.entries(initData).forEach(([key, value]: [string, number]) => {
-					if (value !== undefined && value !== null) {
-						this.values[key as keyof DurationParam] = value;
-					}
-				});
+				if (!isNaN(+weeksStr)) {
+					this.dates = +weeksStr * 7;
 
-				this.rebalancing();
+					this.rebalancing();
+				}
 			}
+
+		}
+		else if (initData instanceof Duration) {
+			this.values = {
+				...initData.values
+			};
+
+			this.rebalancing();
+		}
+		else if (isDurationParam(initData)) {
+			Object.entries(initData).forEach(([key, value]: [string, number]) => {
+				if (value !== undefined && value !== null) {
+					this.values[key as keyof DurationParam] = value;
+				}
+			});
+
+			this.rebalancing();
 		}
 	}
 

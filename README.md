@@ -263,8 +263,9 @@ Default value is `en`..
 
 `locale()` methods uses ES6 `import` function. `import` function is working as `Promise`, so you should wait JavaScript
 1 cycle after called `locale()` to load i18n file.
+Check the `isLocaleLoaded` value to see if the multilingual file has finished loading.
 
-If the language code is invalid or the language file load fails after 1 cycle, the previous value will be restored.
+If the language code is invalid or the language file load fails, the previous value will be restored.
 
 ### `DateTime.locale(): string`
 

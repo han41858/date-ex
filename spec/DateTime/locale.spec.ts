@@ -26,7 +26,9 @@ export const localeSpec = (): void => {
 					DateTime.locale(invalidLocale);
 
 					// wait for load
-					await wait();
+					while (!DateTime.isLocaleLoaded) {
+						await wait(10);
+					}
 
 					const date: DateTime = new DateTime();
 
@@ -40,7 +42,9 @@ export const localeSpec = (): void => {
 					date.locale(invalidLocale);
 
 					// wait for load
-					await wait();
+					while (!DateTime.isLocaleLoaded) {
+						await wait(10);
+					}
 
 					// not changed
 					expect(date.locale()).to.be.eql(DefaultLocale);
@@ -59,7 +63,9 @@ export const localeSpec = (): void => {
 			DateTime.locale(anotherLocale);
 
 			// wait for load
-			await wait();
+			while (!DateTime.isLocaleLoaded) {
+				await wait(10);
+			}
 
 			const date1: DateTime = new DateTime();
 			const date2: DateTime = new DateTime();
@@ -75,7 +81,9 @@ export const localeSpec = (): void => {
 			date1.locale(anotherLocale);
 
 			// wait for load
-			await wait();
+			while (!DateTime.isLocaleLoaded) {
+				await wait(10);
+			}
 
 			expect(date1.locale()).to.be.eql(anotherLocale);
 
@@ -87,7 +95,9 @@ export const localeSpec = (): void => {
 			DateTime.locale(anotherLocale);
 
 			// wait for load
-			await wait();
+			while (!DateTime.isLocaleLoaded) {
+				await wait(10);
+			}
 
 			const date3: DateTime = new DateTime();
 
@@ -102,7 +112,9 @@ export const localeSpec = (): void => {
 			DateTime.locale(anotherLocale);
 
 			// wait for load
-			await wait();
+			while (!DateTime.isLocaleLoaded) {
+				await wait(10);
+			}
 
 			const date: DateTime = new DateTime();
 			expect(date.locale()).to.be.eql(anotherLocale);
@@ -116,7 +128,9 @@ export const localeSpec = (): void => {
 			date.locale(anotherLocale);
 
 			// wait for load
-			await wait();
+			while (!DateTime.isLocaleLoaded) {
+				await wait(10);
+			}
 
 			expect(date.locale()).to.be.eql(anotherLocale);
 		});
@@ -126,7 +140,9 @@ export const localeSpec = (): void => {
 			date1.locale(anotherLocale);
 
 			// wait for load
-			await wait();
+			while (!DateTime.isLocaleLoaded) {
+				await wait(10);
+			}
 
 			const date2: DateTime = new DateTime(date1);
 

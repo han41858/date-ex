@@ -198,6 +198,10 @@ export class DateTime extends DateProxy {
 		return returnValue;
 	}
 
+	static get isLocaleLoaded (): boolean {
+		return globalConfig.localeTimer === undefined;
+	}
+
 	locale (locale?: string): string {
 		let returnValue: string; // not undefined
 
@@ -246,6 +250,10 @@ export class DateTime extends DateProxy {
 		}
 
 		return returnValue;
+	}
+
+	get isLocaleLoaded (): boolean {
+		return this.setLocaleTimer === undefined;
 	}
 
 	// allow null, no limit number range

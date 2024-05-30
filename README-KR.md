@@ -259,8 +259,9 @@ console.log(date3.locale()); // 'en'
 
 `locale()` 함수는 ES6 `import` 함수를 사용합니다. 이 함수는 `Promise` 방식으로 동작하기 때문에 `locale()`을 실행한 후에는 JavaScript 1 싸이클을 기다려야 다국어 파일이
 로드됩니다.
+다국어 파일 로드가 끝났는지 확인하려면 `isLocaleLoaded` 값을 확인하세요.
 
-다국어 코드가 유효하지 않거나 1 싸이클 이후에 다국어 파일 로드를 실패하면 이전값으로 원복됩니다.
+다국어 코드가 유효하지 않거나 다국어 파일 로드를 실패하면 이전값으로 원복됩니다.
 
 ### `DateTime.locale(): string`
 

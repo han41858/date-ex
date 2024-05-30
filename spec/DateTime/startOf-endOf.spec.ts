@@ -45,7 +45,7 @@ export const startOfEndOfSpec = (): void => {
 			});
 		});
 
-		describe('DateTimeParmaKeyEx', () => {
+		describe('DateTimeParamKeyEx', () => {
 			it('quarter', () => {
 				const date: DateTime = new DateTime();
 				const newDate: DateTime = date.startOf('quarter');
@@ -65,6 +65,7 @@ export const startOfEndOfSpec = (): void => {
 					const date: DateTime = new DateTime();
 					const newDate: DateTime = date
 						.set({
+							year: 2022,
 							month: 3,
 							date: 15
 						})
@@ -177,7 +178,7 @@ export const startOfEndOfSpec = (): void => {
 			});
 		});
 
-		describe('DateTimeParmaKeyEx', () => {
+		describe('DateTimeParamKeyEx', () => {
 			it('quarter', () => {
 				const date: DateTime = new DateTime();
 				const newDate: DateTime = date.endOf('quarter');
@@ -197,6 +198,7 @@ export const startOfEndOfSpec = (): void => {
 					const date: DateTime = new DateTime();
 					const newDate: DateTime = date
 						.set({
+							year: 2022,
 							month: 3,
 							date: 15
 						})

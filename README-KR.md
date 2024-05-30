@@ -42,17 +42,17 @@ const newDateByDateTimeParam: DateTime = new DateTime({
 
 ### 값 가져오기 - 기본 필드
 
-| 게터 | 반환 타입 | 값 범위 | 설명 | `Date` 함수 |
-|---|---|---|---|---|
-| `year` | `number` | - | 연도를 반환합니다. | `Date.getFullYear()` |
-| `month` | `number` | `1` ~ `12` | 월을 반환합니다. | `Date.getMonth()` |
-| `date` | `number` | `1` ~ `31` | 일자를 반환합니다. | `Date.getDate()` |
-| `day` | `number` | `0` ~ `6` | 요일에 해당하는 숫자를 반환합니다. | `Date.getDay()` |
-| `hours` | `number` | `0` ~ `23` | 시각을 반환합니다. | `Date.getHours()` |
-| `minutes` | `number` | `0` ~ `59` | 분을 반환합니다. | `Date.getMinutes()` |
-| `seconds` | `number` | `0` ~ `59` | 초를 반환합니다. | `Date.getSeconds()` |
-| `ms` | `number` | `0` ~ `999` | 밀리초를 반환합니다. | `Date.getMilliseconds()` |
-| `timezoneOffset` | `timezone` | - | 타임존 오프셋을 분 단위로 반환합니다. | `Date.getTimezoneOffset()` |
+| 게터               | 반환 타입      | 값 범위        | 설명                    | `Date` 함수                  |
+|------------------|------------|-------------|-----------------------|----------------------------|
+| `year`           | `number`   | -           | 연도를 반환합니다.            | `Date.getFullYear()`       |
+| `month`          | `number`   | `1` ~ `12`  | 월을 반환합니다.             | `Date.getMonth()`          |
+| `date`           | `number`   | `1` ~ `31`  | 일자를 반환합니다.            | `Date.getDate()`           |
+| `day`            | `number`   | `0` ~ `6`   | 요일에 해당하는 숫자를 반환합니다.   | `Date.getDay()`            |
+| `hours`          | `number`   | `0` ~ `23`  | 시각을 반환합니다.            | `Date.getHours()`          |
+| `minutes`        | `number`   | `0` ~ `59`  | 분을 반환합니다.             | `Date.getMinutes()`        |
+| `seconds`        | `number`   | `0` ~ `59`  | 초를 반환합니다.             | `Date.getSeconds()`        |
+| `ms`             | `number`   | `0` ~ `999` | 밀리초를 반환합니다.           | `Date.getMilliseconds()`   |
+| `timezoneOffset` | `timezone` | -           | 타임존 오프셋을 분 단위로 반환합니다. | `Date.getTimezoneOffset()` |
 
 * `Date` 객체와 비교해보면 편의성을 위해 `get-` 접두사를 생략했으며 함수 실행 형태가 아니라 getter 방식을 사용합니다. 같은 이유로 `getMilliseconds()`는 `ms`로 제공합니다.
 
@@ -60,20 +60,20 @@ const newDateByDateTimeParam: DateTime = new DateTime({
 
 ### 값 가져오기 - 확장 필드
 
-| 게터                      | 반환 타입 | 값 범위 | 설명                                 |
-|-------------------------|---|---|------------------------------------|
-| `quarter`               | `number` | `1` ~ `4` | 분기를 반환합니다.                         |
-| `weekOfYear`            | `number` | `1` ~ `53` | 해당 연도를 기준으로 몇주차인지 반환합니다.           |
-| `weekOfMonth`           | `number` | `1` ~ `5` | 해당 월을 기준으로 몇주차인지 반환합니다.            |
-| `weeksOfYear`           | `number` | `52` ~ `53` | 해당 연도의 최대 주차수를 반환합니다.              |
-| `weeksOfMonth`          | `number` | `4` ~ `6` | 해당 월의 최대 주차수를 반환합니다.               |
-| `dayOfYear`             | `number` | `1` ~ `365` | 해당 연도를 기준으로 몇일차인지 반환합니다.           |
-| `daysOfYear`            | `number` | `1` ~ `366` | 해당 연도의 일자 개수를 반환합니다.               |
-| `lastDate`              | `number` | `28` ~ `31` | 해당 월의 마지막 일자를 반환합니다.          |
-| `timezoneOffsetInHours` | `number` | `-12` ~ `14` | 타임존 오프셋을 시각 단위로 반환합니다.             |
+| 게터                      | 반환 타입     | 값 범위           | 설명                                 |
+|-------------------------|-----------|----------------|------------------------------------|
+| `quarter`               | `number`  | `1` ~ `4`      | 분기를 반환합니다.                         |
+| `weekOfYear`            | `number`  | `1` ~ `53`     | 해당 연도를 기준으로 몇주차인지 반환합니다.           |
+| `weekOfMonth`           | `number`  | `1` ~ `5`      | 해당 월을 기준으로 몇주차인지 반환합니다.            |
+| `weeksOfYear`           | `number`  | `52` ~ `53`    | 해당 연도의 최대 주차수를 반환합니다.              |
+| `weeksOfMonth`          | `number`  | `4` ~ `6`      | 해당 월의 최대 주차수를 반환합니다.               |
+| `dayOfYear`             | `number`  | `1` ~ `365`    | 해당 연도를 기준으로 몇일차인지 반환합니다.           |
+| `daysOfYear`            | `number`  | `1` ~ `366`    | 해당 연도의 일자 개수를 반환합니다.               |
+| `lastDate`              | `number`  | `28` ~ `31`    | 해당 월의 마지막 일자를 반환합니다.               |
+| `timezoneOffsetInHours` | `number`  | `-12` ~ `14`   | 타임존 오프셋을 시각 단위로 반환합니다.             |
 | `isAm`                  | `boolean` | `true`/`false` | 오전이면 `true`, 오후이면 `false`를 반환합니다.  |
-| `hours24`               | `number` | `0` ~ `23` | 24시 기준으로 시각을 반환합니다. `hours`와 같습니다. |
-| `hours12`               | `number` | `0` ~ `12` | 12시 기준으로 시각을 반환합니다.                |
+| `hours24`               | `number`  | `0` ~ `23`     | 24시 기준으로 시각을 반환합니다. `hours`와 같습니다. |
+| `hours12`               | `number`  | `0` ~ `12`     | 12시 기준으로 시각을 반환합니다.                |
 
 ### UTC 필드
 
@@ -89,25 +89,25 @@ const utcDate: DateTime = date.UTC;
 
 ### 변환 함수
 
-| 게터 | 반환 타입 | 설명 |
-|---|---|---|
-| `valueOf()` | `number` | 유닉스 타임스탬프를 반환합니다. `+new Date()`와 같으며 `+new DateTime()`로 사용할 수 있습니다. |
-| `toDate()` | `Date` | `Date` 형식을 반환합니다. |
-| `toISOString()` | `string` | ISO 문자열 형식을 반환합니다. `Date.toISOString()`과 같습니다. |
-| `toUTCString()` | `string` | UTC 문자열 형식을 반환합니다. `Date.toUTCString()`과 같습니다. |
-| `toJson()` | `object` | [`DateTimeParam`](#DateTimeParam) 형식을 반환합니다. |
+| 게터              | 반환 타입    | 설명                                                                  |
+|-----------------|----------|---------------------------------------------------------------------|
+| `valueOf()`     | `number` | 유닉스 타임스탬프를 반환합니다. `+new Date()`와 같으며 `+new DateTime()`로 사용할 수 있습니다. |
+| `toDate()`      | `Date`   | `Date` 형식을 반환합니다.                                                   |
+| `toISOString()` | `string` | ISO 문자열 형식을 반환합니다. `Date.toISOString()`과 같습니다.                      |
+| `toUTCString()` | `string` | UTC 문자열 형식을 반환합니다. `Date.toUTCString()`과 같습니다.                      |
+| `toJson()`      | `object` | [`DateTimeParam`](#DateTimeParam) 형식을 반환합니다.                        |
 
 ### 값 설정하기 - 개별 필드
 
-| 세터 | 인자 타입 | 설명 | `Date` 함수 |
-|---|---|---|---|
-| `year` | `number` | 연도를 설정합니다. | `Date.setFullYear()` |
-| `month` | `number` | 월을 설정합니다. | `Date.setMonth()` |
-| `date` | `number` | 일자를 설정합니다. | `Date.setDate()` |
-| `hours` | `number` | 시각을 설정니다. | `Date.setHours()` |
-| `minutes` | `number` | 분을 설정합니다. | `Date.setMinutes()` |
-| `seconds` | `number` | 초를 설정합니다. | `Date.setSeconds()` |
-| `ms` | `number` | 밀리초를 설정합니다. | `Date.setMilliseconds()` |
+| 세터        | 인자 타입    | 설명          | `Date` 함수                |
+|-----------|----------|-------------|--------------------------|
+| `year`    | `number` | 연도를 설정합니다.  | `Date.setFullYear()`     |
+| `month`   | `number` | 월을 설정합니다.   | `Date.setMonth()`        |
+| `date`    | `number` | 일자를 설정합니다.  | `Date.setDate()`         |
+| `hours`   | `number` | 시각을 설정니다.   | `Date.setHours()`        |
+| `minutes` | `number` | 분을 설정합니다.   | `Date.setMinutes()`      |
+| `seconds` | `number` | 초를 설정합니다.   | `Date.setSeconds()`      |
+| `ms`      | `number` | 밀리초를 설정합니다. | `Date.setMilliseconds()` |
 
 * `Date` 객체와 비교해보면 편의성을 위해 `set-` 접두사를 생략했으며 함수 실행 형태가 아니라 setter 타입을 사용합니다. 같은 이유로 `setMilliseconds()`는 `ms`로 제공합니다.
 
@@ -192,39 +192,39 @@ console.log(date.endOf('year').toISOString()); // 2020-12-31T23:59:59.999Z
 
 주어진 형식으로 문자열을 구성합니다.
 
-| 토큰 | 토큰 문자열 | 게터 | 설명 | 값 범위 |
-|---|---|---|---|---|
-| `FormatToken.YearShort` | `YY` | - | 2자리 연도로 변환합니다. | `00` ~ `20`, ... |
-| `FormatToken.Year` | `YYYY` | `year` | 4자리 연도로 변환합니다. | `1970` ~ `2020`, ... |
-| `FormatToken.Quarter` | `Q` | `quarter` | 분기로 변환합니다. | `1` ~ `4` |
-| `FormatToken.Month` | `M` | `month` | 월로 변환합니다. | `1` ~ `12` |
-| `FormatToken.MonthPadded` | `MM` | - | 2자리를 채운 월로 변환합니다. | `01` ~ `12` |
-| `FormatToken.MonthStringShort` | `MMM` | - | 짧은 이름 월로 변환합니다. | `Jan` ~ `Dec` |
-| `FormatToken.MonthStringLong` | `MMMM` | - | 긴 이름 월로 변환합니다. | `January` ~ `December` |
-| `FormatToken.Week` | `W` | `weekOfYear` | 연기준 주차를 반환합니다. | `1` ~ `53` |
-| `FormatToken.WeekPadded` | `WW` | - | 2자리를 채운 연기준 주차를 반환합니다. | `01` ~ `53` |
-| `FormatToken.WeekPaddedWithPrefix` | `Www` | - | 2자리를 채운 연기준 주차에 접두사 `W`를 붙여서 반환합니다. | `W01` ~ `W53` |
-| `FormatToken.DayOfYear` | `DDD` | `dayOfYear` | 연기준 일차수로 변환합니다. | `1` ~ `365` |
-| `FormatToken.DayOfYearPadded` | `DDDD` | - | 3자리를 채운 연기준 일차수로 변환합니다. | `001` ~ `365` |
-| `FormatToken.DayOfMonth` | `D` | `dayOfMonth` | 월기준 일차수로 변환합니다. | `1` ~ `31` |
-| `FormatToken.DayOfMonthPadded` | `DD` | - | 2자리를 채운 월기준 일차수로 변환합니다. | `01` ~ `31` |
-| `FormatToken.DayOfWeek` | `d` | `day` | 요일에 해당하는 숫자로 변환합니다. | `0` ~ `6` |
-| `FormatToken.DayOfWeekStringShort` | `dd` | - | 짧은 이름 요일로 변환합니다. | `Su` ~ `Sa` |
-| `FormatToken.DayOfWeekStringMiddle` | `ddd` | - | 중간 이름 요일로 변환합니다. | `Sun` ~ `Sat` |
-| `FormatToken.DayOfWeekStringLong` | `dddd` | - | 긴 이름 요일로 변환합니다. | `Sunday` ~ `Saturday` |
-| `FormatToken.MeridiemLower` | `a` | - | 오전/오후를 소문자로 변환합니다. | `am`, `pm` |
-| `FormatToken.MeridiemCapital` | `A` | - | 오전/오후를 대문자로 변환합니다. | `AM`, `PM` |
-| `FormatToken.Hours24` | `H` | `hours`, `hours24` | 24시 기준 시각으로 변환합니다. | `0` ~ `23` |
-| `FormatToken.Hours24Padded` | `HH` | - | 2자리를 채운 24시 기준 시각으로 변환합니다. | `00` ~ `23` |
-| `FormatToken.Hours12` | `h` | `hours12` | 12시 기준 시각으로 변환합니다. | `0` ~ `12` |
-| `FormatToken.Hours12Padded` | `hh` | - | 2자리를 채운 12시 기준 시각으로 변환합니다. | `00` ~ `12` |
-| `FormatToken.Minutes` | `m` | `minutes` | 분으로 변환합니다. | `0` ~ `59` |
-| `FormatToken.MinutesPadded` | `mm` | - | 2자리를 채운 분으로 변환합니다. | `00` ~ `59` |
-| `FormatToken.Seconds` | `s` | `seconds` | 초로 변환합니다. | `0` ~ `59` |
-| `FormatToken.SecondsPadded` | `ss` | - | 2자리를 채운 초로 변환합니다. | `00` ~ `59` |
-| `FormatToken.MilliSeconds` | `S` | `ms` | 밀리초로 변환합니다. | `0` ~ `999` |
-| `FormatToken.MilliSecondsPadded2` | `SS` | - | 2자리를 채운 밀리초로 변환합니다. | `00` ~ `99` |
-| `FormatToken.MilliSecondsPadded3` | `SSS` | - | 3자리를 채운 밀리초로 변환합니다. | `000` ~ `999`  |
+| 토큰                                  | 토큰 문자열 | 게터                 | 설명                                  | 값 범위                   |
+|-------------------------------------|--------|--------------------|-------------------------------------|------------------------|
+| `FormatToken.YearShort`             | `YY`   | -                  | 2자리 연도로 변환합니다.                      | `00` ~ `20`, ...       |
+| `FormatToken.Year`                  | `YYYY` | `year`             | 4자리 연도로 변환합니다.                      | `1970` ~ `2020`, ...   |
+| `FormatToken.Quarter`               | `Q`    | `quarter`          | 분기로 변환합니다.                          | `1` ~ `4`              |
+| `FormatToken.Month`                 | `M`    | `month`            | 월로 변환합니다.                           | `1` ~ `12`             |
+| `FormatToken.MonthPadded`           | `MM`   | -                  | 2자리를 채운 월로 변환합니다.                   | `01` ~ `12`            |
+| `FormatToken.MonthStringShort`      | `MMM`  | -                  | 짧은 이름 월로 변환합니다.                     | `Jan` ~ `Dec`          |
+| `FormatToken.MonthStringLong`       | `MMMM` | -                  | 긴 이름 월로 변환합니다.                      | `January` ~ `December` |
+| `FormatToken.Week`                  | `W`    | `weekOfYear`       | 연기준 주차를 반환합니다.                      | `1` ~ `53`             |
+| `FormatToken.WeekPadded`            | `WW`   | -                  | 2자리를 채운 연기준 주차를 반환합니다.              | `01` ~ `53`            |
+| `FormatToken.WeekPaddedWithPrefix`  | `Www`  | -                  | 2자리를 채운 연기준 주차에 접두사 `W`를 붙여서 반환합니다. | `W01` ~ `W53`          |
+| `FormatToken.DayOfYear`             | `DDD`  | `dayOfYear`        | 연기준 일차수로 변환합니다.                     | `1` ~ `365`            |
+| `FormatToken.DayOfYearPadded`       | `DDDD` | -                  | 3자리를 채운 연기준 일차수로 변환합니다.             | `001` ~ `365`          |
+| `FormatToken.DayOfMonth`            | `D`    | `dayOfMonth`       | 월기준 일차수로 변환합니다.                     | `1` ~ `31`             |
+| `FormatToken.DayOfMonthPadded`      | `DD`   | -                  | 2자리를 채운 월기준 일차수로 변환합니다.             | `01` ~ `31`            |
+| `FormatToken.DayOfWeek`             | `d`    | `day`              | 요일에 해당하는 숫자로 변환합니다.                 | `0` ~ `6`              |
+| `FormatToken.DayOfWeekStringShort`  | `dd`   | -                  | 짧은 이름 요일로 변환합니다.                    | `Su` ~ `Sa`            |
+| `FormatToken.DayOfWeekStringMiddle` | `ddd`  | -                  | 중간 이름 요일로 변환합니다.                    | `Sun` ~ `Sat`          |
+| `FormatToken.DayOfWeekStringLong`   | `dddd` | -                  | 긴 이름 요일로 변환합니다.                     | `Sunday` ~ `Saturday`  |
+| `FormatToken.MeridiemLower`         | `a`    | -                  | 오전/오후를 소문자로 변환합니다.                  | `am`, `pm`             |
+| `FormatToken.MeridiemCapital`       | `A`    | -                  | 오전/오후를 대문자로 변환합니다.                  | `AM`, `PM`             |
+| `FormatToken.Hours24`               | `H`    | `hours`, `hours24` | 24시 기준 시각으로 변환합니다.                  | `0` ~ `23`             |
+| `FormatToken.Hours24Padded`         | `HH`   | -                  | 2자리를 채운 24시 기준 시각으로 변환합니다.          | `00` ~ `23`            |
+| `FormatToken.Hours12`               | `h`    | `hours12`          | 12시 기준 시각으로 변환합니다.                  | `0` ~ `12`             |
+| `FormatToken.Hours12Padded`         | `hh`   | -                  | 2자리를 채운 12시 기준 시각으로 변환합니다.          | `00` ~ `12`            |
+| `FormatToken.Minutes`               | `m`    | `minutes`          | 분으로 변환합니다.                          | `0` ~ `59`             |
+| `FormatToken.MinutesPadded`         | `mm`   | -                  | 2자리를 채운 분으로 변환합니다.                  | `00` ~ `59`            |
+| `FormatToken.Seconds`               | `s`    | `seconds`          | 초로 변환합니다.                           | `0` ~ `59`             |
+| `FormatToken.SecondsPadded`         | `ss`   | -                  | 2자리를 채운 초로 변환합니다.                   | `00` ~ `59`            |
+| `FormatToken.MilliSeconds`          | `S`    | `ms`               | 밀리초로 변환합니다.                         | `0` ~ `999`            |
+| `FormatToken.MilliSecondsPadded2`   | `SS`   | -                  | 2자리를 채운 밀리초로 변환합니다.                 | `00` ~ `99`            |
+| `FormatToken.MilliSecondsPadded3`   | `SSS`  | -                  | 3자리를 채운 밀리초로 변환합니다.                 | `000` ~ `999`          |
 
 ### 다국어
 
@@ -273,25 +273,25 @@ console.log(date3.locale()); // 'en'
 
 ### 다국어 지원 목록
 
-| 언어 코드 | 이름 |
-|---|---|
-| `en` | English |
+| 언어 코드   | 이름             |
+|---------|----------------|
+| `en`    | English        |
 | `ko-kr` | Korean (Korea) |
 
 ### 비교 함수
 
 모든 비교 함수는 `DateTimeUnit` 단위를 인자로 받을 수 있습니다. 계산의 정확도는 이 단위를 기준으로 하며, 단위를 생략하면 밀리초 단위로 계산합니다.
 
-| 함수 | 반환 타입 | 설명 |
-|---|---|---|
-| `diff()` | `number` | 차이값을 반환합니다. |
-| `isEqual()` | `boolean` | 인자로 전달한 일자와 같으면 `true`를 반환합니다. |
-| `isBefore()` | `boolean` | 인자로 전달한 일자 이전이면 `true`를 반환합니다. |
-| `isBeforeOrEqual()` | `boolean` | 인자로 전달한 일자 이전이거나 같으면 `true`를 반환합니다. |
-| `isAfter()` | `boolean` | 인자로 전달한 일자 이후이면 `true`를 반환합니다. |
-| `isAfterOrEqual()` | `boolean` | 인자로 전달한 일자 이후거나 같으면 `true`를 반환합니다. |
-| `isBetween()` | `boolean` | 인자로 전달한 두 일자 사이에 있으면 `true`를 반환합니다. |
-| `isAfterOrEqual()` | `boolean` | 인자로 전달한 두 일자 사이에 있거나 같으면 `true`를 반환합니다. |
+| 함수                  | 반환 타입     | 설명                                      |
+|---------------------|-----------|-----------------------------------------|
+| `diff()`            | `number`  | 차이값을 반환합니다.                             |
+| `isEqual()`         | `boolean` | 인자로 전달한 일자와 같으면 `true`를 반환합니다.          |
+| `isBefore()`        | `boolean` | 인자로 전달한 일자 이전이면 `true`를 반환합니다.          |
+| `isBeforeOrEqual()` | `boolean` | 인자로 전달한 일자 이전이거나 같으면 `true`를 반환합니다.     |
+| `isAfter()`         | `boolean` | 인자로 전달한 일자 이후이면 `true`를 반환합니다.          |
+| `isAfterOrEqual()`  | `boolean` | 인자로 전달한 일자 이후거나 같으면 `true`를 반환합니다.      |
+| `isBetween()`       | `boolean` | 인자로 전달한 두 일자 사이에 있으면 `true`를 반환합니다.     |
+| `isAfterOrEqual()`  | `boolean` | 인자로 전달한 두 일자 사이에 있거나 같으면 `true`를 반환합니다. |
 
 ```typescript
 const date1: DateTime = new DateTime({
@@ -330,17 +330,17 @@ console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 
 일자와 시각 값을 표현하는 객체입니다. 이 객체는 다음과 같은 필드로 구성됩니다.
 
-| 필드        | 필드 타입 | 값 범위        | 설명                                        |
-|-----------|---|-------------|-------------------------------------------|
-| `year`    | `number` | -           | 연도를 표현합니다.                                |
-| `quarter` | `number` | `1` ~ `4`   | 분기를 표현합니다. (`DateTimeParamEx`에만 존재합니다.)   |
-| `month`   | `number` | `1` ~ `12`  | 월을 표현합니다.                                 |
+| 필드        | 필드 타입    | 값 범위        | 설명                                       |
+|-----------|----------|-------------|------------------------------------------|
+| `year`    | `number` | -           | 연도를 표현합니다.                               |
+| `quarter` | `number` | `1` ~ `4`   | 분기를 표현합니다. (`DateTimeParamEx`에만 존재합니다.)  |
+| `month`   | `number` | `1` ~ `12`  | 월을 표현합니다.                                |
 | `week`    | `number` | `1` ~ `42`  | 주차수를 표현합니다. (`DateTimeParamEx`에만 존재합니다.) |
-| `date`    | `number` | `1` ~ `31`  | 일자를 표현합니다.                                |
-| `hours`   | `number` | `0` ~ `23`  | 시각을 표현합니다.                                |
-| `minutes` | `number` | `0` ~ `59`  | 분을 표현합니다.                                 |
-| `seconds` | `number` | `0` ~ `59`  | 초를 표현합니다.                                 |
-| `ms`      | `number` | `0` ~ `999` | 밀리초를 표현합니다.                               |
+| `date`    | `number` | `1` ~ `31`  | 일자를 표현합니다.                               |
+| `hours`   | `number` | `0` ~ `23`  | 시각을 표현합니다.                               |
+| `minutes` | `number` | `0` ~ `59`  | 분을 표현합니다.                                |
+| `seconds` | `number` | `0` ~ `59`  | 초를 표현합니다.                                |
+| `ms`      | `number` | `0` ~ `999` | 밀리초를 표현합니다.                              |
 
 * `month` 필드의 값은 `0` ~ `11` 범위가 아닙니다. 이 필드는 실제 월 값 `1` ~ `12`을 표현합니다.
 * `quarter`, `week` 필드는 `DateTimeParamEx`에만 존재합니다.
@@ -349,17 +349,17 @@ console.log(date2.isBetweenOrEqual(date1, date2, 'date')); // true
 
 일자, 시각 단위를 표현하는 값입니다.
 
-| 토큰 | 필드 | 타입 | 설명 |
-|---|---|---|---|
-| `DateTimeUnit.Year` | `year` | `number` | 연도 |
-| `DateTimeUnit.Quarter` | `quarter` | `number` | 분기 |
-| `DateTimeUnit.Month` | `month` | `number` | 월 |
-| `DateTimeUnit.Week` | `week` | `number` | 주 |
-| `DateTimeUnit.Date` | `date` | `number` | 일자 |
-| `DateTimeUnit.Hours` | `hours` | `number` | 시간 |
-| `DateTimeUnit.Minutes` | `minutes` | `number` | 분 |
-| `DateTimeUnit.Seconds` | `seconds` | `number` | 초 |
-| `DateTimeUnit.Ms` | `ms` | `number` | 밀리초 |
+| 토큰                     | 필드        | 타입       | 설명  |
+|------------------------|-----------|----------|-----|
+| `DateTimeUnit.Year`    | `year`    | `number` | 연도  |
+| `DateTimeUnit.Quarter` | `quarter` | `number` | 분기  |
+| `DateTimeUnit.Month`   | `month`   | `number` | 월   |
+| `DateTimeUnit.Week`    | `week`    | `number` | 주   |
+| `DateTimeUnit.Date`    | `date`    | `number` | 일자  |
+| `DateTimeUnit.Hours`   | `hours`   | `number` | 시간  |
+| `DateTimeUnit.Minutes` | `minutes` | `number` | 분   |
+| `DateTimeUnit.Seconds` | `seconds` | `number` | 초   |
+| `DateTimeUnit.Ms`      | `ms`      | `number` | 밀리초 |
 
 ## 달력
 
@@ -400,15 +400,15 @@ const newDurationByDurationParam: Duration = new Duration({
 
 ### 값 가져오기 & 값 설정하기 - 개별 필드
 
-| 토큰 | 필드 | 타입 |
-|---|---|---|
-| `DateTimeUnit.Years` | `year` | `number` |
-| `DateTimeUnit.Months` | `month` | `number` |
-| `DateTimeUnit.Dates` | `date` | `number` |
-| `DateTimeUnit.Hours` | `hours` | `number` |
+| 토큰                     | 필드        | 타입       |
+|------------------------|-----------|----------|
+| `DateTimeUnit.Years`   | `year`    | `number` |
+| `DateTimeUnit.Months`  | `month`   | `number` |
+| `DateTimeUnit.Dates`   | `date`    | `number` |
+| `DateTimeUnit.Hours`   | `hours`   | `number` |
 | `DateTimeUnit.Minutes` | `minutes` | `number` |
 | `DateTimeUnit.Seconds` | `seconds` | `number` |
-| `DateTimeUnit.Ms` | `ms` | `number` |
+| `DateTimeUnit.Ms`      | `ms`      | `number` |
 
 ```TypeScript
 const duration: Duration = new Duration(); // value : {}
@@ -443,28 +443,28 @@ console.log(duration.divide(4)); // 값이 { ms : 250 }인 Duration 인스턴스
 
 기간을 표현합니다. 이 객체는 다음과 같은 필드로 구성됩니다.
 
-| 필드 | 필드 타입 | 값 범위 | 설명 |
-|---|---|---|---|
-| `years` | `number` | - | 연단위 기간을 표현합니다. |
-| `months` | `number` | `1` ~ `12` | 월단위 기간을 표현합니다. |
-| `dates` | `number` | `1` ~ `31` | 일단위 기간을 표현합니다. |
-| `hours` | `number` | `0` ~ `23` | 시간단위 기간을 표현합니다. |
-| `minutes` | `number` | `0` ~ `59` | 분단위 기간을 표현합니다. |
-| `seconds` | `number` | `0` ~ `59` | 초단위 기간을 표현합니다. |
-| `ms` | `number` | `0` ~ `999` | 밀리초단위 기간을 표현합니다. |
+| 필드        | 필드 타입    | 값 범위        | 설명               |
+|-----------|----------|-------------|------------------|
+| `years`   | `number` | -           | 연단위 기간을 표현합니다.   |
+| `months`  | `number` | `1` ~ `12`  | 월단위 기간을 표현합니다.   |
+| `dates`   | `number` | `1` ~ `31`  | 일단위 기간을 표현합니다.   |
+| `hours`   | `number` | `0` ~ `23`  | 시간단위 기간을 표현합니다.  |
+| `minutes` | `number` | `0` ~ `59`  | 분단위 기간을 표현합니다.   |
+| `seconds` | `number` | `0` ~ `59`  | 초단위 기간을 표현합니다.   |
+| `ms`      | `number` | `0` ~ `999` | 밀리초단위 기간을 표현합니다. |
 
 ## `DurationUnit`
 
 기간 단위를 표현합니다.
 
-| 토큰 | 필드 | 타입 |설명 |
-|---|---|---|---|
-| `DurationUnit.Years` | `years` | `number` | 연단위 기간을 표현합니다. |
-| `DurationUnit.Quarters` | `quarters` | `number` | 분기단위 기간을 표현합니다. |
-| `DurationUnit.Months` | `months` | `number` | 월단위 기간을 표현합니다. |
-| `DurationUnit.Weeks` | `weeks` | `number` | 주단위 기간을 표현합니다. |
-| `DurationUnit.Dates` | `dates` | `number` | 일단위 기간을 표현합니다. |
-| `DurationUnit.Hours` | `hours` | `number` | 시간단위 기간을 표현합니다. |
-| `DurationUnit.Minutes` | `minutes` | `number` | 분단위 기간을 표현합니다. |
-| `DurationUnit.Seconds` | `seconds` | `number` | 초단위 기간을 표현합니다. |
-| `DurationUnit.Ms` | `ms` | `number` | 밀리초단위 기간을 표현합니다. |
+| 토큰                      | 필드         | 타입       | 설명               |
+|-------------------------|------------|----------|------------------|
+| `DurationUnit.Years`    | `years`    | `number` | 연단위 기간을 표현합니다.   |
+| `DurationUnit.Quarters` | `quarters` | `number` | 분기단위 기간을 표현합니다.  |
+| `DurationUnit.Months`   | `months`   | `number` | 월단위 기간을 표현합니다.   |
+| `DurationUnit.Weeks`    | `weeks`    | `number` | 주단위 기간을 표현합니다.   |
+| `DurationUnit.Dates`    | `dates`    | `number` | 일단위 기간을 표현합니다.   |
+| `DurationUnit.Hours`    | `hours`    | `number` | 시간단위 기간을 표현합니다.  |
+| `DurationUnit.Minutes`  | `minutes`  | `number` | 분단위 기간을 표현합니다.   |
+| `DurationUnit.Seconds`  | `seconds`  | `number` | 초단위 기간을 표현합니다.   |
+| `DurationUnit.Ms`       | `ms`       | `number` | 밀리초단위 기간을 표현합니다. |

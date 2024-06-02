@@ -463,9 +463,9 @@ export class DateTime extends DateProxy {
 			const maxIndex: number = matchArr.length - 1;
 
 			for (let i = maxIndex; i >= 0; i--) {
-				result = result.substr(0, matchArr[i].startIndex)
+				result = result.substring(0, matchArr[i].startIndex)
 					+ this.convertTokenToValue(matchArr[i].token)
-					+ result.substr(matchArr[i].startIndex + matchArr[i].token.length);
+					+ result.substring(matchArr[i].startIndex + matchArr[i].token.length);
 			}
 		}
 

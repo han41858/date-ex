@@ -37,7 +37,7 @@ export const formatSpec = (): void => {
 				const result: string = date.format(FormatToken.YearShort);
 
 				expect(result).to.be.lengthOf(2);
-				expect(result).to.be.eql(('' + year).substr(2, 2));
+				expect(result).to.be.eql(('' + year).substring(2));
 			});
 		});
 	});

@@ -322,9 +322,9 @@ export const findTokens = (formatString: string, valueString?: string): TokenMat
 			const regExpStr: string = formatTokenToRegExpStr(token);
 			const regExpPartial: RegExp = new RegExp(regExpStr);
 
-			fullFormatStr += valueStrRemains.substr(0, execResult.index);
+			fullFormatStr += valueStrRemains.substring(0, execResult.index);
 			// skip don't care string
-			valueStrRemains = valueStrRemains.substr(execResult.index);
+			valueStrRemains = valueStrRemains?.substring(execResult.index);
 
 			// not null
 			const fragResult: RegExpExecArray = regExpPartial.exec(valueStrRemains) as RegExpExecArray;
@@ -338,8 +338,8 @@ export const findTokens = (formatString: string, valueString?: string): TokenMat
 			});
 
 			fullFormatStr += regExpStr;
-			formatStrRemains = formatStrRemains.substr(execResult.index + token.length);
-			valueStrRemains = valueStrRemains.substr(fragResult.index + valueStr.length);
+			formatStrRemains = formatStrRemains.substring(execResult.index + token.length);
+			valueStrRemains = valueStrRemains.substring(fragResult.index + valueStr.length);
 			omitLength += execResult.index + token.length;
 
 			execResult = regExp.exec(formatStrRemains);
@@ -371,7 +371,7 @@ export const findTokens = (formatString: string, valueString?: string): TokenMat
 				token
 			});
 
-			formatStrRemains = formatStrRemains.substr(execResult.index + token.length);
+			formatStrRemains = formatStrRemains.substring(execResult.index + token.length);
 			omitLength += execResult.index + token.length;
 
 			execResult = regExp.exec(formatStrRemains);

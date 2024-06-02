@@ -28,8 +28,8 @@ export class Duration {
 			this.rebalancing();
 		}
 		else if (typeof initData === 'string') {
-			const regExp1 = /^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
-			const regExp2 = /^P\d+W$/; // PnW
+			const regExp1 = /(?<=^P)(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$/; // PnYnMnDTnHnMnS
+			const regExp2 = /(?<=^P)\d+(?=W$)/; // PnW
 
 			// P<date>T<time>
 			// const regExp3 = /^P\d{8}T\d{4}$/; // PYYYYMMDDThhmmss
@@ -41,17 +41,16 @@ export class Duration {
 
 				if (execResult) {
 					const [dateStr, timeStr] = initData // divide date & time for 'M'
-						.replace('P', '') // remove starting 'P'
 						.split('T');
 
 					[
-						{ key: 'years', value: /\d+Y/.exec(dateStr)?.[0]?.replace('Y', '') },
-						{ key: 'months', value: /\d+M/.exec(dateStr)?.[0]?.replace('M', '') },
-						{ key: 'dates', value: /\d+D/.exec(dateStr)?.[0]?.replace('D', '') },
+						{ key: 'years', value: /\d+(?=Y)/.exec(dateStr)?.[0] },
+						{ key: 'months', value: /\d+(?=M)/.exec(dateStr)?.[0] },
+						{ key: 'dates', value: /\d+(?=D)/.exec(dateStr)?.[0] },
 
-						{ key: 'hours', value: /\d+H/.exec(timeStr)?.[0]?.replace('H', '') },
-						{ key: 'minutes', value: /\d+M/.exec(timeStr)?.[0]?.replace('M', '') },
-						{ key: 'seconds', value: /\d+S/.exec(timeStr)?.[0]?.replace('S', '') }
+						{ key: 'hours', value: /\d+(?=H)/.exec(timeStr)?.[0] },
+						{ key: 'minutes', value: /\d+(?=M)/.exec(timeStr)?.[0] },
+						{ key: 'seconds', value: /\d+(?=S)/.exec(timeStr)?.[0] }
 					].forEach((obj) => {
 						const key: keyof DurationParam = obj.key as keyof DurationParam;
 						const valueStr: string | undefined = obj.value;
@@ -65,14 +64,16 @@ export class Duration {
 				}
 			}
 			else if (regExp2.test(initData)) {
-				const weeksStr: string = initData
-					.replace(/^P/, '')
-					.replace(/W$/, '');
+				const regResult: RegExpMatchArray | null = initData.match(regExp2);
 
-				if (!isNaN(+weeksStr)) {
-					this.dates = +weeksStr * 7;
+				if (regResult) {
+					const weeksStr: string = regResult[0];
 
-					this.rebalancing();
+					if (!isNaN(+weeksStr)) {
+						this.dates = +weeksStr * 7;
+
+						this.rebalancing();
+					}
 				}
 			}
 

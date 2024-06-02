@@ -199,7 +199,8 @@ export class DateTime extends DateProxy {
 	}
 
 	static get isLocaleLoaded (): boolean {
-		return globalConfig.localeTimer === undefined;
+		return globalConfig.localeTimer === undefined
+			&& globalConfig.locale !== undefined;
 	}
 
 	locale (locale?: string): string {
@@ -253,7 +254,8 @@ export class DateTime extends DateProxy {
 	}
 
 	get isLocaleLoaded (): boolean {
-		return this.setLocaleTimer === undefined;
+		return this.setLocaleTimer === undefined
+			&& this.ownLocale !== undefined;
 	}
 
 	// allow null, no limit number range

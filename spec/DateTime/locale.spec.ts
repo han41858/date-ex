@@ -42,7 +42,7 @@ export const localeSpec = (): void => {
 					date.locale(invalidLocale);
 
 					// wait for load
-					while (!DateTime.isLocaleLoaded) {
+					while (!date.isLocaleLoaded) {
 						await wait(10);
 					}
 

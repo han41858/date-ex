@@ -1410,7 +1410,7 @@ export const constructorSpec = (): void => {
 				});
 			});
 
-			xdescribe('meridiem', () => {
+			describe.skip('meridiem', () => {
 				it('duplicated tokens', () => {
 					expect(() => new DateTime(
 						('' + now.getDate()) + '-' + now.getDate(),
@@ -1806,7 +1806,7 @@ export const constructorSpec = (): void => {
 					});
 				});
 
-				xdescribe('12-hours', () => {
+				describe.skip('12-hours', () => {
 					describe(FormatToken.Hours12, () => {
 						it('invalid value', () => {
 							expect(() => new DateTime('', FormatToken.Hours12)).to.throws;

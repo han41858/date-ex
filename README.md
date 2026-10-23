@@ -1,8 +1,15 @@
 ![npm](https://img.shields.io/npm/v/@han41858/date-ex?logo=npm)
 
+> [!IMPORTANT]
+> **Deprecated — No Longer Maintained**
+>
+> `@han41858/date-ex` is no longer maintained, and no further updates are planned.
+> For new projects, we recommend using the standard JavaScript [Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) instead.
+> Existing users can continue using this package, but Temporal is not a drop-in replacement; migration may require code changes.
+
 # date-ex
 
-[한국어](https://github.com/han41858/date-ex/blob/master/README-KR.md)
+[한국어](https://github.com/han41858/date-ex/blob/main/README-KR.md)
 
 Extensions for Date class.
 

@@ -1,5 +1,12 @@
 ![npm](https://img.shields.io/npm/v/@han41858/date-ex?logo=npm)
 
+> [!IMPORTANT]
+> **유지보수 종료 (Deprecated)**
+>
+> `@han41858/date-ex`의 유지보수가 종료되었으며, 추가 업데이트는 예정되어 있지 않습니다.
+> 신규 프로젝트에서는 JavaScript 표준 [Temporal API](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Temporal)를 사용하는 것을 권장합니다.
+> 기존 사용자는 이 패키지를 계속 사용할 수 있지만, Temporal은 완전히 호환되는 대체재가 아니므로 마이그레이션 시 코드 변경이 필요할 수 있습니다.
+
 # DateEx
 
 Date 클래스 확장 패키지
